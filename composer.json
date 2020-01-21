@@ -17,12 +17,12 @@
     },
     "autoload": {
         "psr-4": {
-            "BRCas\\Laravel\\": "src/"
+            "BRCas\\Laravel\\": "src/laravel/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BRCas\\LaravelTests\\": "src/"
+            "BRCas\\LaravelTests\\": "src/tests"
         }
     }
 }
