@@ -1,0 +1,23 @@
+<?php
+
+
+namespace BRCas\Laravel\Abstracts;
+
+use Package\Traits\Uuid;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+abstract class Model extends EloquentModel
+{
+    use SoftDeletes, Uuid;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $dates = ['deleted_at'];
+    protected $hidden = [
+        'deleted_at'
+    ];
+    protected $casts = [
+        'id' => 'string'
+    ];
+}
