@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 
 abstract class CrudController extends BaseController
