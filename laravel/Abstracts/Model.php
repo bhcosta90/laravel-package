@@ -3,7 +3,7 @@
 
 namespace BRCas\Laravel\Abstracts;
 
-use Package\Traits\Uuid;
+use BRCas\Laravel\Traits\Uuid;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
