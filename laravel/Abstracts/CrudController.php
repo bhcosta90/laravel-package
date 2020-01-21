@@ -2,7 +2,7 @@
 
 namespace BRCas\Laravel\Abstracts;
 
-use Package\Contracts\ServiceContract;
+use BRCas\Laravel\Contracts\ServiceContract;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
