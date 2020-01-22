@@ -7,7 +7,7 @@ use BRCas\Laravel\Traits\Models\Uuid;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-abstract class Model extends EloquentModel
+abstract class ModelUuid extends EloquentModel
 {
     use SoftDeletes, Uuid;
 
