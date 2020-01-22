@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Laravel\Model\Traits;
+namespace BRCas\Laravel\Traits\Models;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
