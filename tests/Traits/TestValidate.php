@@ -12,7 +12,7 @@ trait TestValidate
 
     protected abstract function routeUpdate();
 
-    protected abstract function removeArrayData(): array{
+    protected function removeArrayData(): array{
         return [
             'token'
         ];
