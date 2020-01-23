@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelTests;
+namespace BRCas\LaravelTests\Traits;
 
 use Illuminate\Foundation\Testing\TestResponse;
 
