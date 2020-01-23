@@ -22,6 +22,11 @@ trait TestSaves{
 
         $model = $this->model();
         $table = (new $model())->getTable();
+        
+        foreach ($this->removeArrayData() as $rs) {
+            unset($testDatabase[$rs]);
+        }
+
         $this->assertDatabaseHas($table, ["id" => $response->json('id')] + $testDatabase);
         $testResponse = $testJson ? $testJson : $testDatabase;
         $response->assertJsonFragment(["id" => $response->json('id')] + $testResponse);
@@ -38,6 +43,11 @@ trait TestSaves{
 
         $model = $this->model();
         $table = (new $model())->getTable();
+
+        foreach ($this->removeArrayData() as $rs) {
+            unset($testDatabase[$rs]);
+        }
+        
         $this->assertDatabaseHas($table, ["id" => $response->json('id')] + $testDatabase);
         $testResponse = $testJson ? $testJson : $testDatabase;
         $response->assertJsonFragment(["id" => $response->json('id')] + $testResponse);
