@@ -80,15 +80,14 @@ abstract class CrudController extends BaseController
     }
 
     public function destroy($id){
-        DB::transaction(function() use($id){
+        return DB::transaction(function () use ($id) {
             $obj = $this->getObject($id);
-            if(is_callable($this->service().'::destroy')){
+            if (is_callable($this->service() . '::destroy')) {
                 return $this->service()::destroy($obj);
-            }else{
+            } else {
                 $obj->delete();
+                return response()->noContent();
             }
-            
         });
-        return response()->noContent();
     }
 }
