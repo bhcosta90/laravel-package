@@ -12,13 +12,21 @@ trait TestValidate
 
     protected abstract function routeUpdate();
 
+    protected abstract function removeArrayData(): array{
+        return [
+            'token'
+        ];
+    }
+
     protected function assertValidationInStorageAction(
         array $data,
         string $rule,
         array $params = []
     ) {
         $response = $this->json('POST', $this->routeStorage(), $data);
-        unset($data['token']);
+        foreach($this->removeArrayData() as $rs){
+            unset($data[$rs]);
+        }
         $fields = array_keys($data);
         $this->assertInvationFields($response, $fields, $rule, $params);
     }
@@ -29,7 +37,9 @@ trait TestValidate
         array $params = []
     ) {
         $response = $this->json('PUT', $this->routeUpdate(), $data);
-        unset($data['token']);
+        foreach ($this->removeArrayData() as $rs) {
+            unset($data[$rs]);
+        }
         $fields = array_keys($data);
         $this->assertInvationFields($response, $fields, $rule, $params);
     }
