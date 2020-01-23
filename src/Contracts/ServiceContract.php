@@ -6,5 +6,5 @@ interface ServiceContract
 {
     public static function store(array $dados);
 
-    public static function update(object $obj, $dados);
+    public static function update(object $obj, array $dados);
 }
