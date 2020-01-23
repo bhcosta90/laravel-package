@@ -20,10 +20,5 @@
             "BRCas\\Laravel\\": "./src/",
             "BRCas\\LaravelTests\\": "./tests"
         }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            
-        }
     }
 }
