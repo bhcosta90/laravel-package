@@ -16,7 +16,7 @@ use Exception;
 abstract class CrudController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
+
     protected abstract function model();
 
     protected abstract function service();
@@ -27,9 +27,9 @@ abstract class CrudController extends BaseController
 
     public function index(Request $request)
     {
-        if(is_callable($this->service().'::index')){
+        if (is_callable($this->service() . '::index')) {
             return $this->service()::index($request->all());
-        }else{
+        } else {
             return $this->model()::all();
         }
     }
@@ -45,10 +45,22 @@ abstract class CrudController extends BaseController
     {
         $obj = $this->getObject($id);
 
-        if(is_callable($this->service().'::show')){
+        if (is_callable($this->service() . '::show')) {
             return $this->service()::show($obj);
-        }else{
+        } else {
             return $obj;
+        }
+    }
+
+    private function retornoStoreUpdate($obj)
+    {
+        switch (get_class($obj)) {
+            case 'Illuminate\Http\JsonResponse':
+                return $obj;
+                break;
+            default:
+                $obj->refresh();
+                return $obj;
         }
     }
 
@@ -56,30 +68,31 @@ abstract class CrudController extends BaseController
     {
         $service = $this->service();
         $obj = (new $service);
-        if(in_array(ServiceContract::class, class_implements($obj)) === false){
-            throw new Exception($this->service(). " don't implements ".ServiceContract::class);
+        if (in_array(ServiceContract::class, class_implements($obj)) === false) {
+            throw new Exception($this->service() . " don't implements " . ServiceContract::class);
         }
-        
+
         $dataSend = $this->validate($request, $this->rulesPost($request->all()));
-        $obj = DB::transaction(function() use($dataSend){
+        $obj = DB::transaction(function () use ($dataSend) {
             return $this->service()::store($dataSend);
         });
-        $obj->refresh();
-        return $obj;
+
+        return $this->retornoStoreUpdate($obj);
     }
 
     public function update(Request $request, $id)
     {
         $dataSend = $this->validate($request, $this->rulesPut($request->all()));
-        $obj = DB::transaction(function() use($id, $dataSend){
+        $obj = DB::transaction(function () use ($id, $dataSend) {
             $obj = $this->getObject($id);
             return $this->service()::update($obj, $dataSend);
         });
 
-        return $obj;
+        return $this->retornoStoreUpdate($obj);
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         return DB::transaction(function () use ($id) {
             $obj = $this->getObject($id);
             if (is_callable($this->service() . '::destroy')) {
