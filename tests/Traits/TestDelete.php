@@ -3,6 +3,8 @@ namespace BRCas\LaravelTests\Traits;
 
 trait TestDelete
 {
+    protected abstract function model();
+    
     protected abstract function routeDelete();
     
     public function assertDelete($id){
