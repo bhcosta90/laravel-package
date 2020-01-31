@@ -17,7 +17,4 @@ abstract class ModelUuid extends EloquentModel
     protected $hidden = [
         'deleted_at'
     ];
-    protected $casts = [
-        'id' => 'string'
-    ];
 }
