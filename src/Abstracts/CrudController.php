@@ -3,6 +3,7 @@
 namespace BRCas\Laravel\Abstracts;
 
 use BRCas\Laravel\Contracts\ServiceContract;
+use BRCas\Laravel\Traits\Services\BaseService;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,11 +16,9 @@ use Exception;
 
 abstract class CrudController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, BaseService;
 
     protected abstract function model();
-
-    protected abstract function service();
 
     protected abstract function rulesPost(array $data);
 
@@ -27,11 +26,7 @@ abstract class CrudController extends BaseController
 
     public function index(Request $request)
     {
-        if (is_callable($this->service() . '::index')) {
-            return $this->service()::index($request->all());
-        } else {
-            return $this->model()::all();
-        }
+        return $this->databaseList($request->all());
     }
 
     private function getObject($id)
@@ -66,15 +61,10 @@ abstract class CrudController extends BaseController
 
     public function store(Request $request)
     {
-        $service = $this->service();
-        $obj = (new $service);
-        if (in_array(ServiceContract::class, class_implements($obj)) === false) {
-            throw new Exception($this->service() . " don't implements " . ServiceContract::class);
-        }
-
         $dataSend = $this->validate($request, $this->rulesPost($request->all()));
         $obj = DB::transaction(function () use ($dataSend) {
-            return $this->service()::store($dataSend);
+            $obj = $this->model()::create($dataSend);
+            return $this->databaseCreated($obj, $dataSend);
         });
 
         return $this->retornoStoreUpdate($obj);
@@ -85,7 +75,9 @@ abstract class CrudController extends BaseController
         $dataSend = $this->validate($request, $this->rulesPut($request->all()));
         $obj = DB::transaction(function () use ($id, $dataSend) {
             $obj = $this->getObject($id);
-            return $this->service()::update($obj, $dataSend);
+            $obj->update($dataSend);
+            $obj->save();
+            return $this->databaseUpdated($obj, $dataSend);
         });
 
         return $this->retornoStoreUpdate($obj);
@@ -95,12 +87,8 @@ abstract class CrudController extends BaseController
     {
         return DB::transaction(function () use ($id) {
             $obj = $this->getObject($id);
-            if (is_callable($this->service() . '::destroy')) {
-                return $this->service()::destroy($obj);
-            } else {
-                $obj->delete();
-                return response()->noContent();
-            }
+            $this->databaseDestroy($obj);
+            return response()->noContent();
         });
     }
 }

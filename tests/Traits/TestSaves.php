@@ -23,8 +23,10 @@ trait TestSaves{
         $model = $this->model();
         $table = (new $model())->getTable();
         
-        foreach ($this->removeArrayData() as $rs) {
-            unset($testDatabase[$rs]);
+        if(method_exists($this, 'removeArrayData')){
+            foreach ($this->removeArrayData() as $rs) {
+                unset($testDatabase[$rs]);
+            }
         }
 
         $this->assertDatabaseHas($table, ["id" => $response->json('id')] + $testDatabase);
@@ -44,8 +46,10 @@ trait TestSaves{
         $model = $this->model();
         $table = (new $model())->getTable();
 
-        foreach ($this->removeArrayData() as $rs) {
-            unset($testDatabase[$rs]);
+        if(method_exists($this, 'removeArrayData')){
+            foreach ($this->removeArrayData() as $rs) {
+                unset($testDatabase[$rs]);
+            }
         }
         
         $this->assertDatabaseHas($table, ["id" => $response->json('id')] + $testDatabase);

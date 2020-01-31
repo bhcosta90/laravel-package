@@ -5,19 +5,15 @@ namespace BRCas\Laravel\Abstracts;
 
 use BRCas\Laravel\Traits\Models\Uuid;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 abstract class ModelUuid extends EloquentModel
 {
-    use SoftDeletes, Uuid;
+    use Uuid;
 
     public $incrementing = false;
     protected $keyType = 'string';
     protected $dates = ['deleted_at'];
     protected $hidden = [
         'deleted_at'
-    ];
-    protected $casts = [
-        'id' => 'string'
     ];
 }
