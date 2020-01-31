@@ -40,8 +40,8 @@ abstract class CrudController extends BaseController
     {
         $obj = $this->getObject($id);
 
-        if (is_callable($this->service() . '::show')) {
-            return $this->service()::show($obj);
+        if (method_exists($this, "databaseShow")) {
+            return $this->databaseShow($obj);
         } else {
             return $obj;
         }
