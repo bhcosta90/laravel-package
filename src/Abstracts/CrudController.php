@@ -2,7 +2,6 @@
 
 namespace BRCas\Laravel\Abstracts;
 
-use BRCas\Laravel\Contracts\ServiceContract;
 use BRCas\Laravel\Traits\Services\BaseService;
 use Illuminate\Http\Request;
 
@@ -56,10 +55,6 @@ abstract class CrudController extends BaseController
     {
         $obj = $this->getObject($id);
 
-        if (method_exists($this, "databaseShow")) {
-            $obj = $this->databaseShow($obj);
-        } 
-
         $resource = $this->resource();
         return new $resource($obj);
     }
@@ -81,7 +76,7 @@ abstract class CrudController extends BaseController
         $dataSend = $this->validate($request, $this->rulesPost($request->all()));
         $obj = DB::transaction(function () use ($dataSend) {
             $obj = $this->model()::create($dataSend);
-            return $this->databaseCreated($obj, $dataSend);
+            return $obj;
         });
 
         $resource = $this->resource();
@@ -95,7 +90,7 @@ abstract class CrudController extends BaseController
             $obj = $this->getObject($id);
             $obj->update($dataSend);
             $obj->save();
-            return $this->databaseUpdated($obj, $dataSend);
+            return $obj;
         });
 
         $resource = $this->resource();
@@ -106,7 +101,7 @@ abstract class CrudController extends BaseController
     {
         return DB::transaction(function () use ($id) {
             $obj = $this->getObject($id);
-            $this->databaseDestroy($obj);
+            $obj->delete();
             return response()->noContent();
         });
     }
