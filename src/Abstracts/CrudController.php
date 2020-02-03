@@ -2,7 +2,6 @@
 
 namespace BRCas\Laravel\Abstracts;
 
-use BRCas\Laravel\Traits\Services\BaseService;
 use Illuminate\Http\Request;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,7 +15,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class CrudController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, BaseService;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $paginateSize = 15;
 
