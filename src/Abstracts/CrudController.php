@@ -20,6 +20,8 @@ abstract class CrudController extends BaseController
 
     protected abstract function model();
 
+    protected abstract function resource();
+
     protected abstract function rulesPost(array $data);
 
     protected abstract function rulesPut(array $data);
