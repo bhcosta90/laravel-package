@@ -13,14 +13,19 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class CrudController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, BaseService;
 
+    protected $paginateSize = 15;
+
     protected abstract function model();
 
     protected abstract function resource();
+
+    protected abstract function resourceCollection();
 
     protected abstract function rulesPost(array $data);
 
@@ -29,7 +34,15 @@ abstract class CrudController extends BaseController
     public function index(Request $request)
     {
         $resource = $this->resource();
-        return new $resource($this->databaseList($request->all()));
+        $data = !$this->paginateSize 
+            ? $request->all() 
+            : $this->model()::paginate($this->paginateSize);
+
+        $resourceCollectionClass = $this->resourceCollection();
+        $refClass = new \ReflectionClass($resourceCollectionClass);
+        return $refClass->isSubclassOf(ResourceCollection::class) 
+            ? new $resourceCollectionClass($data) 
+            : $resourceCollectionClass::collection($data);
     }
 
     private function getObject($id)
