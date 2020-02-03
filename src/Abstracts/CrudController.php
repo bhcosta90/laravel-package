@@ -69,7 +69,8 @@ abstract class CrudController extends BaseController
             return $this->databaseCreated($obj, $dataSend);
         });
 
-        return $this->retornoStoreUpdate($obj);
+        $resource = $this->resource();
+        return new $resource($this->retornoStoreUpdate($obj));
     }
 
     public function update(Request $request, $id)
@@ -82,7 +83,8 @@ abstract class CrudController extends BaseController
             return $this->databaseUpdated($obj, $dataSend);
         });
 
-        return $this->retornoStoreUpdate($obj);
+        $resource = $this->resource();
+        return new $resource($this->retornoStoreUpdate($obj));
     }
 
     public function destroy($id)
