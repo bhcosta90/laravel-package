@@ -44,10 +44,11 @@ abstract class CrudController extends BaseController
         $obj = $this->getObject($id);
 
         if (method_exists($this, "databaseShow")) {
-            return $this->databaseShow($obj);
-        } else {
-            return $obj;
-        }
+            $obj = $this->databaseShow($obj);
+        } 
+
+        $resource = $this->resource();
+        return new $resource($obj);
     }
 
     private function retornoStoreUpdate($obj)
