@@ -28,7 +28,8 @@ abstract class CrudController extends BaseController
 
     public function index(Request $request)
     {
-        return $this->databaseList($request->all());
+        $resource = $this->resource();
+        return new $resource($this->databaseList($request->all()));
     }
 
     private function getObject($id)
