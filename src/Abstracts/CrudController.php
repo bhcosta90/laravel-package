@@ -48,6 +48,32 @@ abstract class CrudController extends BaseController
         if (method_exists($obj, $routeTransformFunctionName)) {
             $obj = $obj->$routeTransformFunctionName($request->all());
         }
+
+        $requestArray = $request->all();
+
+        foreach($requestArray as $k => $data){
+            $dados = explode('_', $k);
+            if(count($dados) > 1){
+                $type = array_shift($dados);
+                $tabela = array_shift($dados);
+                $field = implode('_', $dados);
+                if($data){
+                    switch($type){
+                        case 'like':
+                            $obj->where("$tabela.$field", "like", "$data");
+                            break;
+
+                        case 'equal':
+                            $obj->where("$tabela.$field", "=", "$data");
+                            break;
+                    }
+                }
+            }
+        }
+
+        if ($request->get('sql') == true) {
+            print $obj->toRawSql() and exit;
+        }
         
         $data = !$this->paginateSize 
             ? $obj->all() 
