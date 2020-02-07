@@ -8,9 +8,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-use Exception;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class CrudController extends BaseController
@@ -31,10 +30,28 @@ abstract class CrudController extends BaseController
 
     public function index(Request $request)
     {
-        $resource = $this->resource();
+        $model = $this->model();
+        $obj = new $model;
+        $routeName = Route::currentRouteName();
+        if($request->get('filter') == ''){
+            $routeReplacePoint = str_replace('.', ' ', $routeName);
+            $routeTransformCamelCase = ucwords($routeReplacePoint);
+            $routeTransformFunction = str_replace(' ', '', $routeTransformCamelCase);
+            $routeTransformFunctionName = "query$routeTransformFunction";
+            if($request->get('router') == true){
+                print $routeTransformFunctionName;exit;
+            }
+        }else{
+            $routeTransformFunctionName = "query". $request->get('filter');
+        }
+
+        if (method_exists($obj, $routeTransformFunctionName)) {
+            $obj = $obj->$routeTransformFunctionName($request->all());
+        }
+        
         $data = !$this->paginateSize 
-            ? $request->all() 
-            : $this->model()::paginate($this->paginateSize);
+            ? $obj->all() 
+            : $obj->paginate($this->paginateSize);
 
         $resourceCollectionClass = $this->resourceCollection();
         $refClass = new \ReflectionClass($resourceCollectionClass);
@@ -47,7 +64,9 @@ abstract class CrudController extends BaseController
     {
         $model = $this->model();
         $keyName = (new $model)->getRouteKeyName();
-        return $this->model()::where($keyName, $id)->firstOrFail();
+        $table = (new $model)->getTable();
+
+        return $this->model()::where("$table.$keyName", $id)->firstOrFail();
     }
 
     public function show($id)
