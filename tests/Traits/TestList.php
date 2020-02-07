@@ -18,6 +18,7 @@ trait TestList{
     protected function assertIndex($data, array $sendData = []): TestResponse
     {
         $response = $this->json('GET', $this->routeIndex(), $sendData);
+        $response->assertStatus(200);
         $response->assertJson(["data" => [$data]]);
         return $response;
     }
@@ -25,6 +26,7 @@ trait TestList{
     protected function assertShow($data, array $sendData = []): TestResponse
     {
         $response = $this->json('GET', $this->routeShow(), $sendData);
+        $response->assertStatus(200);
         $response->assertJson(["data" => $data]);
         return $response;
     }
