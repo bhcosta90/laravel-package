@@ -31,6 +31,12 @@ abstract class CrudController extends BaseController
     public function index(Request $request)
     {
         try{
+            $dataSend = $request->all();
+
+            if(method_exists($this, 'rulesIndex')){
+                $dataSend = $this->validate($request, $this->rulesIndex());
+            }
+
             $routeName = Route::currentRouteName();
             if ($request->get('route') == true) {
                 print $routeName and exit;
@@ -56,9 +62,7 @@ abstract class CrudController extends BaseController
                 $obj = $obj->$routeTransformFunctionName($request->all());
             }
 
-            $requestArray = $request->all();
-            
-            foreach ($requestArray as $k => $data) {
+            foreach ($dataSend as $k => $data) {
                 $dados = explode('_', $k);
                 if (count($dados) > 1) {
                     $type = array_shift($dados);
