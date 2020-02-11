@@ -30,9 +30,14 @@ abstract class CrudController extends BaseController
 
     public function index(Request $request)
     {
+        $routeName = Route::currentRouteName();
+        if ($request->get('route') == true) {
+            print $routeName and exit;
+        }
+
         $model = $this->model();
         $obj = new $model;
-        $routeName = Route::currentRouteName();
+
         if($request->get('filter') == ''){
             $routeReplacePoint = str_replace('.', ' ', $routeName);
             $routeTransformCamelCase = ucwords($routeReplacePoint);
