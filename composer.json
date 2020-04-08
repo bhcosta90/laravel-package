@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "illuminate/database": "^7.0",
+        "illuminate/database": "^6.0",
         "ramsey/uuid": "^3.9"
     },
     "require-dev": {
