@@ -1,22 +1,16 @@
 <?php
 
-namespace BRCas\Laravel\Traits;
+namespace BRCas\Traits\Queries;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Route;
 
-trait QueryIndex
+trait Index
 {
     protected $paginateSize = 30;
 
-    protected abstract function resource();
-
-    protected abstract function resourceCollection();
-
-    protected abstract function model();
-
-    public function listQuery(Request $request)
+    public function list(Request $request)
     {
         $dataSend = $request->all();
 
@@ -25,10 +19,6 @@ trait QueryIndex
         }
 
         $routeName = Route::currentRouteName();
-        if ($request->get('route') == true) {
-            print $routeName and exit;
-        }
-
         $model = $this->model();
         $obj = new $model;
 
@@ -43,6 +33,10 @@ trait QueryIndex
             }
         } else {
             $routeTransformFunctionName = "query" . $request->get('filter');
+        }
+
+        if ($request->get('route') == true) {
+            print $routeTransformFunctionName and exit;
         }
 
         if (method_exists($obj, $routeTransformFunctionName)) {
@@ -83,4 +77,10 @@ trait QueryIndex
             ? new $resourceCollectionClass($data)
             : $resourceCollectionClass::collection($data);
     }
+
+    protected abstract function model();
+
+    protected abstract function resourceCollection();
+
+    protected abstract function resource();
 }
