@@ -29,7 +29,7 @@ trait ControllerDestroy
                 $obj->delete();
             }
 
-            $this->request->session()->flash('success', __('Registro removido com sucesso'));
+            $this->request->session()->flash('success', __('Registro deletado com sucesso'));
             DB::commit();
             return redirect($this->route());
         });

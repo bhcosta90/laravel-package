@@ -28,7 +28,7 @@ trait ApiUpdate
 
             $data = [
                 "status" => 200,
-                "msg" => __('Registration updated successfully')
+                "msg" => __('Registro atualizado com sucesso')
             ];
 
             if (method_exists($this, 'route')) {
@@ -59,11 +59,6 @@ trait ApiUpdate
             }
 
             DB::commit();
-
-            $data = [
-                "status" => 200,
-                "msg" => __('Registration updated successfully')
-            ];
 
             if (method_exists($this, 'route')) {
                 $data += [

@@ -24,7 +24,7 @@ trait ApiStore
 
             $data = [
                 "status" => 201,
-                "msg" => __('Successful registration')
+                "msg" => __('Registrado com sucesso')
             ];
 
             if (method_exists($this, 'route')) {
