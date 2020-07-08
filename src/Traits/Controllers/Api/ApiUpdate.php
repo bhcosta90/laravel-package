@@ -1,23 +1,20 @@
 <?php
 
-namespace BRCas\Laravel\Traits\Controllers\Api;
+namespace BRCas\Traits\Controllers\Api;
 
-use BRCas\Laravel\Traits\Queries\Save;
-use BRCas\Laravel\Traits\Queries\ExecuteApi;
-use Exception;
+use BRCas\Traits\Queries\Save;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 trait ApiUpdate
 {
-    use ExecuteApi;
-
     public function update(Request $request, $id)
     {
         $this->request = $request;
 
         return $this->executeAction($request, function () use ($id) {
+            $objClass = $this->model();
+
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'find')) {
@@ -25,14 +22,13 @@ trait ApiUpdate
                 }
             }
 
-            $objClass = $this->model();
             if (empty($obj)) {
                 $obj = $objClass::findOrFail($id);
             }
 
             $data = [
                 "status" => 200,
-                "msg" => __('Successful registration')
+                "msg" => __('Registration updated successfully')
             ];
 
             if (method_exists($this, 'route')) {
@@ -56,7 +52,7 @@ trait ApiUpdate
                 }
             }
 
-            $obj->update($data);
+            $obj->update($dataSend);
 
             if (method_exists($this, 'postUpdated')) {
                 $this->postUpdated($obj);
@@ -65,8 +61,8 @@ trait ApiUpdate
             DB::commit();
 
             $data = [
-                "status" => 201,
-                "msg" => __('Successful registration')
+                "status" => 200,
+                "msg" => __('Registration updated successfully')
             ];
 
             if (method_exists($this, 'route')) {

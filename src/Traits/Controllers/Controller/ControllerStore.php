@@ -2,18 +2,13 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Controller;
 
-use BRCas\Laravel\Traits\Queries\ExecuteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 trait ControllerStore
 {
 
-    use ExecuteController;
-
     public abstract function create();
-
-    public abstract function route();
 
     public function store(Request $request)
     {
@@ -51,6 +46,8 @@ trait ControllerStore
     protected abstract function rulesPost();
 
     protected abstract function model();
+
+    public abstract function route();
 
     protected abstract function resource();
 

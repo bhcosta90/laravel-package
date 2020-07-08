@@ -2,15 +2,11 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
-use BRCas\Laravel\Traits\Queries\ExecuteApi;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 trait ApiStore
 {
-    use ExecuteApi;
 
     public function store(Request $request)
     {
@@ -40,12 +36,12 @@ trait ApiStore
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
-                    $obj = $objService::store(new $model, $dataSend);
+                    $obj = $objService::store($dataSend);
                     DB::commit();
                     return (new $resource($obj))
                         ->additional($data)
                         ->response()
-                        ->setStatusCode(200);
+                        ->setStatusCode(201);
                 }
             }
 
@@ -60,7 +56,7 @@ trait ApiStore
             return (new $resource($obj))
                 ->additional($data)
                 ->response()
-                ->setStatusCode(200);
+                ->setStatusCode(201);
         });
     }
 

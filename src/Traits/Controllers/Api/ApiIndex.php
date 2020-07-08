@@ -3,7 +3,6 @@
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
 use BRCas\Laravel\Traits\Queries\Index;
-use Illuminate\Http\Request;
 
 trait ApiIndex
 {

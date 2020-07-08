@@ -3,16 +3,12 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
-use BRCas\Laravel\Traits\Queries\ExecuteApi;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-trait ApiDelete
+trait ApiDestroy
 {
-    use ExecuteApi;
-
-    public function delete(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         return $this->executeAction($request, function () use ($id) {
             if (method_exists($this, 'service')) {

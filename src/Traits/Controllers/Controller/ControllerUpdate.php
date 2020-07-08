@@ -2,18 +2,13 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Controller;
 
-use BRCas\Laravel\Traits\Queries\ExecuteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 trait ControllerUpdate
 {
 
-    use ExecuteController;
-
     public abstract function edit();
-
-    public abstract function route();
 
     public function update(Request $request, $id)
     {
@@ -61,6 +56,8 @@ trait ControllerUpdate
     protected abstract function model();
 
     protected abstract function rulesPut();
+
+    public abstract function route();
 
     protected abstract function resource();
 }
