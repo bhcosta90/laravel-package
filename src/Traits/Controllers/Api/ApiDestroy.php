@@ -1,6 +1,5 @@
 <?php
 
-
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
 use Illuminate\Http\Request;
