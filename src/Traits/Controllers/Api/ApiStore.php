@@ -47,10 +47,6 @@ trait ApiStore
 
             $obj = $model::create($dataSend);
 
-            if (method_exists($this, 'postCreated')) {
-                $this->postCreated($obj);
-            }
-
             DB::commit();
 
             return (new $resource($obj))

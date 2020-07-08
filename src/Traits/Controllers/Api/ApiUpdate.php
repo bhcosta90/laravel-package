@@ -53,11 +53,7 @@ trait ApiUpdate
             }
 
             $obj->update($dataSend);
-
-            if (method_exists($this, 'postUpdated')) {
-                $this->postUpdated($obj);
-            }
-
+            
             DB::commit();
 
             if (method_exists($this, 'route')) {
