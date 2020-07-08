@@ -52,11 +52,11 @@ trait Index
                 if ($data) {
                     switch ($type) {
                         case 'like':
-                            $obj = $obj->where("$tabela.$field", "like", "$data%");
+                            $obj = $obj->where("$tabela", "like", "$data%");
                             break;
 
                         case 'equal':
-                            $obj = $obj->where("$tabela.$field", "=", "$data");
+                            $obj = $obj->where("$tabela", "=", "$data");
                             break;
                     }
                 }
