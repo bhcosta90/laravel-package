@@ -47,8 +47,7 @@ trait Index
             $dados = explode('_', $k);
             if (count($dados) > 1) {
                 $type = array_shift($dados);
-                $tabela = array_shift($dados);
-                $field = implode('_', $dados);
+                $tabela = str_replace('|', '.', array_shift($dados));
                 if ($data) {
                     switch ($type) {
                         case 'like':
