@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-trait ExecuteApi
+trait ApiExecute
 {
     protected function executeAction($request, $funcao)
     {

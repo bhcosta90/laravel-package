@@ -4,9 +4,8 @@ namespace BRCas\Laravel\Traits\Queries;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
-trait ExecuteController
+trait ControllerExecute
 {
     protected function executeAction($request, $funcao)
     {
