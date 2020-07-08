@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 trait ApiUpdate
 {
+    
     public function update(Request $request, $id)
     {
         $this->request = $request;

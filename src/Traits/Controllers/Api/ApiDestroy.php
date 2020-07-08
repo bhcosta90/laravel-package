@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 trait ApiDestroy
 {
+    
     public function destroy(Request $request, $id)
     {
         return $this->executeAction($request, function () use ($id) {

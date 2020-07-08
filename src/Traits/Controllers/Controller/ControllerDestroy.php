@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 trait ControllerDestroy
 {
+    
     public function destroy(Request $request, $id)
     {
         return $this->executeAction($request, function () use ($id) {
