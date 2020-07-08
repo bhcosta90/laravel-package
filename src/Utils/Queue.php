@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BRCas\Utils;
+namespace BRCas\Laravel\Utils;
 
 use Illuminate\Support\Facades\Log;
 

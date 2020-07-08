@@ -1,9 +1,9 @@
 <?php
 
 
-namespace BRCas\Traits\Controllers\Api;
+namespace BRCas\Laravel\Traits\Controllers\Api;
 
-use BRCas\Traits\Queries\ExecuteApi;
+use BRCas\Laravel\Traits\Queries\ExecuteApi;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

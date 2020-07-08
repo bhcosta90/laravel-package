@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BRCas\Http\Middleware;
+namespace BRCas\Laravel\Http\Middleware;
 
 use Closure;
 

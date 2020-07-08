@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BRCas\Traits\Entities;
+namespace BRCas\Laravel\Traits\Entities;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
@@ -22,7 +22,7 @@ trait Uuid
 
     public static function getUuid()
     {
-        return (string)RamseyUuid::uuid4();
+        return (string) RamseyUuid::uuid4();
     }
 
     public function getKeyType()

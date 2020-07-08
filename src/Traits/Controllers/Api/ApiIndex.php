@@ -1,8 +1,8 @@
 <?php
 
-namespace BRCas\Traits\Controllers\Api;
+namespace BRCas\Laravel\Traits\Controllers\Api;
 
-use BRCas\Traits\Queries\Index;
+use BRCas\Laravel\Traits\Queries\Index;
 use Illuminate\Http\Request;
 
 trait ApiIndex

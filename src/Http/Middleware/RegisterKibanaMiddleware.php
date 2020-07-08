@@ -1,8 +1,8 @@
 <?php
 
-namespace BRCas\Http\Middleware;
+namespace BRCas\Laravel\Http\Middleware;
 
-use BRCas\Services\KibanaServices;
+use BRCas\Laravel\Services\KibanaServices;
 use Closure;
 use Illuminate\Http\JsonResponse;
 

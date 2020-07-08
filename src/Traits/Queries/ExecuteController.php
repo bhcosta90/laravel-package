@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Traits\Queries;
+namespace BRCas\Laravel\Traits\Queries;
 
 use Exception;
 use Illuminate\Support\Facades\DB;

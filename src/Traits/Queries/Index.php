@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Traits\Queries;
+namespace BRCas\Laravel\Traits\Queries;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;

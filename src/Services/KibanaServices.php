@@ -1,9 +1,8 @@
 <?php
 
-namespace BRCas\Services;
+namespace BRCas\Laravel\Services;
 
-use App\Jobs\System\RegisterLogJob;
-use BRCas\Traits\Entities\Uuid;
+use BRCas\Laravel\Traits\Entities\Uuid;
 
 class KibanaServices
 {
@@ -66,9 +65,8 @@ class KibanaServices
         ];
 
         self::truncar(self::$data);
-        dispatch(new RegisterLogJob(self::$data));
 
-        return true;
+        return self::$data;
     }
 
     public static function truncar(&$data)

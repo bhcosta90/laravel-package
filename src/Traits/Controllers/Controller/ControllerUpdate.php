@@ -1,8 +1,8 @@
 <?php
 
-namespace BRCas\Traits\Controllers\Controller;
+namespace BRCas\Laravel\Traits\Controllers\Controller;
 
-use BRCas\Traits\Queries\ExecuteController;
+use BRCas\Laravel\Traits\Queries\ExecuteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

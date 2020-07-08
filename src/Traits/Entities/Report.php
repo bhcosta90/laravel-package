@@ -1,9 +1,8 @@
 <?php
 
 
-namespace BRCas\Traits\Entities;
+namespace BRCas\Laravel\Traits\Entities;
 
-use App\Jobs\System\ReportJob;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait Report
