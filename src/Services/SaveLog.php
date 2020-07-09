@@ -4,7 +4,7 @@ namespace BRCas\Laravel\Services;
 
 use BRCas\Laravel\Traits\Entities\Uuid;
 
-class KibanaServices
+class SaveLog
 {
     use Uuid;
 
