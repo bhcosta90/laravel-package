@@ -21,7 +21,7 @@ trait ControllerExecute
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()
                 ->back()
-                ->withErrors('Erro na base de dados')
+                ->withErrors($e->getMessage())
                 ->withInput();
         } catch (\Exception $e) {
             \Log::error($e);
