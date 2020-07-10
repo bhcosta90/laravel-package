@@ -21,6 +21,11 @@ trait ApiExecute
                 'success' => false,
                 'message' => sprintf("%s | %s | %s", $e->getLine(), $e->getFile(), $e->getMessage()),
             ])->setStatusCode(400);
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            return response([
+                'success' => false,
+                'errors' => $e->getMessage(),
         } catch (ValidationException $e) {
             DB::rollback();
             return response([
