@@ -19,6 +19,7 @@ trait ControllerExecute
             return redirect()
                 ->back();
         } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
             return redirect()
                 ->back()
                 ->withErrors($e->getMessage())
