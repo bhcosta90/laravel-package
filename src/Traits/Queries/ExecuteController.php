@@ -5,7 +5,7 @@ namespace BRCas\Laravel\Traits\Queries;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-trait ControllerExecute
+trait ExecuteController
 {
     protected function executeAction($request, $funcao)
     {
