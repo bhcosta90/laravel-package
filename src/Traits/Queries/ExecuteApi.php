@@ -26,7 +26,7 @@ trait ExecuteApi
             return response([
                 'success' => false,
                 'errors' => $e->getMessage(),
-            ]);
+            ])->setStatusCode(400);
         } catch (ValidationException $e) {
             DB::rollback();
             return response([
