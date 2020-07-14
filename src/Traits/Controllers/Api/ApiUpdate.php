@@ -45,10 +45,7 @@ trait ApiUpdate
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
                     DB::commit();
-                    return (new $resource($obj))
-                        ->additional($data)
-                        ->response()
-                        ->setStatusCode(200);
+                    return $obj;
                 }
             }
 
