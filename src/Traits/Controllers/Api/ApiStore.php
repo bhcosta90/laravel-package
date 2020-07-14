@@ -38,10 +38,7 @@ trait ApiStore
                 if (method_exists($objService, 'store')) {
                     $obj = $objService::store($dataSend);
                     DB::commit();
-                    return (new $resource($obj))
-                        ->additional($data)
-                        ->response()
-                        ->setStatusCode(201);
+                    return $obj;
                 }
             }
 
