@@ -13,6 +13,8 @@ trait ApiUpdate
         DB::beginTransaction();
 
         $this->request = $request;
+        
+        DB::beginTransaction();
 
         return $this->executeAction($request, function () use ($id) {
             $objClass = $this->model();

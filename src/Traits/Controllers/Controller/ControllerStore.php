@@ -12,6 +12,10 @@ trait ControllerStore
 
     public function store(Request $request)
     {
+        DB::beginTransaction();
+        
+        $this->request = $request;
+        
         return $this->executeAction($request, function () {
             $data = $this->validate($this->request, $this->rulesPost());
             $model = $this->model();
@@ -25,10 +29,6 @@ trait ControllerStore
                     $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
                     return redirect($this->route());
                 }
-            }
-
-            if (method_exists($this, 'serializeArray')) {
-                $data = $this->serializeArray($data);
             }
 
             $obj = $model::create($data);

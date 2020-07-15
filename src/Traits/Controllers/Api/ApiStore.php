@@ -10,6 +10,8 @@ trait ApiStore
 
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $this->request = $request;
 
         return $this->executeAction($request, function () {
