@@ -11,6 +11,10 @@ trait ControllerDestroy
     
     public function destroy(Request $request, $id)
     {
+        DB::beginTransaction();
+        
+        $this->request = $request;
+        
         return $this->executeAction($request, function () use ($id) {
             $obj = null;
 
