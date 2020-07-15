@@ -29,7 +29,7 @@ trait ApiDestroy
                 if (method_exists($this, 'service')) {
                     $objService = call_user_func_array([$this, 'service'], []);
                     if (method_exists($objService, 'destroy')) {
-                        $objService::destroy($obj);
+                        $objService::destroy($this->object);
                         DB::commit();
                         return response("")
                             ->setStatusCode(204);
