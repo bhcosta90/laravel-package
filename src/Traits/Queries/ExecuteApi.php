@@ -14,7 +14,9 @@ trait ExecuteApi
         $this->request = $request;
         DB::beginTransaction();
         try {
-            return $funcao();
+            $ret = $funcao();
+            DB::commit();
+            return $ret;
         } catch (ErrorException $e) {
             DB::rollback();
             return response([

@@ -12,7 +12,9 @@ trait ExecuteController
         $this->request = $request;
         DB::beginTransaction();
         try {
-            return $funcao();
+            $ret = $funcao();
+            DB::commit();
+            return $ret;
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             $request->session()->flash('error_validate', json_encode($e->errors()));
