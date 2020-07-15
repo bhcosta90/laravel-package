@@ -12,7 +12,6 @@ trait ControllerStore
 
     public function store(Request $request)
     {
-        
         $this->request = $request;
         
         return $this->executeAction($request, function () {

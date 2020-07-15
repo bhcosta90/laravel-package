@@ -10,6 +10,8 @@ trait ApiDestroy
     
     public function destroy(Request $request, $id)
     {
+        $this->request = $request;
+        
         return $this->executeAction($request, function () use ($id) {
             $obj = null;
             
