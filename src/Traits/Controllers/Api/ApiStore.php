@@ -10,8 +10,6 @@ trait ApiStore
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
-
         $this->request = $request;
 
         return $this->executeAction($request, function () {
@@ -39,14 +37,11 @@ trait ApiStore
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
                     $obj = $objService::store($dataSend);
-                    DB::commit();
                     return $obj;
                 }
             }
 
             $obj = $model::create($dataSend);
-
-            DB::commit();
 
             return (new $resource($obj))
                 ->additional($data)

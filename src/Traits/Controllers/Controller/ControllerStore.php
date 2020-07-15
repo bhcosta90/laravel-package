@@ -12,7 +12,6 @@ trait ControllerStore
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
         
         $this->request = $request;
         
@@ -25,7 +24,6 @@ trait ControllerStore
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
                     $objService::store($data);
-                    DB::commit();
                     $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
                     return redirect($this->route());
                 }
@@ -37,7 +35,6 @@ trait ControllerStore
                 $this->postCreated($obj);
             }
 
-            DB::commit();
             $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
             return redirect($this->route());
         });

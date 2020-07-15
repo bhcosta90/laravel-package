@@ -10,12 +10,8 @@ trait ApiUpdate
     
     public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-
         $this->request = $request;
         
-        DB::beginTransaction();
-
         return $this->executeAction($request, function () use ($id) {
             $objClass = $this->model();
 
@@ -48,15 +44,12 @@ trait ApiUpdate
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
-                    DB::commit();
                     return $obj;
                 }
             }
 
             $obj->update($dataSend);
             
-            DB::commit();
-
             if (method_exists($this, 'route')) {
                 $data += [
                     'route' => $this->route()

@@ -11,8 +11,6 @@ trait ControllerDestroy
     
     public function destroy(Request $request, $id)
     {
-        DB::beginTransaction();
-        
         $this->request = $request;
         
         return $this->executeAction($request, function () use ($id) {
@@ -36,7 +34,6 @@ trait ControllerDestroy
                     if (method_exists($objService, 'destroy')) {
                         $objService::destroy($obj);
                         $this->request->session()->flash('success', __('Registro deletado com sucesso'));
-                        DB::commit();
                         return redirect($this->route());
                     }
                 }
@@ -44,7 +41,6 @@ trait ControllerDestroy
             }
 
             $this->request->session()->flash('success', __('Registro deletado com sucesso'));
-            DB::commit();
             return redirect($this->route());
         });
     }

@@ -12,8 +12,6 @@ trait ControllerUpdate
 
     public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-        
         $this->request = $request;
         
         return $this->executeAction($request, function () use ($id) {
@@ -35,23 +33,14 @@ trait ControllerUpdate
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $data);
-                    DB::commit();
                     $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
                     return redirect($this->route());
                 }
             }
 
-            if (method_exists($this, 'serializeArray')) {
-                $data = $this->serializeArray($data);
-            }
-
             $obj->update($data);
+            $obj->save();
 
-            if (method_exists($this, 'postUpdated')) {
-                $this->postUpdated($obj);
-            }
-
-            DB::commit();
             $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
             return redirect($this->route());
         });

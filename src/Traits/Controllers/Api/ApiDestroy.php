@@ -10,8 +10,6 @@ trait ApiDestroy
     
     public function destroy(Request $request, $id)
     {
-        DB::beginTransaction();
-
         return $this->executeAction($request, function () use ($id) {
             $obj = null;
             
@@ -32,7 +30,6 @@ trait ApiDestroy
                     $objService = call_user_func_array([$this, 'service'], []);
                     if (method_exists($objService, 'destroy')) {
                         $objService::destroy($obj);
-                        DB::commit();
                         return response("")
                             ->setStatusCode(204);
                     }
@@ -40,8 +37,6 @@ trait ApiDestroy
                 $obj->delete();
             }
             
-            DB::commit();
-
             return response("")
                 ->setStatusCode(204);
         });
