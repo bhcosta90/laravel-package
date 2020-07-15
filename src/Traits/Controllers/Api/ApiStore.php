@@ -3,7 +3,6 @@
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 trait ApiStore
 {
