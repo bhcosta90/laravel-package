@@ -10,6 +10,8 @@ trait ApiDestroy
     
     public function destroy(Request $request, $id)
     {
+        DB::beginTransaction();
+
         return $this->executeAction($request, function () use ($id) {
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
@@ -23,8 +25,6 @@ trait ApiDestroy
                 $this->object = $objClass::findOrFail($id);
             }
 
-            DB::beginTransaction();
-            
             if ($this->object != null) {
                 if (method_exists($this, 'service')) {
                     $objService = call_user_func_array([$this, 'service'], []);
