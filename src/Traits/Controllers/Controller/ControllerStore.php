@@ -31,10 +31,6 @@ trait ControllerStore
                 }
             }
 
-            if (method_exists($this, 'serializeArray')) {
-                $data = $this->serializeArray($data);
-            }
-
             $obj = $model::create($data);
 
             if (method_exists($this, 'postCreated')) {
