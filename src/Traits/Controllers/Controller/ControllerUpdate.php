@@ -12,6 +12,8 @@ trait ControllerUpdate
 
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
+        
         return $this->executeAction($request, function () use ($id) {
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
