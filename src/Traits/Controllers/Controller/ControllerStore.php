@@ -12,6 +12,8 @@ trait ControllerStore
 
     public function store(Request $request)
     {
+        DB::beginTransaction();
+        
         return $this->executeAction($request, function () {
             $data = $this->validate($this->request, $this->rulesPost());
             $model = $this->model();
