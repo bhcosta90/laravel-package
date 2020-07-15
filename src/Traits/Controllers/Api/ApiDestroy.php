@@ -24,9 +24,20 @@ trait ApiDestroy
             }
 
             DB::beginTransaction();
+            
             if ($this->object != null) {
+                if (method_exists($this, 'service')) {
+                    $objService = call_user_func_array([$this, 'service'], []);
+                    if (method_exists($objService, 'destroy')) {
+                        $objService::destroy($obj);
+                        DB::commit();
+                        return response("")
+                            ->setStatusCode(204);
+                    }
+                }
                 $this->object->delete();
             }
+            
             DB::commit();
 
             return response("")
