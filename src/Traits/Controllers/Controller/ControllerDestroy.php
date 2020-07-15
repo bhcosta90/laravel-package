@@ -31,7 +31,6 @@ trait ControllerDestroy
             }
 
             if ($obj != null) {
-                
                 if (method_exists($this, 'service')) {
                     $objService = call_user_func_array([$this, 'service'], []);
                     if (method_exists($objService, 'destroy')) {
@@ -41,7 +40,6 @@ trait ControllerDestroy
                         return redirect($this->route());
                     }
                 }
-                
                 $obj->delete();
             }
 
