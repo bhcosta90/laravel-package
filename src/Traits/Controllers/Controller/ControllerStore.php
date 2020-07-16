@@ -12,9 +12,17 @@ trait ControllerStore
     public function store(Request $request)
     {
         $this->request = $request;
-        
+
         return $this->executeAction($request, function () {
             $data = $this->validate($this->request, $this->rulesPost());
+
+            if (method_exists($this, 'serializeArray')) {
+                $ret = $this->serializeArray($data);
+                if (is_array($ret)) {
+                    $data = $ret;
+                }
+            }
+
             $model = $this->model();
             $objService = null;
 
@@ -45,5 +53,4 @@ trait ControllerStore
     public abstract function route();
 
     protected abstract function resource();
-
 }

@@ -12,7 +12,7 @@ trait ControllerUpdate
     public function update(Request $request, $id)
     {
         $this->request = $request;
-        
+
         return $this->executeAction($request, function () use ($id) {
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
@@ -27,6 +27,13 @@ trait ControllerUpdate
             }
 
             $data = $this->validate($this->request, $this->rulesPut());
+
+            if (method_exists($this, 'serializeArray')) {
+                $ret = $this->serializeArray($data);
+                if (is_array($ret)) {
+                    $data = $ret;
+                }
+            }
 
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);

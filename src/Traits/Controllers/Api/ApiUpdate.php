@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 trait ApiUpdate
 {
-    
+
     public function update(Request $request, $id)
     {
         $this->request = $request;
-        
+
         return $this->executeAction($request, function () use ($id) {
             $objClass = $this->model();
 
@@ -37,6 +37,14 @@ trait ApiUpdate
             }
 
             $dataSend = $this->validate($this->request, $this->rulesPut());
+
+            if (method_exists($this, 'serializeArray')) {
+                $ret = $this->serializeArray($dataSend);
+                if (is_array($ret)) {
+                    $dataSend = $ret;
+                }
+            }
+
             $resource = $this->resource();
 
             if (method_exists($this, 'service')) {
@@ -48,7 +56,7 @@ trait ApiUpdate
             }
 
             $obj->update($dataSend);
-            
+
             if (method_exists($this, 'route')) {
                 $data += [
                     'route' => $this->route()
