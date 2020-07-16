@@ -28,8 +28,8 @@ trait ControllerUpdate
 
             $data = $this->validate($this->request, $this->rulesPut());
 
-            if (method_exists($this, 'serializeArray')) {
-                $ret = $this->serializeArray($data);
+            if (method_exists($this, 'serializeArrayUpdate')) {
+                $ret = $this->serializeArrayUpdate($data);
                 if (is_array($ret)) {
                     $data = $ret;
                 }

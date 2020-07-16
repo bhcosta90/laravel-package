@@ -16,8 +16,8 @@ trait ControllerStore
         return $this->executeAction($request, function () {
             $data = $this->validate($this->request, $this->rulesPost());
 
-            if (method_exists($this, 'serializeArray')) {
-                $ret = $this->serializeArray($data);
+            if (method_exists($this, 'serializeArrayStore')) {
+                $ret = $this->serializeArrayStore($data);
                 if (is_array($ret)) {
                     $data = $ret;
                 }

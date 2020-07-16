@@ -38,8 +38,8 @@ trait ApiUpdate
 
             $dataSend = $this->validate($this->request, $this->rulesPut());
 
-            if (method_exists($this, 'serializeArray')) {
-                $ret = $this->serializeArray($dataSend);
+            if (method_exists($this, 'serializeArrayUpdate')) {
+                $ret = $this->serializeArrayUpdate($dataSend);
                 if (is_array($ret)) {
                     $dataSend = $ret;
                 }

@@ -18,8 +18,8 @@ trait ApiStore
 
             $dataSend = $this->validate($this->request, $this->rulesPost());
 
-            if (method_exists($this, 'serializeArray')) {
-                $ret = $this->serializeArray($dataSend);
+            if (method_exists($this, 'serializeArrayStore')) {
+                $ret = $this->serializeArrayStore($dataSend);
                 if (is_array($ret)) {
                     $dataSend = $ret;
                 }
