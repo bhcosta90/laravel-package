@@ -14,20 +14,27 @@ trait ControllerStore
         $this->request = $request;
         
         return $this->executeAction($request, function () {
-            $data = $this->validate($this->request, $this->rulesPost());
+            $dataSend = $this->validate($this->request, $this->rulesPost());
+
+            if (method_exists($this, 'serializeArrayStore')) {
+                if(is_array($result = $this->serializeArrayStore($dataSend))) {
+                    $dataSend = $result;
+                }
+            }
+
             $model = $this->model();
             $objService = null;
 
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
-                    $objService::store($data);
+                    $objService::store($dataSend);
                     $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
                     return redirect($this->route());
                 }
             }
 
-            $obj = $model::create($data);
+            $obj = $model::create($dataSend);
 
             if (method_exists($this, 'postCreated')) {
                 $this->postCreated($obj);

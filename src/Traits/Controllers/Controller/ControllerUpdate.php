@@ -26,18 +26,24 @@ trait ControllerUpdate
                 $obj = $objClass::findOrFail($id);
             }
 
-            $data = $this->validate($this->request, $this->rulesPut());
+            $dataSend = $this->validate($this->request, $this->rulesPut());
+
+            if (method_exists($this, 'serializeArrayUpdate')) {
+                if(is_array($result = $this->serializeArrayUpdate($dataSend))) {
+                    $dataSend = $result;
+                }
+            }
 
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'put')) {
-                    $obj = $objService::put($obj, $data);
+                    $obj = $objService::put($obj, $dataSend);
                     $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
                     return redirect($this->route());
                 }
             }
 
-            $obj->update($data);
+            $obj->update($dataSend);
             $obj->save();
 
             $this->request->session()->flash('success', __('Registro atualizado com sucesso'));

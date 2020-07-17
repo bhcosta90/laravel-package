@@ -37,6 +37,13 @@ trait ApiUpdate
             }
 
             $dataSend = $this->validate($this->request, $this->rulesPut());
+
+            if (method_exists($this, 'serializeArrayUpdate')) {
+                if(is_array($result = $this->serializeArrayUpdate($dataSend))) {
+                    $dataSend = $result;
+                }
+            }
+
             $resource = $this->resource();
 
             if (method_exists($this, 'service')) {

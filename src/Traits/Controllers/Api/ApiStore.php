@@ -17,6 +17,13 @@ trait ApiStore
             }
 
             $dataSend = $this->validate($this->request, $this->rulesPost());
+
+            if (method_exists($this, 'serializeArrayStore')) {
+                if(is_array($result = $this->serializeArrayStore($dataSend))) {
+                    $dataSend = $result;
+                }
+            }
+
             $model = $this->model();
             $resource = $this->resource();
             $objService = null;
