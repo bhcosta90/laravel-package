@@ -12,7 +12,7 @@ trait ControllerStore
     public function store(Request $request)
     {
         $this->request = $request;
-        
+
         return $this->executeAction($request, function () {
             $dataSend = $this->validate($this->request, $this->rulesPost());
 
@@ -52,5 +52,4 @@ trait ControllerStore
     public abstract function route();
 
     protected abstract function resource();
-
 }
