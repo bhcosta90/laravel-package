@@ -27,6 +27,7 @@ trait ApiUpdate
 
             $data = [
                 "status" => 200,
+                "msg" => __('Registro atualizado com sucesso'),
             ];
 
             if (method_exists($this, 'route')) {
