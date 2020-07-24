@@ -30,7 +30,6 @@ trait ApiStore
 
             $data = [
                 "status" => 201,
-                "msg" => __('Registrado com sucesso')
             ];
 
             if (method_exists($this, 'route')) {
@@ -43,11 +42,16 @@ trait ApiStore
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
                     $obj = $objService::store($dataSend);
+
+                    $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
+
                     return $obj;
                 }
             }
 
             $obj = $model::create($dataSend);
+
+            $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
 
             return (new $resource($obj))
                 ->additional($data)

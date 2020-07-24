@@ -27,7 +27,6 @@ trait ApiUpdate
 
             $data = [
                 "status" => 200,
-                "msg" => __('Registro atualizado com sucesso')
             ];
 
             if (method_exists($this, 'route')) {
@@ -50,6 +49,9 @@ trait ApiUpdate
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
+
+                    $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
+
                     return $obj;
                 }
             }
@@ -62,6 +64,7 @@ trait ApiUpdate
                 ];
             }
 
+            $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
 
             return (new $resource($obj))
                 ->additional($data)
