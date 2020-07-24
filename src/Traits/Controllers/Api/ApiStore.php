@@ -2,10 +2,15 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
+use BRCas\Laravel\Utils\Message;
 use Illuminate\Http\Request;
 
 trait ApiStore
 {
+    public function getMessageStore()
+    {
+        return Message::created();
+    }
 
     public function store(Request $request)
     {
@@ -30,6 +35,7 @@ trait ApiStore
 
             $data = [
                 "status" => 201,
+                "msg" => __('Registro cadastrado com sucesso'),
             ];
 
             if (method_exists($this, 'route')) {

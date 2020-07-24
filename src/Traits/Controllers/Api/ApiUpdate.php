@@ -2,10 +2,15 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Api;
 
+use BRCas\Laravel\Utils\Message;
 use Illuminate\Http\Request;
 
 trait ApiUpdate
 {
+    public function getMessageUpdate()
+    {
+        return Message::created();
+    }
 
     public function update(Request $request, $id)
     {
@@ -27,6 +32,7 @@ trait ApiUpdate
 
             $data = [
                 "status" => 200,
+                "msg" => __('Registro atualizado com sucesso'),
             ];
 
             if (method_exists($this, 'route')) {
@@ -50,7 +56,7 @@ trait ApiUpdate
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
 
-                    $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
+                    $this->request->session()->flash('success', $this->getMessageUpdate());
 
                     return $obj;
                 }
@@ -64,7 +70,7 @@ trait ApiUpdate
                 ];
             }
 
-            $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
+            $this->request->session()->flash('success', $this->getMessageUpdate());
 
             return (new $resource($obj))
                 ->additional($data)

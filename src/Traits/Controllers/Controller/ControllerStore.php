@@ -2,10 +2,15 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Controller;
 
+use BRCas\Laravel\Utils\Message;
 use Illuminate\Http\Request;
 
 trait ControllerStore
 {
+    public function getMessageStore()
+    {
+        return Message::created();
+    }
 
     public abstract function create();
 
@@ -29,7 +34,7 @@ trait ControllerStore
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'store')) {
                     $objService::store($dataSend);
-                    $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
+                    $this->request->session()->flash('success', $this->getMessageStore());
                     return redirect($this->route());
                 }
             }
@@ -40,7 +45,7 @@ trait ControllerStore
                 $this->postCreated($obj);
             }
 
-            $this->request->session()->flash('success', __('Registro cadastrado com sucesso'));
+            $this->request->session()->flash('success', $this->getMessageStore());
             return redirect($this->route());
         });
     }

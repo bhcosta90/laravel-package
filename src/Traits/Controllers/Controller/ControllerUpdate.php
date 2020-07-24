@@ -2,10 +2,15 @@
 
 namespace BRCas\Laravel\Traits\Controllers\Controller;
 
+use BRCas\Laravel\Utils\Message;
 use Illuminate\Http\Request;
 
 trait ControllerUpdate
 {
+    public function getMessageUpdate()
+    {
+        return Message::created();
+    }
 
     public abstract function edit();
 
@@ -38,7 +43,7 @@ trait ControllerUpdate
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
-                    $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
+                    $this->request->session()->flash('success', $this->getMessageUpdate());
                     return redirect($this->route());
                 }
             }
@@ -46,7 +51,7 @@ trait ControllerUpdate
             $obj->update($dataSend);
             $obj->save();
 
-            $this->request->session()->flash('success', __('Registro atualizado com sucesso'));
+            $this->request->session()->flash('success', $this->getMessageUpdate());
             return redirect($this->route());
         });
     }
