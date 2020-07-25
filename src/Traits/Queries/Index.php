@@ -75,7 +75,7 @@ trait Index
                 $this->getTotalPaginate(),
                 ["*"],
                 'page',
-                request()->input('pageIndex') ?? request()->input('page', 0)
+                (request()->input('pageIndex') ?? request()->input('page', 0)) + 1
             );
 
         $resourceCollectionClass = $this->resourceCollection();
