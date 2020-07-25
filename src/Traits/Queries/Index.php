@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Route;
 
 trait Index
 {
-    protected $paginateSize = 30;
+    protected function getTotalPaginate()
+    {
+        return request()->input('pageSize', 30);
+    }
 
     public function list(Request $request)
     {
@@ -66,9 +69,9 @@ trait Index
             print $obj->toRawSql() and exit;
         }
 
-        $data = !$this->paginateSize
+        $data = !$this->getTotalPaginate()
             ? $obj->all()
-            : $obj->paginate($this->paginateSize);
+            : $obj->paginate($this->getTotalPaginate());
 
         $resourceCollectionClass = $this->resourceCollection();
         $refClass = new \ReflectionClass($resourceCollectionClass);
