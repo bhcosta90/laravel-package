@@ -71,7 +71,12 @@ trait Index
 
         $data = !$this->getTotalPaginate()
             ? $obj->all()
-            : $obj->paginate($this->getTotalPaginate());
+            : $obj->paginate(
+                $this->getTotalPaginate(),
+                ["*"],
+                'page',
+                request()->input('pageIndex') ?? request()->input('page', 0)
+            );
 
         $resourceCollectionClass = $this->resourceCollection();
         $refClass = new \ReflectionClass($resourceCollectionClass);
