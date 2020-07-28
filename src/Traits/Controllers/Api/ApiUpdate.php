@@ -9,7 +9,7 @@ trait ApiUpdate
 {
     public function getMessageUpdate()
     {
-        return Message::created();
+        return Message::updated();
     }
 
     public function update(Request $request, $id)
