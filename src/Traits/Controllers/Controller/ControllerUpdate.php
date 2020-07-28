@@ -9,7 +9,7 @@ trait ControllerUpdate
 {
     public function getMessageUpdate()
     {
-        return Message::created();
+        return Message::updated();
     }
 
     public abstract function edit();
