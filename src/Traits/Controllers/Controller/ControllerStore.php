@@ -39,11 +39,7 @@ trait ControllerStore
                 }
             }
 
-            $obj = $model::create($dataSend);
-
-            if (method_exists($this, 'postCreated')) {
-                $this->postCreated($obj);
-            }
+            $model::create($dataSend);
 
             $this->request->session()->flash('success', $this->getMessageStore());
             return redirect($this->route());
