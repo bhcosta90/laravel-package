@@ -32,7 +32,7 @@ trait ApiUpdate
 
             $data = [
                 "status" => 200,
-                "msg" => __('Registro atualizado com sucesso'),
+                "msg" => $this->getMessageUpdate(),
             ];
 
             if (method_exists($this, 'route')) {
@@ -56,7 +56,9 @@ trait ApiUpdate
                 if (method_exists($objService, 'put')) {
                     $obj = $objService::put($obj, $dataSend);
 
-                    $this->request->session()->flash('success', $this->getMessageUpdate());
+                    if (method_exists($this, 'route')) {
+                        $this->request->session()->flash('success', $this->getMessageUpdate());
+                    }
 
                     return $obj;
                 }
@@ -65,12 +67,12 @@ trait ApiUpdate
             $obj->update($dataSend);
 
             if (method_exists($this, 'route')) {
+                $this->request->session()->flash('success', $this->getMessageUpdate());
+
                 $data += [
                     'route' => $this->route()
                 ];
             }
-
-            $this->request->session()->flash('success', $this->getMessageUpdate());
 
             return (new $resource($obj))
                 ->additional($data)
