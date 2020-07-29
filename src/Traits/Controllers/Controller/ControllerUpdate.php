@@ -22,7 +22,7 @@ trait ControllerUpdate
             if (method_exists($this, 'service')) {
                 $objService = call_user_func_array([$this, 'service'], []);
                 if (method_exists($objService, 'find')) {
-                    $obj = $objService::find($id);
+                   w $obj = $objService::find($id);
                 }
             }
 
