@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Model;
+namespace BRCas\Laravel\Traits\Model;
 
 
 use Ramsey\Uuid\Uuid;

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Query;
+namespace BRCas\Laravel\Traits\Query;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;

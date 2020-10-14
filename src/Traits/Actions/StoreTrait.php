@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Actions;
+namespace BRCas\Laravel\Traits\Actions;
 
 
 use Illuminate\Http\RedirectResponse;

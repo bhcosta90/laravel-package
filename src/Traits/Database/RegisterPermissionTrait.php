@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Database;
+namespace BRCas\Laravel\Traits\Database;
 
 use Illuminate\Support\Facades\DB;
 

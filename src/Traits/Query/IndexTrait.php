@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Query;
+namespace BRCas\Laravel\Traits\Query;
 
 
 trait IndexTrait

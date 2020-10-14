@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Package\Traits\Controller;
+namespace BRCas\Laravel\Traits\Controller;
 
 
 use Illuminate\Contracts\Foundation\Application;
