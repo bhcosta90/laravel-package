@@ -4,10 +4,10 @@
 namespace BRCas\Laravel\Traits\Actions;
 
 
+use BRCas\Laravel\Traits\Query\ExecuteTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Kris\LaravelFormBuilder\FormBuilder;
-use BRCas\Laravel\Traits\Query\ExecuteTrait;
 
 trait UpdateTrait
 {
@@ -16,23 +16,7 @@ trait UpdateTrait
     /**
      * @return mixed
      */
-    public abstract function model();
-
-    /**
-     * @return mixed
-     */
     public abstract function routeResource();
-
-    /**
-     * @return mixed
-     */
-    public abstract function formUpdate();
-
-    public function executeUpdate($obj, $data)
-    {
-        $obj->update($data);
-        return $obj;
-    }
 
     /**
      * @param FormBuilder $formBuilder
@@ -58,5 +42,21 @@ trait UpdateTrait
                 return redirect($this->routeIndex());
             }
         });
+    }
+
+    /**
+     * @return mixed
+     */
+    public abstract function formUpdate();
+
+    /**
+     * @return mixed
+     */
+    public abstract function model();
+
+    public function executeUpdate($obj, $data)
+    {
+        $obj->update($data);
+        return $obj;
     }
 }

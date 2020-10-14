@@ -7,16 +7,6 @@ namespace BRCas\Laravel\Traits\Actions;
 trait DestroyTrait
 {
     /**
-     * @return mixed
-     */
-    public abstract function model();
-
-    /**
-     * @return mixed
-     */
-    public abstract function routeResource();
-
-    /**
      * @param $id
      */
     public function destroy($id)
@@ -33,4 +23,14 @@ trait DestroyTrait
             }
         });
     }
+
+    /**
+     * @return mixed
+     */
+    public abstract function model();
+
+    /**
+     * @return mixed
+     */
+    public abstract function routeResource();
 }

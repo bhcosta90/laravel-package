@@ -8,35 +8,13 @@ use Illuminate\Foundation\Testing\TestResponse;
 
 trait TestValidate
 {
-    protected abstract function routeStorage();
-
-    protected abstract function routeUpdate();
-
-    protected function removeArrayData(): array{
-        return [
-            'token'
-        ];
-    }
-
     protected function assertValidationInStorageAction(
         array $data,
         string $rule,
         array $params = []
-    ) {
+    )
+    {
         $response = $this->json('POST', $this->routeStorage(), $data);
-        foreach($this->removeArrayData() as $rs){
-            unset($data[$rs]);
-        }
-        $fields = array_keys($data);
-        $this->assertInvationFields($response, $fields, $rule, $params);
-    }
-
-    protected function assertValidationInUpdateAction(
-        array $data,
-        string $rule,
-        array $params = []
-    ) {
-        $response = $this->json('PUT', $this->routeUpdate(), $data);
         foreach ($this->removeArrayData() as $rs) {
             unset($data[$rs]);
         }
@@ -44,12 +22,22 @@ trait TestValidate
         $this->assertInvationFields($response, $fields, $rule, $params);
     }
 
+    protected abstract function routeStorage();
+
+    protected function removeArrayData(): array
+    {
+        return [
+            'token'
+        ];
+    }
+
     protected function assertInvationFields(
         TestResponse $response,
         array $fields,
         string $rule,
         array $params = []
-    ) {
+    )
+    {
         if ($response->status() != 422) {
             throw new \Exception("Response status must be 201, given {$response->status()}\n{$response->content()}");
         }
@@ -64,4 +52,20 @@ trait TestValidate
             ]);
         }
     }
+
+    protected function assertValidationInUpdateAction(
+        array $data,
+        string $rule,
+        array $params = []
+    )
+    {
+        $response = $this->json('PUT', $this->routeUpdate(), $data);
+        foreach ($this->removeArrayData() as $rs) {
+            unset($data[$rs]);
+        }
+        $fields = array_keys($data);
+        $this->assertInvationFields($response, $fields, $rule, $params);
+    }
+
+    protected abstract function routeUpdate();
 }

@@ -23,7 +23,7 @@ trait GenerateUuidTrait
 
     public static function getUuid()
     {
-        return (string) Uuid::uuid4();
+        return (string)Uuid::uuid4();
     }
 
     public function getKeyType()

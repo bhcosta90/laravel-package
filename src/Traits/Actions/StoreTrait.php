@@ -4,10 +4,10 @@
 namespace BRCas\Laravel\Traits\Actions;
 
 
+use BRCas\Laravel\Traits\Query\ExecuteTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Kris\LaravelFormBuilder\FormBuilder;
-use BRCas\Laravel\Traits\Query\ExecuteTrait;
 
 trait StoreTrait
 {
@@ -16,22 +16,7 @@ trait StoreTrait
     /**
      * @return mixed
      */
-    public abstract function model();
-
-    /**
-     * @return mixed
-     */
     public abstract function routeResource();
-
-    /**
-     * @return mixed
-     */
-    public abstract function formStore();
-
-    public function executeStore($obj, $data)
-    {
-        return $obj->create($data);
-    }
 
     /**
      * @param FormBuilder $formBuilder
@@ -56,5 +41,20 @@ trait StoreTrait
                 return redirect($this->routeIndex());
             }
         });
+    }
+
+    /**
+     * @return mixed
+     */
+    public abstract function formStore();
+
+    /**
+     * @return mixed
+     */
+    public abstract function model();
+
+    public function executeStore($obj, $data)
+    {
+        return $obj->create($data);
     }
 }

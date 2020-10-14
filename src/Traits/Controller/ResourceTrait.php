@@ -4,57 +4,22 @@
 namespace BRCas\Laravel\Traits\Controller;
 
 
+use BRCas\Laravel\Traits\Actions\DestroyTrait;
+use BRCas\Laravel\Traits\Actions\StoreTrait;
+use BRCas\Laravel\Traits\Actions\UpdateTrait;
+use BRCas\Laravel\Traits\Query\IndexTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Kris\LaravelFormBuilder\FormBuilder;
-use BRCas\Laravel\Traits\Actions\DestroyTrait;
-use BRCas\Laravel\Traits\Actions\StoreTrait;
-use BRCas\Laravel\Traits\Actions\UpdateTrait;
-use BRCas\Laravel\Traits\Query\IndexTrait;
 
 trait ResourceTrait
 {
     use IndexTrait, DestroyTrait, StoreTrait, UpdateTrait;
 
     protected $obj;
-
-    public function titleIndex()
-    {
-        return 'Relatório';
-    }
-
-    public function titleCreate()
-    {
-        return 'Cadastro';
-    }
-
-    public function titleEdit()
-    {
-        return 'Alteração';
-    }
-
-    /**
-     * @return mixed
-     */
-    public abstract function model();
-
-    /**
-     * @return mixed
-     */
-    public abstract function routeResource();
-
-    /**
-     * @return mixed
-     */
-    public abstract function formStore();
-
-    /**
-     * @return mixed
-     */
-    public abstract function formUpdate();
 
     /**
      * @param Request $request
@@ -66,7 +31,7 @@ trait ResourceTrait
         $result = new $model;
 
         $routes = collect(explode('.', Route::currentRouteName()))->last();
-        if(method_exists($this, $routes . "Query")){
+        if (method_exists($this, $routes . "Query")) {
             $nameFilter = $routes . "Query";
             $result = $this->$nameFilter($result);
         }
@@ -88,7 +53,7 @@ trait ResourceTrait
         $filter = $this->getFilter();
         $filter_none = "none";
 
-        if(is_array($filter)) {
+        if (is_array($filter)) {
             foreach ($filter as $key => $value) {
                 if (substr($key, 0, 7) != 'request' && request($key) != '') {
                     $filter_none = "block";
@@ -103,6 +68,11 @@ trait ResourceTrait
         return view('default.list', compact('data', 'table', 'actions', 'title', 'new', 'titleCreate', 'filter', 'filter_none'));
     }
 
+    /**
+     * @return mixed
+     */
+    public abstract function model();
+
     public function getTable()
     {
         return null;
@@ -113,14 +83,30 @@ trait ResourceTrait
         return null;
     }
 
+    public function titleIndex()
+    {
+        return 'Relatório';
+    }
+
+    public function titleCreate()
+    {
+        return 'Cadastro';
+    }
+
     public function getFilter()
     {
         return null;
     }
 
-    public function routeCreate(){
+    public function routeCreate()
+    {
         return route($this->routeResource() . '.create');
     }
+
+    /**
+     * @return mixed
+     */
+    public abstract function routeResource();
 
     /**
      * @param FormBuilder $formBuilder
@@ -140,6 +126,11 @@ trait ResourceTrait
 
         return view('default.form', compact('form', 'title'));
     }
+
+    /**
+     * @return mixed
+     */
+    public abstract function formStore();
 
     /**
      * @param FormBuilder $formBuilder
@@ -163,5 +154,15 @@ trait ResourceTrait
         $title = $this->titleEdit();
 
         return view('default.form', compact('form', 'title'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public abstract function formUpdate();
+
+    public function titleEdit()
+    {
+        return 'Alteração';
     }
 }

@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace BRCas\LaravelTests\Traits;
 
-use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Http\UploadedFile;
 
 trait TestUpload
 {
-    protected abstract function routeStorage();
-
-    protected abstract function routeUpdate();
-
     public function assertInvalidateFiles($field, $extension, $maxSize, $rule, $ruleParams)
     {
         $routes = [
@@ -43,4 +39,8 @@ trait TestUpload
             $this->assertInvationFields($response, [$field], "max.file", ['max' => $maxSize]);
         }
     }
+
+    protected abstract function routeStorage();
+
+    protected abstract function routeUpdate();
 }

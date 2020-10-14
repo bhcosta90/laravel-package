@@ -6,12 +6,9 @@ namespace BRCas\LaravelTests\Traits;
 
 use Illuminate\Foundation\Testing\TestResponse;
 
-trait TestList{
+trait TestList
+{
     protected abstract function routeStorage();
-    
-    protected abstract function routeIndex();
-    
-    protected abstract function routeShow();
 
     protected abstract function model();
 
@@ -23,6 +20,8 @@ trait TestList{
         return $response;
     }
 
+    protected abstract function routeIndex();
+
     protected function assertShow($data, array $sendData = []): TestResponse
     {
         $response = $this->json('GET', $this->routeShow(), $sendData);
@@ -30,5 +29,7 @@ trait TestList{
         $response->assertJson(["data" => $data]);
         return $response;
     }
+
+    protected abstract function routeShow();
 
 }
