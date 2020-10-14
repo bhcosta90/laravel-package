@@ -1,13 +1,14 @@
 {
     "name": "brcas/laravel",
     "description": "Pacote para trabalhar com o laravel",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Bruno Costa",
             "email": "bhcosta90@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "illuminate/database": "^5.8|^6.0|^7.0|^8.0",
         "illuminate/http": "^5.8|^6.0|^7.0|^8.0",
