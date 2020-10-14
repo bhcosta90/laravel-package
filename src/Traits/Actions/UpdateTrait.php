@@ -7,7 +7,7 @@ namespace BRCas\Laravel\Traits\Actions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Package\Traits\Query\ExecuteTrait;
+use BRCas\Laravel\Traits\Query\ExecuteTrait;
 
 trait UpdateTrait
 {

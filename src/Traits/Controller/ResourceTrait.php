@@ -10,10 +10,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Package\Traits\Actions\DestroyTrait;
-use Package\Traits\Actions\StoreTrait;
-use Package\Traits\Actions\UpdateTrait;
-use Package\Traits\Query\IndexTrait;
+use BRCas\Laravel\Traits\Actions\DestroyTrait;
+use BRCas\Laravel\Traits\Actions\StoreTrait;
+use BRCas\Laravel\Traits\Actions\UpdateTrait;
+use BRCas\Laravel\Traits\Query\IndexTrait;
 
 trait ResourceTrait
 {
