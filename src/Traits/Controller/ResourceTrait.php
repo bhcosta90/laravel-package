@@ -21,6 +21,56 @@ trait ResourceTrait
 
     protected $obj;
 
+    public function titleIndex()
+    {
+        return 'Relatório';
+    }
+
+    public function titleCreate()
+    {
+        return 'Cadastro';
+    }
+
+    public function titleEdit()
+    {
+        return 'Alteração';
+    }
+
+    /**
+     * @return mixed
+     */
+    public abstract function model();
+
+    /**
+     * @return mixed
+     */
+    public abstract function routeResource();
+
+    /**
+     * @return mixed
+     */
+    public abstract function formStore();
+
+    /**
+     * @return mixed
+     */
+    public abstract function formUpdate();
+
+    public function viewIndex()
+    {
+        return 'default.list';
+    }
+
+    public function viewCreate()
+    {
+        return 'default.form';
+    }
+
+    public function viewEdit()
+    {
+        return 'default.form';
+    }
+
     /**
      * @param Request $request
      * @return Application|Factory|View
@@ -65,13 +115,8 @@ trait ResourceTrait
         $new = $this->routeCreate();
 
 
-        return view('default.list', compact('data', 'table', 'actions', 'title', 'new', 'titleCreate', 'filter', 'filter_none'));
+        return view($this->viewIndex(), compact('data', 'table', 'actions', 'title', 'new', 'titleCreate', 'filter', 'filter_none'));
     }
-
-    /**
-     * @return mixed
-     */
-    public abstract function model();
 
     public function getTable()
     {
@@ -83,16 +128,6 @@ trait ResourceTrait
         return null;
     }
 
-    public function titleIndex()
-    {
-        return 'Relatório';
-    }
-
-    public function titleCreate()
-    {
-        return 'Cadastro';
-    }
-
     public function getFilter()
     {
         return null;
@@ -102,11 +137,6 @@ trait ResourceTrait
     {
         return route($this->routeResource() . '.create');
     }
-
-    /**
-     * @return mixed
-     */
-    public abstract function routeResource();
 
     /**
      * @param FormBuilder $formBuilder
@@ -124,13 +154,8 @@ trait ResourceTrait
 
         $title = $this->titleCreate();
 
-        return view('default.form', compact('form', 'title'));
+        return view($this->viewCreate(), compact('form', 'title'));
     }
-
-    /**
-     * @return mixed
-     */
-    public abstract function formStore();
 
     /**
      * @param FormBuilder $formBuilder
@@ -153,16 +178,6 @@ trait ResourceTrait
 
         $title = $this->titleEdit();
 
-        return view('default.form', compact('form', 'title'));
-    }
-
-    /**
-     * @return mixed
-     */
-    public abstract function formUpdate();
-
-    public function titleEdit()
-    {
-        return 'Alteração';
+        return view($this->viewEdit(), compact('form', 'title'));
     }
 }
