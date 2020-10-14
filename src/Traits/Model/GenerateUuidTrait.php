@@ -1,13 +1,14 @@
 <?php
 
 
-namespace BRCas\Laravel\Traits\Entities;
+namespace Package\Traits\Model;
 
-use Ramsey\Uuid\Uuid as RamseyUuid;
 
-trait Uuid
+use Ramsey\Uuid\Uuid;
+
+trait GenerateUuidTrait
 {
-    public static function bootUuid()
+    public static function bootGenerateUuidTrait()
     {
         static::creating(function ($obj) {
             $field = $obj->getKeyName();
@@ -22,7 +23,7 @@ trait Uuid
 
     public static function getUuid()
     {
-        return (string) RamseyUuid::uuid4();
+        return (string) Uuid::uuid4();
     }
 
     public function getKeyType()

@@ -9,9 +9,9 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "illuminate/database": "^5.8|^6.0|^7.0",
-        "illuminate/http": "^5.8|^6.0|^7.0",
-        "illuminate/support": "^5.8|^6.0|^7.0",
+        "illuminate/database": "^5.8|^6.0|^7.0|^8.0",
+        "illuminate/http": "^5.8|^6.0|^7.0|^8.0",
+        "illuminate/support": "^5.8|^6.0|^7.0|^8.0",
         "ramsey/uuid": "^3.0|^4.0"
     },
     "require-dev": {
