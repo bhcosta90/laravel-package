@@ -1,10 +1,10 @@
 <?php
 
-namespace BRCas\Laravel\Exceptions;
+namespace BRCas\Package\Exceptions;
 
 use Exception;
 
 class CustomException extends Exception
 {
-    
+
 }

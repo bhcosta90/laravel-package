@@ -1,0 +1,113 @@
+<?php
+
+namespace BRCas\Package\Traits\Controller\Web;
+
+use Exception;
+use Illuminate\Database\Eloquent\{Collection, Builder};
+use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Route;
+
+trait Index
+{
+    public abstract function service();
+    
+    public abstract function table();
+
+    public abstract function indexView();
+
+    public abstract function routeBegging();
+
+    public function getTotalPaginate()
+    {
+        return env('TOTAL_PAGINATE');
+    }
+
+    public function actions(){
+        $actions = [];
+        
+        /**
+         * @var \App\Models\User
+         */
+        $objUser = auth()->user();
+
+        $permissions = [];
+        if(method_exists($this, 'permissions') && method_exists($this, '__construct')) $permissions = $this->permissions();
+
+        $permission = $permissions['index'] ?? null;
+        if(Route::has($this->routeBegging() . '.show')){
+            if(($permission && $objUser->can($permission)) || $permission == null){
+                $actions["show"] = [
+                    'action' => function ($obj) {
+                        return route($this->routeBegging() . '.show', $obj->id);
+                    },
+                ];
+            }
+        }
+
+        $permission = $permissions['edit'] ?? null;
+        if(Route::has($this->routeBegging() . '.edit') && Route::has($this->routeBegging() . '.update')){
+            if(($permission && $objUser->can($permission)) || $permission == null){
+                $actions["edit"] = [
+                    'action' => function ($obj) {
+                        return route($this->routeBegging() . '.edit', $obj->id);
+                    },
+                ];
+            }
+        }
+
+        $permission = $permissions['delete'] ?? null;
+        if(Route::has($this->routeBegging() . '.destroy')){
+            if(($permission && $objUser->can($permission)) || $permission == null){
+                $actions["delete"] = [
+                    'action' => function ($obj) {
+                        return route($this->routeBegging() . '.destroy', $obj->id);
+                    },
+                ];
+            }
+        }
+
+        return $actions;
+    }
+
+    public function index()
+    {
+        $objService = app($this->service());
+        
+        if(!method_exists($objService, 'index')) throw new Exception(__('Method index not found in service'));
+
+        /**
+         * @var \App\Models\User
+         */
+        $objUser = auth()->user();
+        
+        $data = $objService->index();
+
+        if(!$data instanceof Collection && !$data instanceof LengthAwarePaginator && !$data instanceof Builder && !$data instanceof SupportCollection){
+            $msg = 'The method return index is not '.Collection::class.' or '.LengthAwarePaginator::class.' or '.Builder::class;
+            $msg .= ". Sended " . gettype($data);
+            throw new Exception(__($msg));
+        }
+
+        if($data instanceof Builder){
+            $data = $data->paginate($this->getTotalPaginate());
+        }
+
+        $table = $this->table();
+
+        $actions = $this->actions();
+
+        $filter = method_exists($this, 'filters') ? $this->filters() : [];
+
+        $permissions = [];
+        if(method_exists($this, 'permissions') && method_exists($this, '__construct')) $permissions = $this->permissions();
+
+        $permission = $permissions['create'] ?? null;;
+        $linkRegister = null;
+        if(($permission && $objUser->can($permission)) || $permission == null){
+            $linkRegister = Route::has($this->routeBegging() . '.create') ? route($this->routeBegging() . '.create') : null;   
+        }
+
+        return view($this->indexView(), compact('data', 'table', 'actions', 'filter', 'linkRegister'));
+    }
+}
