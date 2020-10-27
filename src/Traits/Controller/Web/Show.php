@@ -2,7 +2,7 @@
 
 namespace BRCas\Laravel\Traits\Controller\Web;
 
-use BRCas\Package\Traits\Support\ExecuteTrait;
+use BRCas\Laravel\Traits\Support\ExecuteTrait;
 use Exception;
 
 trait Show

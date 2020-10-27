@@ -2,7 +2,7 @@
 
 namespace BRCas\Laravel\Traits\Controller\Api;
 
-use BRCas\Package\Traits\Support\Execute;
+use BRCas\Laravel\Traits\Support\Execute;
 use Exception;
 use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
