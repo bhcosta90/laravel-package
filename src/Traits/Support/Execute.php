@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Traits\Support;
+namespace BRCas\Laravel\Traits\Support;
 
 use Exception;
 use Illuminate\Http\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Tests;
+namespace BRCas\Laravel\Tests;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 

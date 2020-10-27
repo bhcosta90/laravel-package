@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Traits\Models;
+namespace BRCas\Laravel\Traits\Models;
 
 use Ramsey\Uuid\Uuid;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

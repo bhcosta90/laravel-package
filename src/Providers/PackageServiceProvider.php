@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Providers;
+namespace BRCas\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

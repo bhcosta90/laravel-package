@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Traits\Controller\Web;
+namespace BRCas\Laravel\Traits\Controller\Web;
 
 use Exception;
 use Illuminate\Database\Eloquent\{Collection, Builder};

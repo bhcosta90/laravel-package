@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Traits\Controller\Api;
+namespace BRCas\Laravel\Traits\Controller\Api;
 
 use BRCas\Package\Traits\Support\Execute;
 use Exception;

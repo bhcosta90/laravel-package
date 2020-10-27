@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Exceptions;
+namespace BRCas\Laravel\Exceptions;
 
 use Exception;
 

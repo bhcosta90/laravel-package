@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\Package\Tests;
+namespace BRCas\Laravel\Tests;
 
 use Illuminate\Http\UploadedFile;
 

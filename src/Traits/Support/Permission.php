@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Package\Traits\Support;
+namespace BRCas\Laravel\Traits\Support;
 
 trait Permission {
     public abstract function permissions();
