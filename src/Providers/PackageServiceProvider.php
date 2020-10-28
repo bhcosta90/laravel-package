@@ -10,7 +10,7 @@ class PackageServiceProvider extends ServiceProvider
     {
 
     }
-    
+
     public function boot()
     {
         $this->registerViews();
@@ -20,7 +20,7 @@ class PackageServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/package');
 
-        $sourcePath = __DIR__  . '/../Resources';
+        $sourcePath = __DIR__ . '/../Resources';
 
         $this->publishes([
             $sourcePath => $viewPath

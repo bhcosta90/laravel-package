@@ -10,23 +10,14 @@ use Kris\LaravelFormBuilder\FormBuilder;
 trait Store
 {
     use Execute;
-    
-    public abstract function service();
-
-    public abstract function form();
-
-    public function messageRegister()
-    {
-        return __('Register with successfully');
-    }
 
     public function store(FormBuilder $formBuilder)
     {
         $objService = app($this->service());
 
-        if(!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
+        if (!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
 
-        return $this->execute(function() use($objService, $formBuilder) {
+        return $this->execute(function () use ($objService, $formBuilder) {
             $objForm = $formBuilder->create($this->form());
             if (!$objForm->isValid()) {
                 return response()->json([
@@ -41,6 +32,15 @@ trait Store
                 'msg' => $this->messageRegister(),
             ], Response::HTTP_CREATED);
         });
+    }
+
+    public abstract function service();
+
+    public abstract function form();
+
+    public function messageRegister()
+    {
+        return __('Register with successfully');
     }
 
 }

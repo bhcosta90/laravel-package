@@ -8,22 +8,23 @@ use Exception;
 trait Destroy
 {
     use Execute;
-    
-    public abstract function service();
 
-    public abstract function routeBegging();
-
-    public function destroy($id){
+    public function destroy($id)
+    {
         $objService = app($this->service());
-        
-        if(!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
-        if(!method_exists($objService, 'destroy')) throw new Exception(__('Method destroy not found in service'));
+
+        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
+        if (!method_exists($objService, 'destroy')) throw new Exception(__('Method destroy not found in service'));
 
         $obj = $objService->find($id);
 
-        return $this->execute(function() use($obj, $objService) {
+        return $this->execute(function () use ($obj, $objService) {
             $objService->destroy($obj);
             return redirect()->route($this->routeBegging() . ".index");
         });
     }
+
+    public abstract function service();
+
+    public abstract function routeBegging();
 }

@@ -9,19 +9,12 @@ use Kris\LaravelFormBuilder\FormBuilder;
 trait Create
 {
     use Execute;
-    
-    public abstract function service();
 
-    public abstract function form();
-
-    public abstract function createView();
-
-    public abstract function routeBegging();
-
-    public function create(FormBuilder $formBuilder){
+    public function create(FormBuilder $formBuilder)
+    {
         $objService = app($this->service());
-        
-        if(!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
+
+        if (!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
 
         $form = $formBuilder->create($this->form(), [
             'method' => 'POST',
@@ -34,12 +27,21 @@ trait Create
         return view($this->createView(), compact('form'));
     }
 
-    public function store(FormBuilder $formBuilder){
+    public abstract function service();
+
+    public abstract function form();
+
+    public abstract function routeBegging();
+
+    public abstract function createView();
+
+    public function store(FormBuilder $formBuilder)
+    {
         $objService = app($this->service());
 
-        if(!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
+        if (!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
 
-        return $this->execute(function() use($objService, $formBuilder) {
+        return $this->execute(function () use ($objService, $formBuilder) {
             $objForm = $formBuilder->create($this->form());
             if (!$objForm->isValid()) {
                 return redirect()->back()->withErrors($objForm->getErrors())->withInput();

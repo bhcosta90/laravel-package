@@ -9,20 +9,13 @@ use Kris\LaravelFormBuilder\FormBuilder;
 trait Edit
 {
     use Execute;
-    
-    public abstract function service();
 
-    public abstract function form();
-
-    public abstract function editView();
-
-    public abstract function routeBegging();
-
-    public function edit($id, FormBuilder $formBuilder){
+    public function edit($id, FormBuilder $formBuilder)
+    {
         $objService = app($this->service());
-        
-        if(!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
-        if(!method_exists($objService, 'edit')) throw new Exception(__('Method edit not found in service'));
+
+        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
+        if (!method_exists($objService, 'edit')) throw new Exception(__('Method edit not found in service'));
 
         $obj = $objService->find($id);
 
@@ -38,15 +31,24 @@ trait Edit
         return view($this->editView(), compact('form'));
     }
 
-    public function update($id, FormBuilder $formBuilder){
+    public abstract function service();
+
+    public abstract function form();
+
+    public abstract function routeBegging();
+
+    public abstract function editView();
+
+    public function update($id, FormBuilder $formBuilder)
+    {
         $objService = app($this->service());
 
-        if(!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
-        if(!method_exists($objService, 'edit')) throw new Exception(__('Method edit not found in service'));
+        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
+        if (!method_exists($objService, 'edit')) throw new Exception(__('Method edit not found in service'));
 
         $obj = $objService->find($id);
 
-        return $this->execute(function() use($obj, $objService, $formBuilder) {
+        return $this->execute(function () use ($obj, $objService, $formBuilder) {
 
             $objForm = $formBuilder->create($this->form());
             if (!$objForm->isValid()) {
