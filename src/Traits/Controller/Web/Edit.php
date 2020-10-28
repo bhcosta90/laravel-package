@@ -10,6 +10,14 @@ trait Edit
 {
     use Execute;
 
+    public abstract function service();
+
+    public abstract function form();
+
+    public abstract function editView();
+
+    public abstract function routeBegging();
+
     public function edit($id, FormBuilder $formBuilder)
     {
         $objService = app($this->service());
@@ -30,14 +38,6 @@ trait Edit
 
         return view($this->editView(), compact('form'));
     }
-
-    public abstract function service();
-
-    public abstract function form();
-
-    public abstract function routeBegging();
-
-    public abstract function editView();
 
     public function update($id, FormBuilder $formBuilder)
     {

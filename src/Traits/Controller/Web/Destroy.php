@@ -9,6 +9,10 @@ trait Destroy
 {
     use Execute;
 
+    public abstract function service();
+
+    public abstract function routeBegging();
+
     public function destroy($id)
     {
         $objService = app($this->service());
@@ -23,8 +27,4 @@ trait Destroy
             return redirect()->route($this->routeBegging() . ".index");
         });
     }
-
-    public abstract function service();
-
-    public abstract function routeBegging();
 }

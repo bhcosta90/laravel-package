@@ -8,6 +8,11 @@ use Ramsey\Uuid\Uuid;
 trait Uuids
 {
 
+    public static function getFieldUuid()
+    {
+        return config('package.default_uuid_column');
+    }
+
     /**
      * Boot function from laravel.
      */
@@ -26,11 +31,6 @@ trait Uuids
                 $model->{$field} = $original_uuid;
             }
         });
-    }
-
-    public static function getFieldUuid()
-    {
-        return config('package.default_uuid_column');
     }
 
     /**

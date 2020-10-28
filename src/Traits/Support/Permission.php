@@ -4,6 +4,8 @@ namespace BRCas\Laravel\Traits\Support;
 
 trait Permission
 {
+    public abstract function permissions();
+
     public function __construct()
     {
         foreach ($this->permissions() as $key => $permission) {
@@ -25,6 +27,4 @@ trait Permission
             }
         }
     }
-
-    public abstract function permissions();
 }

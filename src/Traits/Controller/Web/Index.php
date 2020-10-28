@@ -10,55 +10,18 @@ use Illuminate\Support\Facades\Route;
 
 trait Index
 {
-    public function index()
-    {
-        $objService = app($this->service());
-
-        if (!method_exists($objService, 'index')) throw new Exception(__('Method index not found in service'));
-
-        /**
-         * @var \App\Models\User
-         */
-        $objUser = auth()->user();
-
-        $data = $objService->index();
-
-        if (!$data instanceof Collection && !$data instanceof LengthAwarePaginator && !$data instanceof Builder && !$data instanceof SupportCollection) {
-            $msg = 'The method return index is not ' . Collection::class . ' or ' . LengthAwarePaginator::class . ' or ' . Builder::class;
-            $msg .= ". Sended " . gettype($data);
-            throw new Exception(__($msg));
-        }
-
-        if ($data instanceof Builder) {
-            $data = $data->paginate($this->getTotalPaginate());
-        }
-
-        $table = $this->table();
-
-        $actions = $this->actions();
-
-        $filter = method_exists($this, 'filters') ? $this->filters() : [];
-
-        $permissions = [];
-        if (method_exists($this, 'permissions') && method_exists($this, '__construct')) $permissions = $this->permissions();
-
-        $permission = $permissions['create'] ?? null;;
-        $linkRegister = null;
-        if (($permission && $objUser->can($permission)) || $permission == null) {
-            $linkRegister = Route::has($this->routeBegging() . '.create') ? route($this->routeBegging() . '.create') : null;
-        }
-
-        return view($this->indexView(), compact('data', 'table', 'actions', 'filter', 'linkRegister'));
-    }
-
     public abstract function service();
+
+    public abstract function table();
+
+    public abstract function indexView();
+
+    public abstract function routeBegging();
 
     public function getTotalPaginate()
     {
         return env('TOTAL_PAGINATE');
     }
-
-    public abstract function table();
 
     public function actions()
     {
@@ -108,7 +71,44 @@ trait Index
         return $actions;
     }
 
-    public abstract function routeBegging();
+    public function index()
+    {
+        $objService = app($this->service());
 
-    public abstract function indexView();
+        if (!method_exists($objService, 'index')) throw new Exception(__('Method index not found in service'));
+
+        /**
+         * @var \App\Models\User
+         */
+        $objUser = auth()->user();
+
+        $data = $objService->index();
+
+        if (!$data instanceof Collection && !$data instanceof LengthAwarePaginator && !$data instanceof Builder && !$data instanceof SupportCollection) {
+            $msg = 'The method return index is not ' . Collection::class . ' or ' . LengthAwarePaginator::class . ' or ' . Builder::class;
+            $msg .= ". Sended " . gettype($data);
+            throw new Exception(__($msg));
+        }
+
+        if ($data instanceof Builder) {
+            $data = $data->paginate($this->getTotalPaginate());
+        }
+
+        $table = $this->table();
+
+        $actions = $this->actions();
+
+        $filter = method_exists($this, 'filters') ? $this->filters() : [];
+
+        $permissions = [];
+        if (method_exists($this, 'permissions') && method_exists($this, '__construct')) $permissions = $this->permissions();
+
+        $permission = $permissions['create'] ?? null;;
+        $linkRegister = null;
+        if (($permission && $objUser->can($permission)) || $permission == null) {
+            $linkRegister = Route::has($this->routeBegging() . '.create') ? route($this->routeBegging() . '.create') : null;
+        }
+
+        return view($this->indexView(), compact('data', 'table', 'actions', 'filter', 'linkRegister'));
+    }
 }

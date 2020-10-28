@@ -11,6 +11,15 @@ trait Store
 {
     use Execute;
 
+    public abstract function service();
+
+    public abstract function form();
+
+    public function messageRegister()
+    {
+        return __('Register with successfully');
+    }
+
     public function store(FormBuilder $formBuilder)
     {
         $objService = app($this->service());
@@ -32,15 +41,6 @@ trait Store
                 'msg' => $this->messageRegister(),
             ], Response::HTTP_CREATED);
         });
-    }
-
-    public abstract function service();
-
-    public abstract function form();
-
-    public function messageRegister()
-    {
-        return __('Register with successfully');
     }
 
 }

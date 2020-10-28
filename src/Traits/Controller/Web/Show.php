@@ -7,7 +7,11 @@ use Exception;
 
 trait Show
 {
+    public abstract function service();
+
     public abstract function permissions();
+
+    public abstract function showView();
 
     public function show($id)
     {
@@ -19,8 +23,4 @@ trait Show
 
         return view($this->showView(), compact('obj'));
     }
-
-    public abstract function service();
-
-    public abstract function showView();
 }
