@@ -1,5 +1,5 @@
 {
-    "name": "brcas/laravel",
+    "name": "bhcosta90/laravel",
     "description": "Pacote para trabalhar com o laravel",
     "minimum-stability": "dev",
     "prefer-stable": true,
