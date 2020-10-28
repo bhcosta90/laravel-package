@@ -17,7 +17,8 @@ trait Show
     {
         $objService = app($this->service());
 
-        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
+        if (!in_array(\BRCas\Laravel\Contracts\Show::class, class_implements($objService)))
+            throw new Exception(__('Interface '.\BRCas\Laravel\Contracts\Show::class.' not found in service'));
 
         $obj = $objService->find($id);
 

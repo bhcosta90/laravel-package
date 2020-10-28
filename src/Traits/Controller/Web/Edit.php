@@ -22,8 +22,8 @@ trait Edit
     {
         $objService = app($this->service());
 
-        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
-        if (!method_exists($objService, 'edit')) throw new Exception(__('Method edit not found in service'));
+        if (!in_array(\BRCas\Laravel\Contracts\Edit::class, class_implements($objService)))
+            throw new Exception(__('Interface '.\BRCas\Laravel\Contracts\Edit::class.' not found in service'));
 
         $obj = $objService->find($id);
 

@@ -17,8 +17,8 @@ trait Destroy
     {
         $objService = app($this->service());
 
-        if (!method_exists($objService, 'find')) throw new Exception(__('Method find not found in service'));
-        if (!method_exists($objService, 'destroy')) throw new Exception(__('Method destroy not found in service'));
+        if (!in_array(\BRCas\Laravel\Contracts\Destroy::class, class_implements($objService)))
+            throw new Exception(__('Interface '.\BRCas\Laravel\Contracts\Destroy::class.' not found in service'));
 
         $obj = $objService->find($id);
 

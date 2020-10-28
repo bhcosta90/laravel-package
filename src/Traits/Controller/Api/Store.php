@@ -24,7 +24,8 @@ trait Store
     {
         $objService = app($this->service());
 
-        if (!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
+        if (!in_array(\BRCas\Laravel\Contracts\Create::class, class_implements($objService)))
+            throw new Exception(__('Interface '.\BRCas\Laravel\Contracts\Create::class.' not found in service'));
 
         return $this->execute(function () use ($objService, $formBuilder) {
             $objForm = $formBuilder->create($this->form());

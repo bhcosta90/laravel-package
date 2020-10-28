@@ -75,7 +75,8 @@ trait Index
     {
         $objService = app($this->service());
 
-        if (!method_exists($objService, 'index')) throw new Exception(__('Method index not found in service'));
+        if (!in_array(\BRCas\Laravel\Contracts\Index::class, class_implements($objService)))
+            throw new Exception(__('Interface '.\BRCas\Laravel\Contracts\Index::class.' not found in service'));
 
         /**
          * @var \App\Models\User
