@@ -98,7 +98,7 @@ trait Index
             throw new Exception(__($msg));
         }
 
-        if ($data instanceof Builder) {
+        if ($data instanceof Builder || is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)) {
             $data = $data->paginate($this->getTotalPaginate());
         }
 
