@@ -85,8 +85,15 @@ trait Index
 
         $data = $objService->index();
 
-        if (!$data instanceof Collection && !$data instanceof LengthAwarePaginator && !$data instanceof Builder && !$data instanceof SupportCollection) {
-            $msg = 'The method return index is not ' . Collection::class . ' or ' . LengthAwarePaginator::class . ' or ' . Builder::class;
+        if (!$data instanceof Collection
+            && !$data instanceof LengthAwarePaginator
+            && !$data instanceof Builder
+            && !$data instanceof SupportCollection
+            && !is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)
+        ) {
+            $msg = 'The method return index is not ' . Collection::class . ' or ';
+            $msg .= LengthAwarePaginator::class . ' or ' . Builder::class . ' or ';
+            $msg .= 'not extends ' . \Illuminate\Database\Eloquent\Model::class;
             $msg .= ". Sended " . gettype($data);
             throw new Exception(__($msg));
         }
