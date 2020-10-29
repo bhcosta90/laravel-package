@@ -4,6 +4,7 @@ namespace BRCas\Laravel\Traits\Controller\Web;
 
 use Exception;
 use Illuminate\Database\Eloquent\{Builder, Collection};
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Route;
@@ -71,7 +72,7 @@ trait Index
         return $actions;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $objService = app($this->service());
 
@@ -96,6 +97,29 @@ trait Index
             $msg .= 'not extends ' . \Illuminate\Database\Eloquent\Model::class;
             $msg .= ". Sended " . gettype($data);
             throw new Exception(__($msg));
+        }
+
+        foreach ($request->except(['_token']) as $k => $req) {
+            $dados = explode('_', $k);
+            if (count($dados) > 1) {
+                $type = array_shift($dados);
+                $tabela = str_replace('|', '.', array_shift($dados));
+                if ($data) {
+                    switch ($type) {
+                        case 'like':
+                            $data = $data->where("$tabela", "like", "$req%");
+                            break;
+
+                        case 'equal':
+                            $data = $data->where("$tabela", "=", "$req");
+                            break;
+                    }
+                }
+            }
+        }
+
+        if (array_key_exists("sql", $request->all())) {
+            print $data->toRawSql() and exit;
         }
 
         if ($data instanceof Builder || is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)) {

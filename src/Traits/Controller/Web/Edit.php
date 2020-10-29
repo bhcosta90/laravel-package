@@ -58,7 +58,8 @@ trait Edit
             $data = $objForm->getFieldValues();
             $objService->edit($obj, $data);
 
-            return redirect()->route($this->routeBegging() . ".index");
+            return method_exists($this, 'redirectEdit') == false ?
+                redirect()->route($this->routeBegging() . ".index") : $this->redirectEdit($obj);
         });
     }
 }

@@ -3,12 +3,24 @@
 namespace BRCas\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder as BuilderEloquent;
+use Illuminate\Database\Query\Builder;
 
 class PackageServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->registerConfig();
+
+        Builder::macro('toRawSql', function () {
+            return array_reduce($this->getBindings(), function ($sql, $binding) {
+                return preg_replace('/\?/', is_numeric($binding) ? $binding : "'" . $binding . "'", $sql, 1);
+            }, $this->toSql());
+        });
+
+        BuilderEloquent::macro('toRawSql', function () {
+            return ($this->getQuery()->toRawSql());
+        });
     }
 
     public function boot()

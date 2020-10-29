@@ -49,9 +49,10 @@ trait Create
             }
 
             $data = $objForm->getFieldValues();
-            $objService->create($data);
+            $obj = $objService->create($data);
 
-            return redirect()->route($this->routeBegging() . ".index");
+            return method_exists($this, 'redirectCreate') == false ?
+                redirect()->route($this->routeBegging() . ".index") : $this->redirectCreate($obj);
         });
     }
 }
