@@ -23,8 +23,11 @@ trait Destroy
         $obj = $objService->find($id);
 
         return $this->execute(function () use ($obj, $objService) {
+            $old = clone $obj;
             $objService->destroy($obj);
-            return redirect()->route($this->routeBegging() . ".index");
+
+            return method_exists($this, 'redirectDestroy') == false ?
+                redirect()->route($this->routeBegging() . ".index") : $this->redirectDestroy($old);
         });
     }
 }
