@@ -114,6 +114,10 @@ trait Index
                             $data = $data->where("$tabela", "<=", "$req");
                             break;
 
+                        case 'moreorequal':
+                            $data = $data->where("$tabela", ">=", "$req");
+                            break;
+
                         case 'equal':
                             $data = $data->where("$tabela", "=", "$req");
                             break;
