@@ -107,7 +107,8 @@ trait Index
                 if ($data) {
                     switch ($type) {
                         case 'like':
-                            $data = $data->where("$tabela", "like", "$req%");
+                            $newReq = str_replace(' ', '%', $req);
+                            $data = $data->where("$tabela", "like", "%$newReq%");
                             break;
 
                         case 'lessorequal':
