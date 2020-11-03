@@ -8,7 +8,7 @@ trait TestDelete
 {
     public function assertDelete($id)
     {
-        $response = $this->delete($this->routeDelete());
+        $response = $this->json('DELETE', $this->routeDelete());
         $response->assertStatus(204);
 
         $model = $this->model();
@@ -18,7 +18,6 @@ trait TestDelete
         if (in_array(SoftDeletes::class, class_uses($model))) {
             $dados += ["deleted_at" => null];
         }
-
 
         $this->assertDatabaseMissing($table, $dados);
     }

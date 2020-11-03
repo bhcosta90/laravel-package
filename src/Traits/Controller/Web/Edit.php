@@ -4,6 +4,8 @@ namespace BRCas\Laravel\Traits\Controller\Web;
 
 use BRCas\Laravel\Traits\Support\Execute;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 trait Edit
@@ -39,7 +41,7 @@ trait Edit
         return view($this->editView(), compact('form'));
     }
 
-    public function update($id, FormBuilder $formBuilder)
+    public function update($id, FormBuilder $formBuilder, Request $request)
     {
         $objService = app($this->service());
 
@@ -48,18 +50,31 @@ trait Edit
 
         $obj = $objService->find($id);
 
-        return $this->execute(function () use ($obj, $objService, $formBuilder) {
+        return $this->execute(function () use ($obj, $objService, $formBuilder, $request) {
 
             $objForm = $formBuilder->create($this->form());
             if (!$objForm->isValid()) {
-                return redirect()->back()->withErrors($objForm->getErrors())->withInput();
+                if ($request->isJson()) {
+                    return response()->json([
+                        'error' => $objForm->getErrors(),
+                    ], Response::HTTP_BAD_REQUEST);
+                } else {
+                    return redirect()->back()->withErrors($objForm->getErrors())->withInput();
+                }
             }
 
             $data = $objForm->getFieldValues();
             $objService->edit($obj, $data);
 
-            return method_exists($this, 'redirectEdit') == false ?
-                redirect()->route($this->routeBegging() . ".index") : $this->redirectEdit($obj);
+            if (!$request->isJson()) {
+                return method_exists($this, 'redirectEdit') == false ?
+                    redirect()->route($this->routeBegging() . ".index") : $this->redirectEdit($obj);
+            } else{
+                return response()->json([
+                    'data' => $obj,
+                    'msg' => method_exists($this, 'messageUpdate') ? $this->messageUpdate() : __('Save with success'),
+                ], Response::HTTP_OK);
+            }
         });
     }
 }

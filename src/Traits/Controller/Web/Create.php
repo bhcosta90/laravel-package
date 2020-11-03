@@ -4,6 +4,8 @@ namespace BRCas\Laravel\Traits\Controller\Web;
 
 use BRCas\Laravel\Traits\Support\Execute;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 trait Create
@@ -36,23 +38,36 @@ trait Create
         return view($this->createView(), compact('form'));
     }
 
-    public function store(FormBuilder $formBuilder)
+    public function store(FormBuilder $formBuilder, Request $request)
     {
         $objService = app($this->service());
 
         if (!method_exists($objService, 'create')) throw new Exception(__('Method create not found in service'));
 
-        return $this->execute(function () use ($objService, $formBuilder) {
+        return $this->execute(function () use ($objService, $formBuilder, $request) {
             $objForm = $formBuilder->create($this->form());
             if (!$objForm->isValid()) {
-                return redirect()->back()->withErrors($objForm->getErrors())->withInput();
+                if($request->isJson()){
+                    return response()->json([
+                        'error' => $objForm->getErrors(),
+                    ], Response::HTTP_BAD_REQUEST);
+                } else {
+                    return redirect()->back()->withErrors($objForm->getErrors())->withInput();
+                }
             }
 
             $data = $objForm->getFieldValues();
             $obj = $objService->create($data);
 
-            return method_exists($this, 'redirectCreate') == false ?
-                redirect()->route($this->routeBegging() . ".index") : $this->redirectCreate($obj);
+            if (!$request->isJson()) {
+                return method_exists($this, 'redirectCreate') == false ?
+                    redirect()->route($this->routeBegging() . ".index") : $this->redirectCreate($obj);
+            } else{
+                return response()->json([
+                    'data' => $obj,
+                    'msg' => method_exists($this, 'messageStore') ? $this->messageStore() : __('Save with success'),
+                ], Response::HTTP_CREATED);
+            }
         });
     }
 }

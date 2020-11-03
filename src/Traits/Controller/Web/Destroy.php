@@ -4,6 +4,8 @@ namespace BRCas\Laravel\Traits\Controller\Web;
 
 use BRCas\Laravel\Traits\Support\Execute;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 trait Destroy
 {
@@ -13,7 +15,7 @@ trait Destroy
 
     public abstract function routeBegging();
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $objService = app($this->service());
 
@@ -22,12 +24,18 @@ trait Destroy
 
         $obj = $objService->find($id);
 
-        return $this->execute(function () use ($obj, $objService) {
+        return $this->execute(function () use ($obj, $objService, $request) {
             $old = clone $obj;
             $objService->destroy($obj);
 
-            return method_exists($this, 'redirectDestroy') == false ?
-                redirect()->route($this->routeBegging() . ".index") : $this->redirectDestroy($old);
+            if (!$request->isJson()) {
+                return method_exists($this, 'redirectDestroy') == false ?
+                    redirect()->route($this->routeBegging() . ".index") : $this->redirectDestroy($old);
+            } else {
+                return response()->json([
+                    'msg' => method_exists($this, 'messageDelete') ? $this->messageDelete() : __('Save with success'),
+                ], Response::HTTP_NO_CONTENT);
+            }
         });
     }
 }
