@@ -101,13 +101,17 @@ trait Index
 
         foreach ($request->except(['_token']) as $k => $req) {
             $dados = explode('_', $k);
-            if (count($dados) > 1) {
+            if (count($dados) > 1 && !empty($req)) {
                 $type = array_shift($dados);
-                $tabela = str_replace('|', '.', array_shift($dados));
+                $tabela = str_replace('|', '.', implode('_', $dados));
                 if ($data) {
                     switch ($type) {
                         case 'like':
                             $data = $data->where("$tabela", "like", "$req%");
+                            break;
+
+                        case 'lessorequal':
+                            $data = $data->where("$tabela", "<=", "$req");
                             break;
 
                         case 'equal':
