@@ -1,7 +1,6 @@
 {
   "name": "bhcosta90/laravel-package",
   "description": "Pacote para trabalhar com o laravel",
-  "minimum-stability": "dev",
   "prefer-stable": true,
   "authors": [
     {
