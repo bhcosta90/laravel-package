@@ -1,0 +1,63 @@
+<?php
+
+namespace Costa\Package\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class PackageServiceProvider extends ServiceProvider
+{
+    /**
+     * @var string $moduleName
+     */
+    protected $moduleName = 'Package';
+
+    /**
+     * @var string $moduleNameLower
+     */
+    protected $moduleNameLower = 'costa_package';
+
+    /**
+     * Boot the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->registerConfig();
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Register config.
+     *
+     * @return void
+     */
+    protected function registerConfig()
+    {
+        $this->publishes([
+            __DIR__."/../Config/config.php" => config_path($this->moduleNameLower . '.php'),
+        ], 'config');
+        $this->mergeConfigFrom(
+            __DIR__."/../Config/config.php", $this->moduleNameLower
+        );
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [];
+    }
+}

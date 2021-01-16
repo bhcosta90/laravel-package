@@ -1,0 +1,101 @@
+<?php
+
+namespace Costa\Package\Http\Controllers\Traits;
+
+use App\Exceptions\WebException;
+use Costa\Package\Http\Controllers\BaseTrait;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Kris\LaravelFormBuilder\FormBuilder;
+
+trait EditTrait
+{
+    use BaseTrait, Api\UpdateTrait;
+
+    /**
+     * @param FormBuilder $formBuilder
+     * @param Request $request
+     * @param $id
+     * @return Application|Factory|View
+     * @throws WebException
+     */
+    public function edit(FormBuilder $formBuilder, Request $request, $id)
+    {
+        try {
+            $service = app($this->service());
+            $function = $this->functionEdit() ?: $this->getNameFunction($this->getUcWords($this->getNameRoute())).'Show';
+            if (!method_exists($service, $function)) {
+                throw new WebException(__("Method :function do not exist in service :service", [
+                    'function' => $function,
+                    'service' => get_class($service)
+                ]));
+            }
+
+            $obj = $service->$function($id);
+
+            $form = $formBuilder->create($this->form(), [
+                'method' => 'PUT',
+                'model' => $obj,
+                'attr' => [
+                    'id' => 'formDefault'
+                ],
+                'url' => route($this->getNameRoute() . '.update', $id),
+            ], $request->route()->parameters())->add('btn', 'submit', [
+                "attr" => [
+                    'class' => 'btn btn-primary',
+                    'id' => 'btnForm'
+                ],
+                'label' => __('Edit')
+            ]);
+            return view($this->getView().'.edit', ['form' => $form] + $this->returnEditAction());
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function returnEditAction(): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws WebException
+     * @return string
+     */
+    public function form(): string
+    {
+        throw new WebException('Form do not implemented');
+    }
+
+    /**
+     * @return string
+     * @throws WebException
+     */
+    public function service(): string
+    {
+        throw new WebException('Service do not implemented');
+    }
+
+    /**
+     * @return string
+     * @throws WebException
+     */
+    public function resource(): string
+    {
+        throw new WebException('Resource do not implemented');
+    }
+
+    /**
+     * @return null
+     */
+    public function functionEdit()
+    {
+        return null;
+    }
+}
