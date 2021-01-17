@@ -25,6 +25,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "kris/laravel-form-builder": "^1.40",
-        "laravel/framework": "^8.0"
+        "laravel/framework": "^8.0",
+        "jason-guru/laravel-make-repository": "^0.0.3"
     }
 }
