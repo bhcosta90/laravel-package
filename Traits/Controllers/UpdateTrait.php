@@ -1,40 +1,40 @@
 <?php
 
-
-namespace Costa\Package\Http\Controllers\Traits\Api;
-
+namespace Costa\Package\Traits\Controllers;
 
 use App\Exceptions\WebException;
-use Costa\Package\Http\Controllers\BaseTrait;
+use Costa\Package\Traits\BaseTrait;;
 use Costa\Package\Util\ExecuteAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-trait StoreTrait
+trait UpdateTrait
 {
     use BaseTrait;
 
     /**
      * @param Request $request
+     * @param $id
      * @return JsonResponse|RedirectResponse|object
      * @throws WebException
      */
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
         return (new ExecuteAction)->setForm($this->form())
-            ->setFunction($this->functionStore() ?: $this->getNameFunction())
+            ->setFunction($this->functionUpdate() ?: $this->getNameFunction())
+            ->setId($id)
             ->setRequest($request)
             ->setService($this->service())
-            ->setSession('success', __('Dados inseridos com sucesso'))
             ->setNameRoute($this->getNameRoute())
+            ->setSession('success', __('Dados alterados com sucesso'))
             ->exec();
     }
 
     /**
      * @return array
      */
-    protected function returnStoreAction(): array
+    protected function returnUpdateAction(): array
     {
         return [];
     }
@@ -69,7 +69,8 @@ trait StoreTrait
     /**
      * @return null
      */
-    public function functionStore(){
+    public function functionUpdate()
+    {
         return null;
     }
 }

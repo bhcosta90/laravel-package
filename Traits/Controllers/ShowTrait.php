@@ -1,9 +1,9 @@
 <?php
 
-namespace Costa\Package\Http\Controllers\Traits;
+namespace Costa\Package\Traits\Controllers;
 
 use App\Exceptions\WebException;
-use Costa\Package\Http\Controllers\BaseTrait;
+use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use ReflectionClass;
@@ -42,7 +42,7 @@ trait ShowTrait
                     return (new $resource($data))->additional($this->returnShowAction());
                 default:
                     return view($this->getView().'.show', [
-                        'results' => $data,
+                        'rs' => $data,
                     ] + $this->returnShowAction());
             }
 

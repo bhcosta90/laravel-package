@@ -1,9 +1,9 @@
 <?php
 
-namespace Costa\Package\Http\Controllers\Traits;
+namespace Costa\Package\Traits\Controllers;
 
 use App\Exceptions\WebException;
-use Costa\Package\Http\Controllers\BaseTrait;
+use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -13,7 +13,7 @@ use Kris\LaravelFormBuilder\FormBuilder;
 
 trait EditTrait
 {
-    use BaseTrait, Api\UpdateTrait;
+    use BaseTrait, UpdateTrait;
 
     /**
      * @param FormBuilder $formBuilder

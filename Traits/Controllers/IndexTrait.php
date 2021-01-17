@@ -1,9 +1,9 @@
 <?php
 
-namespace Costa\Package\Http\Controllers\Traits;
+namespace Costa\Package\Traits\Controllers;
 
 use App\Exceptions\WebException;
-use Costa\Package\Http\Controllers\BaseTrait;
+use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use ReflectionClass;

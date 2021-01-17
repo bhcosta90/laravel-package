@@ -1,6 +1,6 @@
 <?php
 
-namespace Costa\Package\Http\Controllers;
+namespace Costa\Package\Traits;
 
 use Illuminate\Support\Facades\Route;
 
