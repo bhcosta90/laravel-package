@@ -51,13 +51,4 @@ trait CreateTrait
     {
         return [];
     }
-
-    /**
-     * @throws CustomException
-     * @return string
-     */
-    public function form(): string
-    {
-        throw new CustomException('Form do not implemented');
-    }
 }
