@@ -5,11 +5,11 @@ namespace Costa\Package\Util;
 
 
 use Costa\Package\Exceptions\CustomException;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Exception;
 
 class ExecuteAction
 {
@@ -105,7 +105,8 @@ class ExecuteAction
      * @return JsonResponse|RedirectResponse|object
      * @throws CustomException
      */
-    public function exec(){
+    public function exec($return = null)
+    {
         try {
             $formBuilder = app(FormBuilder::class);
 
@@ -129,10 +130,10 @@ class ExecuteAction
                 ]));
             }
             $data = $form->getFieldValues();
-            if($this->id) {
-                $service->$function($this->id, $data);
-            }else{
-                $service->$function($data);
+            if ($this->id) {
+                $ret = $service->$function($this->id, $data);
+            } else {
+                $ret = $service->$function($data);
             }
 
             switch ($this->request->getContentType()) {
@@ -140,13 +141,17 @@ class ExecuteAction
                     dd('Configura aqui');
                     break;
                 default:
-                    if($this->sessionKey && $this->sessionMessage) {
+                    if ($this->sessionKey && $this->sessionMessage) {
                         session()->flash($this->sessionKey, $this->sessionMessage);
                     }
-                    return redirect()->route($this->nameRoute . '.index');
+                    if ($return === null) {
+                        return redirect()->route($this->nameRoute . '.index');
+                    } else {
+                        return $return($ret);
+                    }
             }
         } catch (CustomException $e) {
-            if($e->getCode() > 0) {
+            if ($e->getCode() > 0) {
                 switch ($this->request->getContentType()) {
                     case 'json':
                         return response()->json(['message' => $e->getMessage()])->setStatusCode($e->getCode());
