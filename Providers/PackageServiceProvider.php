@@ -24,6 +24,7 @@ class PackageServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerConfig();
+        $this->registerViews();
     }
 
     /**
@@ -49,6 +50,26 @@ class PackageServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__."/../Config/config.php", $this->moduleNameLower
         );
+    }
+
+
+
+    /**
+     * Register views.
+     *
+     * @return void
+     */
+    public function registerViews()
+    {
+        $viewPath = resource_path('views/vendor/' . $this->moduleNameLower);
+
+        $sourcePath = __DIR__ . '/../Resources/views';
+
+        $this->publishes([
+            $sourcePath => $viewPath
+        ], ['views', $this->moduleNameLower . '-module-views']);
+
+        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
     }
 
     /**
