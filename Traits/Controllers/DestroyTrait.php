@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ trait DestroyTrait
             $service = app($this->service());
             $function = $this->functionDestroy() ?: $this->getNameFunction();
             if (!method_exists($service, $function)) {
-                throw new WebException(__("Method :function do not exist in service :service", [
+                throw new CustomException(__("Method :function do not exist in service :service", [
                     'function' => $function,
                     'service' => get_class($service)
                 ]));
@@ -39,12 +39,12 @@ trait DestroyTrait
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**

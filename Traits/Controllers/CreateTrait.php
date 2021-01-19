@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;
 use Costa\Package\Util\ExecuteAction;
 use Exception;
@@ -20,7 +20,7 @@ trait CreateTrait
      * @param FormBuilder $formBuilder
      * @param Request $request
      * @return Application|Factory|View
-     * @throws WebException
+     * @throws CustomException
      */
     public function create(FormBuilder $formBuilder, Request $request)
     {
@@ -53,11 +53,11 @@ trait CreateTrait
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function form(): string
     {
-        throw new WebException('Form do not implemented');
+        throw new CustomException('Form do not implemented');
     }
 }

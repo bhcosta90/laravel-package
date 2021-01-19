@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -20,7 +20,7 @@ trait EditTrait
      * @param Request $request
      * @param $id
      * @return Application|Factory|View
-     * @throws WebException
+     * @throws CustomException
      */
     public function edit(FormBuilder $formBuilder, Request $request, $id)
     {
@@ -28,7 +28,7 @@ trait EditTrait
             $service = app($this->service());
             $function = $this->functionEdit() ?: $this->getNameFunction($this->getUcWords($this->getNameRoute())).'Show';
             if (!method_exists($service, $function)) {
-                throw new WebException(__("Method :function do not exist in service :service", [
+                throw new CustomException(__("Method :function do not exist in service :service", [
                     'function' => $function,
                     'service' => get_class($service)
                 ]));
@@ -65,30 +65,30 @@ trait EditTrait
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function form(): string
     {
-        throw new WebException('Form do not implemented');
+        throw new CustomException('Form do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function resource(): string
     {
-        throw new WebException('Resource do not implemented');
+        throw new CustomException('Resource do not implemented');
     }
 
     /**

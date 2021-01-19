@@ -2,8 +2,8 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
-use Costa\Package\Traits\BaseTrait;;
+use Costa\Package\Exceptions\CustomException;
+use Costa\Package\Traits\BaseTrait;
 use Exception;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use ReflectionClass;
@@ -20,7 +20,7 @@ trait IndexTrait
     /**
      * @param Request $request
      * @return Application|Factory|View
-     * @throws WebException
+     * @throws CustomException
      * @throws ReflectionException
      */
     public function index(Request $request)
@@ -28,14 +28,14 @@ trait IndexTrait
         try {
             $service = app($this->service());
             if($this->verifyContract() && !in_array($this->verifyContract(), class_implements($service))){
-                throw new WebException(__("Contract :contract do not implement in service :service", [
+                throw new CustomException(__("Contract :contract do not implement in service :service", [
                     'contract' => $this->verifyContract(),
                     'service' => get_class($service)
                 ]));
             }
             $function = $this->functionIndex() ?: $this->getNameFunction();
             if (!method_exists($service, $function)) {
-                throw new WebException(__("Method :function do not exist in service :service", [
+                throw new CustomException(__("Method :function do not exist in service :service", [
                     'function' => $function,
                     'service' => get_class($service)
                 ]));
@@ -77,21 +77,21 @@ trait IndexTrait
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function resource(): string
     {
-        throw new WebException('Resource do not implemented');
+        throw new CustomException('Resource do not implemented');
     }
 
     /**

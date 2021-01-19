@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -20,7 +20,7 @@ trait ShowTrait
      * @param Request $request
      * @param $id
      * @return Application|Factory|View
-     * @throws WebException
+     * @throws CustomException
      */
     public function show(Request $request, $id)
     {
@@ -28,7 +28,7 @@ trait ShowTrait
             $service = app($this->service());
             $function = $this->functionShow() ?: $this->getNameFunction();
             if (!method_exists($service, $function)) {
-                throw new WebException(__("Method :function do not exist in service :service", [
+                throw new CustomException(__("Method :function do not exist in service :service", [
                     'function' => $function,
                     'service' => get_class($service)
                 ]));
@@ -60,21 +60,21 @@ trait ShowTrait
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**
-     * @throws WebException
+     * @throws CustomException
      * @return string
      */
     public function resource(): string
     {
-        throw new WebException('Resource do not implemented');
+        throw new CustomException('Resource do not implemented');
     }
 
     /**

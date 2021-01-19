@@ -17,7 +17,7 @@ trait UpdateTrait
      * @param Request $request
      * @param $id
      * @return JsonResponse|RedirectResponse|object
-     * @throws WebException
+     * @throws CustomException
      */
     public function update(Request $request, $id)
     {
@@ -41,25 +41,25 @@ trait UpdateTrait
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function form(): string
     {
-        throw new WebException('Form do not implemented');
+        throw new CustomException('Form do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function resource(): string
     {

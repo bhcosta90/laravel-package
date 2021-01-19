@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use Costa\Package\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;;
 use Costa\Package\Util\ExecuteAction;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +16,7 @@ trait StoreTrait
     /**
      * @param Request $request
      * @return JsonResponse|RedirectResponse|object
-     * @throws WebException
+     * @throws CustomException
      */
     public function store(Request $request)
     {
@@ -39,29 +39,29 @@ trait StoreTrait
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function form(): string
     {
-        throw new WebException('Form do not implemented');
+        throw new CustomException('Form do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function service(): string
     {
-        throw new WebException('Service do not implemented');
+        throw new CustomException('Service do not implemented');
     }
 
     /**
      * @return string
-     * @throws WebException
+     * @throws CustomException
      */
     public function resource(): string
     {
-        throw new WebException('Resource do not implemented');
+        throw new CustomException('Resource do not implemented');
     }
 
     /**
