@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use App\Exceptions\WebException;
+use Costa\Package\Exceptions\CustomException;
 use Costa\Package\Traits\BaseTrait;;
 use Costa\Package\Util\ExecuteAction;
 use Illuminate\Http\JsonResponse;
@@ -63,7 +63,7 @@ trait UpdateTrait
      */
     public function resource(): string
     {
-        throw new WebException('Resource do not implemented');
+        throw new CustomException('Resource do not implemented');
     }
 
     /**

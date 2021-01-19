@@ -2,7 +2,7 @@
 
 namespace Costa\Package\Traits\Controllers;
 
-use App\Exceptions\WebException;
+use Costa\Package\Exceptions\WebException;
 use Costa\Package\Traits\BaseTrait;;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
