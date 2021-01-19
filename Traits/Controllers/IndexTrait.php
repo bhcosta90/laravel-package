@@ -77,24 +77,6 @@ trait IndexTrait
     }
 
     /**
-     * @throws CustomException
-     * @return string
-     */
-    public function service(): string
-    {
-        throw new CustomException('Service do not implemented');
-    }
-
-    /**
-     * @throws CustomException
-     * @return string
-     */
-    public function resource(): string
-    {
-        throw new CustomException('Resource do not implemented');
-    }
-
-    /**
      * @return null
      */
     public function functionIndex(){

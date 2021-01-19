@@ -40,33 +40,6 @@ trait UpdateTrait
     }
 
     /**
-     * @return string
-     * @throws CustomException
-     */
-    public function form(): string
-    {
-        throw new CustomException('Form do not implemented');
-    }
-
-    /**
-     * @return string
-     * @throws CustomException
-     */
-    public function service(): string
-    {
-        throw new CustomException('Service do not implemented');
-    }
-
-    /**
-     * @return string
-     * @throws CustomException
-     */
-    public function resource(): string
-    {
-        throw new CustomException('Resource do not implemented');
-    }
-
-    /**
      * @return null
      */
     public function functionUpdate()

@@ -2,6 +2,7 @@
 
 namespace Costa\Package\Traits;
 
+use Costa\Package\Exceptions\CustomException;
 use Illuminate\Support\Facades\Route;
 
 trait BaseTrait
@@ -68,6 +69,41 @@ trait BaseTrait
      * @return null
      */
     protected function verifyContract()
+    {
+        return null;
+    }
+
+    /**
+     * @throws CustomException
+     * @return string
+     */
+    public function service(): string
+    {
+        throw new CustomException('Service do not implemented');
+    }
+
+    /**
+     * @throws CustomException
+     * @return string
+     */
+    public function resource(): string
+    {
+        throw new CustomException('Resource do not implemented');
+    }
+
+    /**
+     * @return string
+     * @throws CustomException
+     */
+    public function form(): string
+    {
+        throw new CustomException('Form do not implemented');
+    }
+
+    /**
+     * @return null
+     */
+    public function functionShow()
     {
         return null;
     }
