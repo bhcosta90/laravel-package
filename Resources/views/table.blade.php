@@ -1,4 +1,4 @@
-@if(count($data))
+@if(count($results))
     <table class='{!! $class ?? "table table-striped table-hover table-list-default" !!}'>
         <thead>
         <tr>
@@ -13,7 +13,7 @@
         </thead>
 
         <tbody>
-        @foreach ($data as $k => $rs)
+        @foreach ($results as $k => $rs)
             <tr class="{!! !empty($class_line) ? $class_line($rs) : "" !!}">
                 @foreach ($table as $j => $column)
                     @php $field = !empty($column['field']) ? $column['field'] : null; @endphp
@@ -61,7 +61,7 @@
         </tbody>
     </table>
 
-    @if($data instanceof \Illuminate\Pagination\LengthAwarePaginator && $data->toArray()['total'] > $data->toArray()['per_page'])
+    @if($results instanceof \Illuminate\Pagination\LengthAwarePaginator && $results->toArray()['total'] > $results->toArray()['per_page'])
         <div class='card-footer'>
             <div class='pagination'>
                 {!! $data->appends(request()->except([
