@@ -31,7 +31,7 @@ trait UuidGenerate
 
     public static function getFieldUuid()
     {
-        return config('package.default_uuid_column');
+        return config('costa_package.default_uuid_column');
     }
 
     /**
