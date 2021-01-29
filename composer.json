@@ -13,7 +13,6 @@
                 "Costa\\Package\\Providers\\PackageServiceProvider"
             ],
             "aliases": {
-
             }
         }
     },

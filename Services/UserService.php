@@ -40,15 +40,9 @@ class UserService implements WebContract, ApiContract
     {
         return $this->index($filter)->paginate();
     }
-    public function webIndex($filter): array
-    {
-        return [
-            'data' => $this->index($filter)->paginate(),
-            'filter' => $filter,
-        ];
-    }
 
-    private function index($filter){
+    private function index($filter)
+    {
         $data = $this->repository->orderBy('name', 'asc');
         if (isset($filter['name'])) {
             $data = $data->where('name', $filter['name']);
@@ -59,6 +53,14 @@ class UserService implements WebContract, ApiContract
         }
 
         return $data;
+    }
+
+    public function webIndex($filter): array
+    {
+        return [
+            'data' => $this->index($filter)->paginate(),
+            'filter' => $filter,
+        ];
     }
 
     public function find($id)
@@ -90,17 +92,18 @@ class UserService implements WebContract, ApiContract
             ]));
     }
 
+    private function addPasswordInArray(&$data)
+    {
+        $data['password'] = Hash::make($password = Str::random(10));
+        $data['password_old'] = $password;
+        return $data;
+    }
+
     public function apiStore($data)
     {
         $this->addPasswordInArray($data);
         $this->request->request->add(['password' => $data['password_old']]);
         return $this->repository->create($data);
-    }
-
-    private function addPasswordInArray(&$data){
-        $data['password'] = Hash::make($password = Str::random(10));
-        $data['password_old'] = $password;
-        return $data;
     }
 
     public function apiUpdate($id, $data)

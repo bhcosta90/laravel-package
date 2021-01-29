@@ -12,7 +12,8 @@ trait ApiCreateTrait
 {
     use BaseController;
 
-    public function store(FormBuilder $formBuilder){
+    public function store(FormBuilder $formBuilder)
+    {
         $form = $formBuilder->create($this->form());
         $service = app($this->service());
         if (!$form->isValid()) {

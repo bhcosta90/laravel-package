@@ -17,7 +17,7 @@ trait WebCreateTrait
         $service = app($this->service());
         $form = $formBuilder->create($this->form(), [
             'method' => 'POST',
-            'url' => route($this->getNameRoute().".store"),
+            'url' => route($this->getNameRoute() . ".store"),
         ])->add('btn', 'submit', [
             "attr" => ['class' => 'btn btn-primary'],
             'label' => __('Enviar')
@@ -25,7 +25,7 @@ trait WebCreateTrait
 
         $data = ['form' => $form];
 
-        if(method_exists($service, 'create')){
+        if (method_exists($service, 'create')) {
             $data += $service->create($request->all());
         }
 
@@ -34,7 +34,10 @@ trait WebCreateTrait
             ]);
     }
 
-    public function store(FormBuilder $formBuilder){
+    protected abstract function form();
+
+    public function store(FormBuilder $formBuilder)
+    {
         $form = $formBuilder->create($this->form());
         $service = app($this->service());
         if (!$form->isValid()) {
@@ -42,6 +45,4 @@ trait WebCreateTrait
         }
         return $service->webStore($form->getFieldValues(), $this->getNameRoute());
     }
-
-    protected abstract function form();
 }

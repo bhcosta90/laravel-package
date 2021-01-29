@@ -12,7 +12,7 @@ trait HasPermission
                 $permissions[$permission]['only'][] = $key;
             }
         }
-        foreach($permissions as $k => $p){
+        foreach ($permissions as $k => $p) {
             $this->middleware('can:' . $k, $p);
         }
     }

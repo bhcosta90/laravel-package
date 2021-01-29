@@ -19,7 +19,7 @@ trait WebEditTrait
         $form = $formBuilder->create($this->form(), [
             'model' => $obj,
             'method' => 'PUT',
-            'url' => route($this->getNameRoute().".update", $id),
+            'url' => route($this->getNameRoute() . ".update", $id),
         ])->add('btn', 'submit', [
             "attr" => ['class' => 'btn btn-primary'],
             'label' => __('Enviar')
@@ -28,16 +28,19 @@ trait WebEditTrait
         $nameView = str_replace(".{$id}", "", $this->getNameView());
         $data = ['form' => $form];
 
-        if(method_exists($service, 'edit')){
+        if (method_exists($service, 'edit')) {
             $data += $service->edit($request->all());
         }
 
-        return view($nameView, $data  + [
+        return view($nameView, $data + [
                 'route_name' => $this->getNameRoute()
             ]);
     }
 
-    public function update($id, FormBuilder $formBuilder){
+    protected abstract function form();
+
+    public function update($id, FormBuilder $formBuilder)
+    {
         $form = $formBuilder->create($this->form());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
@@ -45,6 +48,4 @@ trait WebEditTrait
         $service = app($this->service());
         return $service->webUpdate($id, $form->getFieldValues(), $this->getNameRoute());
     }
-
-    protected abstract function form();
 }

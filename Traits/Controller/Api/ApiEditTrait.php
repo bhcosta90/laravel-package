@@ -11,7 +11,8 @@ trait ApiEditTrait
 {
     use BaseController;
 
-    public function update($id, FormBuilder $formBuilder){
+    public function update($id, FormBuilder $formBuilder)
+    {
         $form = $formBuilder->create($this->form());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();

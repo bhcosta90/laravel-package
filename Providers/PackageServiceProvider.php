@@ -2,6 +2,7 @@
 
 namespace Costa\Package\Providers;
 
+use Config;
 use Illuminate\Support\ServiceProvider;
 
 class PackageServiceProvider extends ServiceProvider
@@ -27,16 +28,6 @@ class PackageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
      * Register config.
      *
      * @return void
@@ -44,11 +35,21 @@ class PackageServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__."/../Config/config.php" => config_path($this->moduleNameLower . '.php'),
+            __DIR__ . "/../Config/config.php" => config_path($this->moduleNameLower . '.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__."/../Config/config.php", $this->moduleNameLower
+            __DIR__ . "/../Config/config.php", $this->moduleNameLower
         );
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 
     /**
@@ -64,7 +65,7 @@ class PackageServiceProvider extends ServiceProvider
     private function getPublishableViewPaths(): array
     {
         $paths = [];
-        foreach (\Config::get('view.paths') as $path) {
+        foreach (Config::get('view.paths') as $path) {
             if (is_dir($path . '/modules/' . $this->moduleNameLower)) {
                 $paths[] = $path . '/modules/' . $this->moduleNameLower;
             }

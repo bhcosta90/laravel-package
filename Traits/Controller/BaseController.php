@@ -17,6 +17,31 @@ trait BaseController
 
     private $request;
 
+    protected function getNameRoute(): string
+    {
+        $action = $this->getActionName();
+        return substr(FacadeRoute::currentRouteName(), 0, -strlen($action) - 1);
+    }
+
+    protected function getActionName(): string
+    {
+        $action = app(Route::class);
+        return collect(explode('@', $action->getActionName()))->last();
+    }
+
+    protected function getNameView(): string
+    {
+        $requestUri = collect(explode('?', substr($this->getRequest()->getRequestUri(), 1)))->first();
+        $requestUriReplace = str_replace('/', '.', $requestUri);
+        $actionName = $this->getActionName();
+
+        if (substr($requestUriReplace, -strlen($actionName)) != $actionName) {
+            $requestUriReplace .= ".{$actionName}";
+        }
+
+        return $requestUriReplace;
+    }
+
     /**
      * @return mixed
      */
@@ -31,35 +56,6 @@ trait BaseController
     public function setRequest(Request $request): void
     {
         $this->request = $request;
-    }
-
-    protected function getNameRoute(): string
-    {
-        $action = $this->getActionName();
-        return substr(FacadeRoute::currentRouteName(), 0, -strlen($action) - 1);
-    }
-
-    protected function getActionName(): string
-    {
-        $action = app(Route::class);
-        return collect(explode('@', $action->getActionName()))->last();
-    }
-
-    protected function prefixNameView(): string {
-        return '';
-    }
-
-    protected  function getNameView(): string
-    {
-        $requestUri = collect(explode('?', substr($this->getRequest()->getRequestUri(), 1)))->first();
-        $requestUriReplace = str_replace('/', '.', $requestUri);
-        $actionName = $this->getActionName();
-
-        if(substr($requestUriReplace, -strlen($actionName)) != $actionName) {
-            $requestUriReplace .= ".{$actionName}";
-        }
-
-        return $this->prefixNameView() . $requestUriReplace;
     }
 
     protected abstract function service();

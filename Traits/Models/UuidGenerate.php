@@ -2,17 +2,13 @@
 
 
 namespace Costa\Package\Traits\Models;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 
 trait UuidGenerate
 {
-    public static function getFieldUuid()
-    {
-        return config('package.default_uuid_column');
-    }
-
     /**
      * Boot function from laravel.
      */
@@ -31,6 +27,11 @@ trait UuidGenerate
                 $model->{$field} = $original_uuid;
             }
         });
+    }
+
+    public static function getFieldUuid()
+    {
+        return config('package.default_uuid_column');
     }
 
     /**
