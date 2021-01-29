@@ -4,12 +4,17 @@
 namespace Costa\Package\Traits\Controller;
 
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as FacadeRoute;
 
 trait BaseController
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     private $request;
 
     /**
