@@ -68,7 +68,7 @@ class UserService implements WebContract, ApiContract
         return $this->repository->getById($id);
     }
 
-    public function webDestroy($id)
+    public function webDestroy($id, $nameRoute)
     {
         $this->repository->deleteById($id);
         return redirect()->route('admin.users.users.index')

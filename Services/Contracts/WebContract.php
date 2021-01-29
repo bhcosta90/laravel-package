@@ -11,7 +11,7 @@ interface WebContract
 
     public function webIndex($filter): array;
 
-    public function webDestroy($id);
+    public function webDestroy($id, $nameRoute);
 
     public function webUpdate($id, $data, $nameRoute);
 
