@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'uuid' => 'uuid'
+    'default_uuid_column' => 'uuid'
 ];
