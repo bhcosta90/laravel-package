@@ -1,6 +1,6 @@
 <?php
 
-namespace Costa\Package\Traits;
+namespace Costa\Package\Traits\Controller;
 
 trait HasPermission
 {
