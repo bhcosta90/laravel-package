@@ -6,6 +6,11 @@ trait HasPermission
 {
     public function __construct()
     {
+        $this->runPermissions();
+    }
+
+    protected function runPermissions()
+    {
         $permissions = [];
         foreach ($this->permissions() as $key => $permission) {
             if ($permission) {
