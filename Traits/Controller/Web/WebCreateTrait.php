@@ -36,13 +36,13 @@ trait WebCreateTrait
 
     protected abstract function form();
 
-    public function store(FormBuilder $formBuilder)
+    public function store(Request $request, FormBuilder $formBuilder)
     {
         $form = $formBuilder->create($this->form());
         $service = app($this->service());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
-        return $service->webStore($form->getFieldValues(), $this->getNameRoute());
+        return $service->webStore($request->route()->parameters() + $form->getFieldValues(), $this->getNameRoute());
     }
 }

@@ -39,13 +39,15 @@ trait WebEditTrait
 
     protected abstract function form();
 
-    public function update($id, FormBuilder $formBuilder)
+    public function update($id, Request $request, FormBuilder $formBuilder)
     {
         $form = $formBuilder->create($this->form());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
         $service = app($this->service());
-        return $service->webUpdate($id, $form->getFieldValues(), $this->getNameRoute());
+        return $service->webUpdate(
+            $id, $request->route()->parameters() + $form->getFieldValues(), $this->getNameRoute()
+        );
     }
 }

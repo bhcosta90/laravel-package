@@ -14,7 +14,9 @@ trait WebIndexTrait
     public function index(Request $request)
     {
         $service = app($this->service());
-        return view($this->getNameView(), $service->webIndex($request->except('_token')) + [
+        return view(
+            $this->getNameView(),
+            $service->webIndex($request->route()->parameters() + $request->except('_token')) + [
                 'route_name' => $this->getNameRoute()
             ]);
     }

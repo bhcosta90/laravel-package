@@ -10,9 +10,10 @@ trait WebDestroyTrait
 {
     use BaseController;
 
-    public function destroy($id)
+    public function destroy(...$id)
     {
+        $id[] = $this->getNameRoute();
         $service = app($this->service());
-        return $service->webDestroy($id, $this->getNameRoute());
+        return $service->webDestroy(...$id);
     }
 }
