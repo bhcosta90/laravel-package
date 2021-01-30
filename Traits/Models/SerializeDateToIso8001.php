@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Costa\Package\Model;
+namespace Costa\Package\Traits\Models;
 
 
 use DateTime;
