@@ -11,14 +11,22 @@ trait WebShowTrait
 {
     use BaseController;
 
-    public function show($id, Request $request)
+    public function show(Request $request, ...$params)
     {
-        $params = [$id];
-        $params += $request->route()->parameters();
+        $this->request = $request;
 
-        $nameView = str_replace(".{$id}", "", $this->getNameView());
+        $id = array_pop($params);
         $service = app($this->service());
-        return view($nameView, ['obj' => $service->find(...$params), "route_name" => $this->getNameRoute()]);
+        $obj = $service->find($id, ...$params);
+
+        $data = [
+            'obj' => $obj,
+        ];
+        if (method_exists($service, 'show')) {
+            $data += $service->show(...array_values($this->request->route()->parameters));
+        }
+
+        return view($this->getNameView() . "." . __FUNCTION__, ["route_name" => $this->getNameRoute()] + $data);
 
     }
 }

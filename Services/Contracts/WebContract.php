@@ -9,11 +9,11 @@ interface WebContract
 
     public function find($id);
 
-    public function webIndex($filter): array;
+    public function index($params): array;
 
-    public function webDestroy($id, $nameRoute);
+    public function destroy($id);
 
-    public function webUpdate($id, $data, $nameRoute);
+    public function update($id, $data);
 
-    public function webStore($data, $nameRoute);
+    public function store($data);
 }

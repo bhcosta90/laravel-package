@@ -14,10 +14,13 @@ trait WebIndexTrait
     public function index(Request $request)
     {
         $service = app($this->service());
-        return view(
-            $this->getNameView(),
-            $service->webIndex($request->route()->parameters() + $request->except('_token')) + [
-                'route_name' => $this->getNameRoute()
-            ]);
+        $data = [
+            $filter = $request->except('_token'),
+            $request->route()->parameters
+        ];
+        return view($this->getNameView()."." . __FUNCTION__, [
+            'route_name' => $this->getNameRoute(),
+            'filter' => $filter
+        ] + $service->index(...$data));
     }
 }

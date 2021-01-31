@@ -15,7 +15,7 @@ trait BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $request;
+    protected $request;
 
     protected function getNameRoute(): string
     {
@@ -31,31 +31,7 @@ trait BaseController
 
     protected function getNameView(): string
     {
-        $requestUri = collect(explode('?', substr($this->getRequest()->getRequestUri(), 1)))->first();
-        $requestUriReplace = str_replace('/', '.', $requestUri);
-        $actionName = $this->getActionName();
-
-        if (substr($requestUriReplace, -strlen($actionName)) != $actionName) {
-            $requestUriReplace .= ".{$actionName}";
-        }
-
-        return $requestUriReplace;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequest(): Request
-    {
-        return $this->request ?? request();
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request): void
-    {
-        $this->request = $request;
+        return $this->getNameRoute();
     }
 
     protected abstract function service();

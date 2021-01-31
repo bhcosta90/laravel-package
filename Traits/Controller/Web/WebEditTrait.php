@@ -12,42 +12,61 @@ trait WebEditTrait
 {
     use BaseController;
 
-    public function edit($id, FormBuilder $formBuilder, Request $request)
+    public function edit(FormBuilder $formBuilder, Request $request, ...$params)
     {
+        $this->request = $request;
+
+        $id = array_pop($params);
+
         $service = app($this->service());
-        $obj = $service->find($id);
+        $routeParams = $request->route()->parameters;
+        $obj = $service->find($id, ...$params);
+
         $form = $formBuilder->create($this->form(), [
             'model' => $obj,
             'method' => 'PUT',
-            'url' => route($this->getNameRoute() . ".update", $id),
+            'url' => route($this->getNameRoute() . ".update", $routeParams),
         ])->add('btn', 'submit', [
             "attr" => ['class' => 'btn btn-primary'],
             'label' => __('Enviar')
         ]);
 
-        $nameView = str_replace(".{$id}", "", $this->getNameView());
         $data = ['form' => $form];
 
         if (method_exists($service, 'edit')) {
-            $data += $service->edit($request->all());
+            $data += $service->edit(...array_values($this->request->route()->parameters));
         }
 
-        return view($nameView, $data + [
+        return view($this->getNameView() .".". __FUNCTION__, $data + [
                 'route_name' => $this->getNameRoute()
             ]);
     }
 
     protected abstract function form();
 
-    public function update($id, Request $request, FormBuilder $formBuilder)
+    public function update(Request $request, FormBuilder $formBuilder, ...$params)
     {
+        $this->request = $request;
+
+        $id = array_pop($params);
+
         $form = $formBuilder->create($this->form());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
         $service = app($this->service());
-        return $service->webUpdate(
-            $id, $request->route()->parameters() + $form->getFieldValues(), $this->getNameRoute()
-        );
+
+        $data = [
+            $id,
+            $form->getFieldValues(),
+            ...$params
+        ];
+
+        $obj = $service->update(...$data);
+        return $this->redirectUpdate($obj);
+    }
+
+    protected function redirectUpdate($obj){
+        return redirect()->route($this->getNameRoute() . ".index");
     }
 }
