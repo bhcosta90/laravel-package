@@ -1,6 +1,6 @@
 <?php
 
-namespace Costa\Package\Http\ControllersHttp\Middleware;
+namespace Costa\Package\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
