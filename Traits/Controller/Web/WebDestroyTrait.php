@@ -6,6 +6,7 @@ namespace Costa\Package\Traits\Controller\Web;
 
 use Costa\Package\Traits\Controller\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 trait WebDestroyTrait
 {
@@ -17,11 +18,14 @@ trait WebDestroyTrait
 
         $id = array_pop($params);
 
-        $service = app($this->service());
-        return $this->redirectDestroy($service->destroy($id, ...$params));
+        DB::transaction(function () use ($params) {
+            $service = app($this->service());
+            return $this->redirectDestroy($service->destroy($id, ...$params));
+        });
     }
 
-    protected function redirectDestroy($obj){
+    protected function redirectDestroy($obj)
+    {
         return redirect()->route($this->getNameRoute() . ".index");
     }
 }

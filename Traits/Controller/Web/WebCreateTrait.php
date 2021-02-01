@@ -6,6 +6,7 @@ namespace Costa\Package\Traits\Controller\Web;
 
 use Costa\Package\Traits\Controller\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 trait WebCreateTrait
@@ -32,7 +33,7 @@ trait WebCreateTrait
             $data += $service->create(...array_values($this->request->route()->parameters));
         }
 
-        return view($this->getNameView().".".__FUNCTION__, $data + [
+        return view($this->getNameView() . "." . __FUNCTION__, $data + [
                 'route_name' => $this->getNameRoute()
             ]);
     }
@@ -44,7 +45,6 @@ trait WebCreateTrait
         $this->request = $request;
 
         $form = $formBuilder->create($this->form());
-        $service = app($this->service());
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
@@ -53,11 +53,15 @@ trait WebCreateTrait
             ...array_values($this->request->route()->parameters)
         ];
 
-        $obj = $service->store(...$data);
-        return $this->redirectStore($obj);
+        return DB::transaction(function () use ($data) {
+            $service = app($this->service());
+            $obj = $service->store(...$data);
+            return $this->redirectStore($obj);
+        });
     }
 
-    protected function redirectStore($obj){
+    protected function redirectStore($obj)
+    {
         return redirect()->route($this->getNameRoute() . ".index");
     }
 }

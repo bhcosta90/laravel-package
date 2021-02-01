@@ -6,6 +6,7 @@ namespace Costa\Package\Traits\Controller\Web;
 
 use Costa\Package\Traits\Controller\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 trait WebEditTrait
@@ -62,8 +63,10 @@ trait WebEditTrait
             ...$params
         ];
 
-        $obj = $service->update(...$data);
-        return $this->redirectUpdate($obj);
+        return DB::transaction(function () use ($data) {
+            $obj = $service->update(...$data);
+            return $this->redirectUpdate($obj);
+        });
     }
 
     protected function redirectUpdate($obj){
