@@ -3,6 +3,7 @@
 namespace Costa\Package\Providers;
 
 use Config;
+use Costa\Package\Http\Middleware\JsonResponseMiddleware;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -64,7 +65,7 @@ class PackageServiceProvider extends ServiceProvider
         $this->app->singleton(\Faker\Generator::class, function () {
             return \Faker\Factory::create('pt_BR');
         });
-        
+
         Str::macro('price', function (?string $str) {
             return number_format($str, 2, ',', '.');
         });
@@ -76,6 +77,10 @@ class PackageServiceProvider extends ServiceProvider
         Str::macro('implode', function (string $delimiter, ?string $str) {
             return !empty($str) ? "{$delimiter}{$str}" : "";
         });
+
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('api', JsonResponseMiddleware::class);
+        app('router')->aliasMiddleware('json', JsonResponseMiddleware::class);
     }
 
     /**
