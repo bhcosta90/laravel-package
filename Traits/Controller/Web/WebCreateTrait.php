@@ -13,7 +13,7 @@ trait WebCreateTrait
 {
     use BaseController;
 
-    public function create(FormBuilder $formBuilder, Request $request)
+    public function create(FormBuilder $formBuilder, Request $request, ...$params)
     {
         $this->request = $request;
 
@@ -22,6 +22,7 @@ trait WebCreateTrait
         $form = $formBuilder->create($this->form(), [
             'method' => 'POST',
             'url' => route($this->getNameRoute() . ".store", $this->request->route()->parameters),
+            'data' => $params
         ])->add('btn', 'submit', [
             "attr" => ['class' => 'btn btn-primary'],
             'label' => __('Enviar')
@@ -40,11 +41,14 @@ trait WebCreateTrait
 
     protected abstract function form();
 
-    public function store(Request $request, FormBuilder $formBuilder)
+    public function store(Request $request, FormBuilder $formBuilder, ...$params)
     {
         $this->request = $request;
 
-        $form = $formBuilder->create($this->form());
+        $form = $formBuilder->create($this->form(), [
+            'data' => $params,
+        ]);
+
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }

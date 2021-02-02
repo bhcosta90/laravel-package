@@ -27,6 +27,7 @@ trait WebEditTrait
             'model' => $obj,
             'method' => 'PUT',
             'url' => route($this->getNameRoute() . ".update", $routeParams),
+            'data' => ['id' => $id] + $params
         ])->add('btn', 'submit', [
             "attr" => ['class' => 'btn btn-primary'],
             'label' => __('Enviar')
@@ -51,7 +52,10 @@ trait WebEditTrait
 
         $id = array_pop($params);
 
-        $form = $formBuilder->create($this->form());
+        $form = $formBuilder->create($this->form(), [
+            'data' => ['id' => $id] + $params,
+        ]);
+
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
