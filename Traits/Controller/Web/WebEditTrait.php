@@ -55,7 +55,6 @@ trait WebEditTrait
         if (!$form->isValid()) {
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
-        $service = app($this->service());
 
         $data = [
             $id,
@@ -64,6 +63,7 @@ trait WebEditTrait
         ];
 
         return DB::transaction(function () use ($data) {
+            $service = app($this->service());
             $obj = $service->update(...$data);
             return $this->redirectUpdate($obj);
         });
