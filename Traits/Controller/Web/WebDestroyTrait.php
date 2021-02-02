@@ -26,6 +26,6 @@ trait WebDestroyTrait
 
     protected function redirectDestroy($obj)
     {
-        return redirect()->route($this->getNameRoute() . ".index");
+        return redirect()->back();
     }
 }
