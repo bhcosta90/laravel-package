@@ -18,7 +18,7 @@ trait WebDestroyTrait
 
         $id = array_pop($params);
 
-        DB::transaction(function () use ($id, $params) {
+        return DB::transaction(function () use ($id, $params) {
             $service = app($this->service());
             return $this->redirectDestroy($service->destroy($id, ...$params));
         });
