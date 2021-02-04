@@ -23,7 +23,7 @@ trait UuidGenerate
         });
         static::saving(function ($model) use ($field) {
             $original_uuid = $model->getOriginal($field);
-            if ($original_uuid !== $model->{$field}) {
+            if (empty($model->{$field}) && $original_uuid !== $model->{$field}) {
                 $model->{$field} = $original_uuid;
             }
         });
