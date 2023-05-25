@@ -14,7 +14,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BRCas\\Laravel\\ServiceProvider"
+                "BRCas\\Laravel\\Providers\\PackageServiceProvider"
             ]
         }
     },
