@@ -44,7 +44,7 @@ class PackageServiceProvider extends ServiceProvider
             $sourcePath => $viewPath
         ], ['views', 'package']);
 
-        $this->loadViewsFrom($sourcePath, "package");
+        $this->loadViewsFrom($sourcePath, "bhcosta90-package");
     }
 
     /**
@@ -62,7 +62,7 @@ class PackageServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom(
             __DIR__ . '/../Config/config.php',
-            'package'
+            'bhcosta90-package'
         );
     }
 }
