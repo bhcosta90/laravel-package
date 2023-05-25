@@ -27,10 +27,10 @@ trait CreateTrait
             ]
         );
 
-        $viewPackage = property_exists($this, 'viewPackage')
-            ? $this->viewPackage . ":"
-            : "";
+        $view = property_exists($this, 'createView')
+            ? $this->createView
+            : RouteSupport::getRouteActual() . '.create';
 
-        return view($viewPackage . RouteSupport::getRouteActual() . '.create', compact('form'));
+        return view($view, compact('form'));
     }
 }

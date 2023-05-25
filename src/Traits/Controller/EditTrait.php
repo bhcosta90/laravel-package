@@ -41,10 +41,10 @@ trait EditTrait
             ]
         );
 
-        $viewPackage = property_exists($this, 'viewPackage')
-            ? $this->viewPackage . ":"
-            : "";
+        $view = property_exists($this, 'editView')
+            ? $this->editView
+            : RouteSupport::getRouteActual() . '.edit';
 
-        return view($viewPackage . RouteSupport::getRouteActual() . '.edit', compact('form'));
+        return view($view, compact('form'));
     }
 }

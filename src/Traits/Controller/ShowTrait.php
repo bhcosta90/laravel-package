@@ -31,10 +31,10 @@ trait ShowTrait
             return redirect()->back();
         }
 
-        $viewPackage = property_exists($this, 'viewPackage')
-            ? $this->viewPackage . ":"
-            : "";
+        $view = property_exists($this, 'showView')
+            ? $this->showView
+            : RouteSupport::getRouteActual() . '.show';
 
-        return view($viewPackage . RouteSupport::getRouteActual() . '.show', compact('obj'));
+        return view($view, compact('obj'));
     }
 }

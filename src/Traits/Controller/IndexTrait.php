@@ -136,12 +136,12 @@ trait IndexTrait
                 : null;
         }
 
-        $viewPackage = property_exists($this, 'viewPackage')
-            ? $this->viewPackage . ":"
-            : "";
+        $view = property_exists($this, 'indexView')
+            ? $this->indexView
+            : $request->route()->getName() . '.index';
 
         return view(
-            $viewPackage . $request->route()->getName(),
+            $view,
             compact(
                 'data',
                 'table',
