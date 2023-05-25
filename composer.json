@@ -1,0 +1,25 @@
+{
+    "name": "bhcosta90/laravel-package",
+    "autoload": {
+        "psr-4": {
+            "BRCas\\Laravel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bruno Costa",
+            "email": "bhcosta90@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BRCas\\Laravel\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "laravel/framework": "^10.10",
+        "kris/laravel-form-builder": "^1.52"
+    }
+}
