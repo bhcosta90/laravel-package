@@ -63,7 +63,7 @@
     @if($data instanceof \Illuminate\Pagination\LengthAwarePaginator && $data->toArray()['total'] > $data->toArray()['per_page'])
         <div class='card-footer'>
             <div class='pagination'>
-                {!! $data->appends(request()->except(config('package.pagination_except') + ['_token', 'q']))->links() !!}
+                {!! $data->appends(request()->except(config('bhcosta90-package.pagination_except') + ['_token', 'q']))->links() !!}
             </div>
         </div>
     @endif
