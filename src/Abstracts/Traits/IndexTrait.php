@@ -1,33 +1,73 @@
 <?php
 
-namespace BRCas\Laravel\Traits\Controller;
+namespace BRCas\Laravel\Abstracts\Traits;
 
 use BRCas\Laravel\Support\RouteSupport;
 use Exception;
-use Illuminate\Database\Eloquent\{Builder, Collection};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\{Builder, Collection};
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as SupportCollection;
-use Illuminate\Support\Facades\Route;
 
 trait IndexTrait
 {
-    use Validation\ValidationService;
+    use Validation\ServiceTrait, ViewTrait;
 
-    public abstract function table();
+    protected abstract function table();
 
-    public function getTotalPaginate()
+    private function executeTable(Request $request, string $action)
     {
-        return env('TOTAL_PAGINATE');
+        $objService = $this->validateService([$action]);
+
+        $data = $objService->$action();
+
+        if (
+            !$data instanceof Collection
+            && !$data instanceof LengthAwarePaginator
+            && !$data instanceof Builder
+            && !$data instanceof SupportCollection
+            && !is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)
+        ) {
+            $msg = 'The method return index is not ' . Collection::class . ' or ';
+            $msg .= LengthAwarePaginator::class . ' or ' . Builder::class . ' or ';
+            $msg .= 'not extends ' . \Illuminate\Database\Eloquent\Model::class;
+            $msg .= ". Sended " . gettype($data);
+            throw new Exception(__($msg));
+        }
+
+        $data = $this->executeFilteredData($request, $data);
+
+        if (array_key_exists("sql", $request->all())) {
+            die($data->toRawSql());
+        }
+
+        if (
+            $data instanceof Builder
+            || is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)
+        ) {
+            $data = $data->paginate($this->getTotalPaginate());
+        }
+
+        $register = $this->linkRegisterInIndex();
+        $table = $this->table();
+        $actions = $this->getActionsTable();
+        $filter = $this->getFilter();
+
+        return view(
+            $this->getView('index'),
+            compact(
+                'data',
+                'table',
+                'actions',
+                'filter',
+                'register'
+            )
+        );
     }
 
-    public function actions()
+    protected function getActionsTable()
     {
-        $actions = [];
-
-        /**
-         * @var \App\Models\User
-         */
         $objUser = auth()->user();
 
         $permissions = [];
@@ -75,84 +115,7 @@ trait IndexTrait
         return $actions;
     }
 
-    public function index(Request $request)
-    {
-        $actionIndex = property_exists($this, 'actionIndex')
-            ? $this->actionIndex
-            : "index";
-
-        $objService = $this->validateService([$actionIndex]);
-
-        /**
-         * @var \App\Models\User
-         */
-        $objUser = auth()->user();
-
-        $data = $objService->$actionIndex();
-
-        if (
-            !$data instanceof Collection
-            && !$data instanceof LengthAwarePaginator
-            && !$data instanceof Builder
-            && !$data instanceof SupportCollection
-            && !is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)
-        ) {
-            $msg = 'The method return index is not ' . Collection::class . ' or ';
-            $msg .= LengthAwarePaginator::class . ' or ' . Builder::class . ' or ';
-            $msg .= 'not extends ' . \Illuminate\Database\Eloquent\Model::class;
-            $msg .= ". Sended " . gettype($data);
-            throw new Exception(__($msg));
-        }
-
-        $data = $this->filteredData($request, $data);
-
-        if (array_key_exists("sql", $request->all())) {
-            die($data->toRawSql());
-        }
-
-        if (
-            $data instanceof Builder
-            || is_subclass_of($data, \Illuminate\Database\Eloquent\Model::class)
-        ) {
-            $data = $data->paginate($this->getTotalPaginate());
-        }
-
-        $table = $this->table();
-
-        $actions = $this->actions();
-
-        $filter = method_exists($this, 'filters') ? $this->filters() : [];
-
-        $permissions = [];
-        if (method_exists($this, 'permissions')) {
-            $permissions = $this->permissions();
-        }
-
-        $permission = $permissions['create'] ?? null;
-        $linkRegister = null;
-        if (($permission && $objUser->can($permission)) || $permission == null) {
-            $linkRegister = Route::has(RouteSupport::getRouteActual() . '.create')
-                ? route(RouteSupport::getRouteActual() . '.create')
-                : null;
-        }
-
-        $view = property_exists($this, 'indexView')
-            ? $this->indexView
-            : $request->route()->getName() . '.index';
-
-        return view(
-            $view,
-            compact(
-                'data',
-                'table',
-                'actions',
-                'filter',
-                'linkRegister'
-            )
-        );
-    }
-
-    protected function filteredData($request, $data)
+    protected function executeFilteredData(Request $request, $data)
     {
         foreach ($request->except(['_token']) as $k => $req) {
             $dados = explode('_', $k);
@@ -186,5 +149,30 @@ trait IndexTrait
         }
 
         return $data;
+    }
+
+    protected function getTotalPaginate(): int
+    {
+        return env('TOTAL_PAGINATE', 20);
+    }
+
+    protected function linkRegisterInIndex()
+    {
+        $objUser = auth()->user();
+
+        $permission = method_exists($this, 'permissions') && !empty($this->permissions()['create']) ?? null;
+        $register = null;
+        if (($permission && $objUser->can($permission)) || $permission == null) {
+            $register = Route::has(RouteSupport::getRouteActual() . '.create')
+                ? route(RouteSupport::getRouteActual() . '.create')
+                : null;
+        }
+
+        return $register;
+    }
+
+    protected function getFilter()
+    {
+        return [];
     }
 }

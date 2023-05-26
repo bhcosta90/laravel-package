@@ -22,8 +22,8 @@
         }
     },
     "require": {
-        "laravel/framework": "^10.10",
-        "kris/laravel-form-builder": "^1.52"
+        "laravel/framework": ">=10.10",
+        "kris/laravel-form-builder": ">=1.52"
     },
     "license": "MIT"
 }

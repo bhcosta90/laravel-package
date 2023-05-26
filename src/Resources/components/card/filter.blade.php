@@ -5,8 +5,8 @@
     foreach(array_keys($filter) as $key){
         if (request($key)) {
             $disable = false;
+            break;
         }
-        break;
     }
 @endphp
 <form>

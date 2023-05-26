@@ -1,10 +1,10 @@
 <?php
 
-namespace BRCas\Laravel\Traits\Controller\Validation;
+namespace BRCas\Laravel\Abstracts\Traits\Validation;
 
 use Exception;
 
-trait ValidationService
+trait ServiceTrait
 {
     public abstract function service();
 
