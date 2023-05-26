@@ -10,7 +10,7 @@
     }
 @endphp
 <form>
-    <div class='card'>
+    <x-card>
         <div class='card-header'>
             <div class='float-left'>{!! title($title ?? "title do not implemented") !!}</div>
             <div class='float-right'>
@@ -21,7 +21,7 @@
                 </a>
             </div>
         </div>
-        <div class='card-body' style="display:{{!$disable ? "block" : "none"}}">
+        <x-card-body show=0>
             @foreach ($filter as $key => $value)
                 @if(substr($key, 0, 7) == 'request')
                     {!! Form::hidden(substr($key, 8), request(substr($key, 8)), ['class' => 'form-control m-input']) !!}
@@ -43,10 +43,10 @@
                     </div>
                 @endif
             @endforeach
-        </div>
+        </x-card-body>
         <div class='card-footer' style="display:{{!$disable ? "block" : "none"}}">
-            <button class='btn btn-outline-primary'>{!! __('Filter') !!}</button>
+            <button class='btn btn-outline-primary'>{!! __('Buscar') !!}</button>
         </div>
-    </div>
+    </x-card>
 </form>
 @endif

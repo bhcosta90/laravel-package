@@ -2,9 +2,12 @@
 
 namespace BRCas\Laravel\Providers;
 
+use BRCas\Laravel\View\Components\Card\{CardBodyComponent, CardComponent, CardFilterComponent, CardHeaderComponent};
+use BRCas\Laravel\View\Components\Table\{TableComponent};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder as BuilderEloquent;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 
 class PackageServiceProvider extends ServiceProvider
@@ -32,6 +35,11 @@ class PackageServiceProvider extends ServiceProvider
     {
         $this->registerViews();
         $this->registerConfig();
+        Blade::component('card', CardComponent::class);
+        Blade::component('card-header', CardHeaderComponent::class);
+        Blade::component('card-body', CardBodyComponent::class);
+        Blade::component('card-filter', CardFilterComponent::class);
+        Blade::component('table-list', TableComponent::class);
     }
 
     public function registerViews()
