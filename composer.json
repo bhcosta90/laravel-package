@@ -24,5 +24,6 @@
     "require": {
         "laravel/framework": "^10.10",
         "kris/laravel-form-builder": "^1.52"
-    }
+    },
+    "license": "MIT"
 }
