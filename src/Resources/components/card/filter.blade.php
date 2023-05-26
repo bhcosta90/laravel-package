@@ -11,16 +11,7 @@
 @endphp
 <form>
     <x-card>
-        <div class='card-header'>
-            <div class='float-left'>{!! title($title ?? "title do not implemented") !!}</div>
-            <div class='float-right'>
-                <a href='javascript:void(1)'
-                    onclick='console.log($(this).parent().parent().parent().find(".card-body,.card-footer").slideToggle())'
-                    class='btn btn-secondary btn-sm'>
-                    <i class="fas fa-caret-down"></i>
-                </a>
-            </div>
-        </div>
+        <x-card-header :title="$title ?? 'title do not implemented'" open=".card-body, .card-footer" />
         <x-card-body show=0>
             @foreach ($filter as $key => $value)
                 @if(substr($key, 0, 7) == 'request')

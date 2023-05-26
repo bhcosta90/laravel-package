@@ -10,6 +10,7 @@ class CardHeaderComponent extends Component
         public string $title,
         public ?string $register = null,
         public ?string $textRegister = null,
+        public ?string $open = null,
     ) {
         //
     }

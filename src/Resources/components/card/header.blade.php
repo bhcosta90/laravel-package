@@ -5,4 +5,13 @@
             <a href='{{$register}}' class='btn btn-light'>{{ __($textRegister ?? "New register") }}</a>
         </div>
     @endif
+    @if($open)
+    <div class='float-right'>
+        <a href='javascript:void(1)'
+            onclick='console.log($(this).parent().parent().parent().find("{{$open}}").slideToggle())'
+            class='btn btn-secondary btn-sm'>
+            <i class="fas fa-caret-down"></i>
+        </a>
+    </div>
+    @endif
 </div>
