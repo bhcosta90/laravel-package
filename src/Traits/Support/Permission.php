@@ -24,6 +24,13 @@ trait Permission
                         $this->middleware('can:' . $permission, ['only' => ['destroy']]);
                         break;
                     default:
+                        if(!is_array($permission)) {
+                            $permission = [$permission];
+                        }
+                        foreach($permission as $pUnique) {
+                            $this->middleware('can:' . $pUnique, ['only' => [$key]]);
+                        }
+
                         break;
                 }
             }
