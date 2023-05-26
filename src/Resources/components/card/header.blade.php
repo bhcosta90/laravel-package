@@ -2,7 +2,13 @@
     <div class='float-left'><h5 class="pt-1 pb-0 title">{{$title}}</h5></div>
     @empty(!$register)
         <div class='float-right'>
-            <a href='{{$register}}' class='btn btn-light'>{{ __($textRegister ?? "New register") }}</a>
+            @switch($typeRegister)
+                @case('submit')
+                    <button class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
+                    @break
+                @default
+                <a href='{{$register}}' class='btn btn-light'>{{ __($textRegister ?? "New register") }}</a>
+            @endswitch
         </div>
     @endif
     @if($open)

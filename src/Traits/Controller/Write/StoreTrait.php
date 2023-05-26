@@ -24,6 +24,10 @@ trait StoreTrait {
         $objService = $this->validateService([$action]);
         $data = $request->route()->parameters() + $formSupport->data($this->formCreate());
 
+        if (method_exists($this, 'addDataInStore')) {
+            $data += $this->addDataInStore($request->all());
+        }
+
         return DB::transaction(function () use ($data, $request, $objService, $action) {
 
             $obj = $objService->$action($data);

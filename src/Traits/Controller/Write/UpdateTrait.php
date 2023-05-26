@@ -31,6 +31,9 @@ trait UpdateTrait {
         $id = end($dataParameters);
 
         $data = $request->route()->parameters() + $formSupport->data($this->formEdit());
+        if (method_exists($this, 'addDataInUpdate')) {
+            $data += $this->addDataInStore($request->all());
+        }
 
         $obj = $objService->$actionFind($id);
 

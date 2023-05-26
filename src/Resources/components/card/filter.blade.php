@@ -12,7 +12,7 @@
 <form>
     <x-card>
         <x-card-header :title="$title ?? 'title do not implemented'" open=".card-body, .card-footer" />
-        <x-card-body show=0>
+        <x-card-body :show="$disable ? 0 : 1">
             @foreach ($filter as $key => $value)
                 @if(substr($key, 0, 7) == 'request')
                     {!! Form::hidden(substr($key, 8), request(substr($key, 8)), ['class' => 'form-control m-input']) !!}
