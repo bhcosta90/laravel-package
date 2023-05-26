@@ -19,7 +19,16 @@ abstract class LaravelPackageController
     public function create()
     {
         $form = $this->runForm("create", "store", __("New"));
-        return view($this->getView("create"), compact('form'));
+
+        $data = [
+            'form' => $form,
+        ];
+
+        if ($addArrayInData = $this->getMethod(str()->camel("add data in create"))) {
+            $data += $this->$addArrayInData(request()->all());
+        }
+
+        return view($this->getView("create"), $data);
     }
 
     public function store()
@@ -30,7 +39,15 @@ abstract class LaravelPackageController
     public function edit()
     {
         $form = $this->runForm("edit", "update", __("Update"), ['model' => $this->getModel()]);
-        return view($this->getView("edit"), compact('form'));
+
+        $data = [
+            'form' => $form,
+        ];
+
+        if ($addArrayInData = $this->getMethod(str()->camel("add data in edit"))) {
+            $data += $this->$addArrayInData(request()->all());
+        }
+        return view($this->getView("edit"), $data);
     }
 
     public function update()
@@ -67,19 +84,5 @@ abstract class LaravelPackageController
                 'msg' => $message,
             ], Response::HTTP_OK);
         });
-    }
-
-    protected function getModel()
-    {
-        $objService = $this->validateService(['find']);
-        $allParameters = request()->route()->parameters();
-        $model = $objService->find(end($allParameters));
-
-        if (empty($model)) {
-            session()->flash('error', __('Register not found'));
-            return redirect()->back();
-        }
-
-        return $model;
     }
 }
