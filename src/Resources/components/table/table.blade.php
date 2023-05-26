@@ -4,7 +4,9 @@
         <tr>
             @foreach ($table as $k => $rs)
                 @php $class = !empty($rs['class']) ? $rs['class'] : ""; @endphp
-                <th class="{!! $class !!}">{!! __($k) !!}</th>
+                @if(substr($k, 0, 1) != "_")
+                    <th class="{!! $class !!}">{!! __($k) !!}</th>
+                @endif
             @endforeach
             @if(!empty($actions))
                 <th colspan="{!! count($actions) !!}"></th>
