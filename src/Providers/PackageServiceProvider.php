@@ -33,22 +33,22 @@ class PackageServiceProvider extends ServiceProvider
         Str::macro('is_active', function (string $title, string $url, null|bool $active) {
             $btn = "text-success";
             $icon = "fas fa-check-square";
-            $title = __('Disable ' . $title);
+            $title = __('Desabilitar ' . $title);
 
             if (empty($active)) {
                 $btn = "text-danger";
                 $icon = "far fa-square";
-                $title = __('Enable user');
+                $title = __('Habilitar user');
             }
 
             return "<a href='" . $url . "'
                 title='{$title}'
                 data-btn-disable='text-danger'
                 data-icon-disable='far fa-square'
-                data-title-disable='" . __('Enable ' . $title) . "'
+                data-title-disable='" . __('Habilitar ' . $title) . "'
                 data-btn-enable='text-success'
                 data-icon-enable='fas fa-check-square'
-                data-title-enable='" . __('Disable ' . $title) . "'
+                data-title-enable='" . __('Desabilitar ' . $title) . "'
                 class='action-enable-disabled {$btn}'>
                 <i class='{$icon}'></i>
             </a>";
