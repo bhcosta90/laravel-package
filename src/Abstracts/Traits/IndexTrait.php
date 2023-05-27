@@ -163,8 +163,6 @@ trait IndexTrait
             ? $this->permissions()['create']
             : null;
 
-        dd($objUser->can($permission), $permission);
-
         $register = null;
         if (($permission && $objUser->can($permission)) || $permission == null) {
             $register = Route::has(RouteSupport::getRouteActual() . '.create')
