@@ -6,6 +6,7 @@ use BRCas\Laravel\Support\RouteSupport;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -59,6 +60,11 @@ abstract class LaravelPackageController extends BaseController
         return $this->executePost("edit", "update", "Register updated successfully", $this->getModel());
     }
 
+    public function show(){
+        $obj = $this->getModel();
+        return view($this->getView("show"), compact('obj'));
+    }
+
     public function destroy(Request $request){
         $objService = $this->validateService(['destroy']);
 
@@ -80,12 +86,12 @@ abstract class LaravelPackageController extends BaseController
             $objService->$action($obj);
 
             if (!$request->isJson() && empty($request->get('__ajax'))) {
-                session()->flash('success', $message);
+                session()->flash('success', __($message));
                 return $redirect;
             }
 
             return response()->json([
-                'msg' => $message,
+                'msg' => __($message),
             ], Response::HTTP_OK);
         });
     }

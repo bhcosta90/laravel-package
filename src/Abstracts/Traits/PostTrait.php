@@ -52,13 +52,13 @@ trait PostTrait
         }
 
         if (!request()->isJson() && empty(request()->get('__ajax'))) {
-            session()->flash('success', $message);
+            session()->flash('success', __($message));
             return $redirect;
         }
 
         return response()->json([
             'data' => $obj,
-            'msg' => $message,
+            'msg' => __($message),
         ] + $attributes, $obj ? Response::HTTP_OK : Response::HTTP_CREATED);
     }
 
