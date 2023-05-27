@@ -3,13 +3,17 @@
 namespace BRCas\Laravel\Abstracts;
 
 use BRCas\Laravel\Support\RouteSupport;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller as BaseController;
 
-abstract class LaravelPackageController
+abstract class LaravelPackageController extends BaseController
 {
     use Traits\IndexTrait, Traits\FormTrait, Traits\ViewTrait;
     use Traits\PostTrait, Traits\Validation\MethodTrait, Traits\Validation\ServiceTrait;
+    use AuthorizesRequests, ValidatesRequests;
 
     public function index(Request $request)
     {
