@@ -29,6 +29,30 @@ class PackageServiceProvider extends ServiceProvider
         Str::macro('number', function ($str) {
             return preg_replace("/[^0-9]/", "", $str);
         });
+
+        Str::macro('is_active', function (string $title, string $url, null|bool $active) {
+            $btn = "text-success";
+            $icon = "fas fa-check-square";
+            $title = __('Disable ' . $title);
+
+            if (empty($active)) {
+                $btn = "text-danger";
+                $icon = "far fa-square";
+                $title = __('Enable user');
+            }
+
+            return "<a href='" . $url . "'
+                title='{$title}'
+                data-btn-disable='text-danger'
+                data-icon-disable='far fa-square'
+                data-title-disable='" . __('Enable ' . $title) . "'
+                data-btn-enable='text-success'
+                data-icon-enable='fas fa-check-square'
+                data-title-enable='" . __('Disable ' . $title) . "'
+                class='action-enable-disabled {$btn}'>
+                <i class='{$icon}'></i>
+            </a>";
+        });
     }
 
     public function boot()
