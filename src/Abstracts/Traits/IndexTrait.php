@@ -159,8 +159,12 @@ trait IndexTrait
     protected function linkRegisterInIndex()
     {
         $objUser = auth()->user();
+        $permission = method_exists($this, 'permissions') && !empty($this->permissions()['create'])
+            ? $this->permissions()['create']
+            : null;
 
-        $permission = method_exists($this, 'permissions') && !empty($this->permissions()['create']) ?? null;
+        dd($objUser->can($permission), $permission);
+
         $register = null;
         if (($permission && $objUser->can($permission)) || $permission == null) {
             $register = Route::has(RouteSupport::getRouteActual() . '.create')
