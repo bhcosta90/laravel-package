@@ -4,6 +4,7 @@ namespace BRCas\Laravel\Abstracts\Traits;
 
 use BRCas\Laravel\Support\FormSupport;
 use BRCas\Laravel\Support\RouteSupport;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 trait PostTrait
@@ -28,8 +29,6 @@ trait PostTrait
         }
 
         return DB::transaction(function () use ($objService, $action, $message, $data, $model) {
-            $request = request();
-
             if (empty($model)) {
                 $obj = $objService->$action($data);
             } else {
