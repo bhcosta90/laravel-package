@@ -8,11 +8,11 @@ trait ViewTrait
 {
     protected function getView($view)
     {
-        return $this->namespaceView() . RouteSupport::getRouteActual() . '.' . $view;
+        return $this->namespaceView() . '.' . $view;
     }
 
     protected function namespaceView()
     {
-        return null;
+        return RouteSupport::getRouteActual();
     }
 }
