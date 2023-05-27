@@ -59,6 +59,11 @@ abstract class LaravelPackageController extends BaseController
         return $this->executePost("edit", "update", "Register updated successfully", $this->getModel());
     }
 
+    public function show(){
+        $obj = $this->getModel();
+        return view($this->getView("show"), compact('obj'));
+    }
+
     public function destroy(Request $request){
         $objService = $this->validateService(['destroy']);
 
