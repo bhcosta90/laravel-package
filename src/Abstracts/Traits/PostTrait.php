@@ -39,7 +39,7 @@ trait PostTrait
         });
     }
 
-    protected function responsePost($action, $obj, $message)
+    protected function responsePost($action, $obj, $message, $attributes = [])
     {
         if ($messageAction = $this->getMethod(str()->camel("message " . $action))) {
             $message = $this->$messageAction($obj);
@@ -59,7 +59,7 @@ trait PostTrait
         return response()->json([
             'data' => $obj,
             'msg' => $message,
-        ], $obj ? Response::HTTP_OK : Response::HTTP_CREATED);
+        ] + $attributes, $obj ? Response::HTTP_OK : Response::HTTP_CREATED);
     }
 
     protected function getModel($action = "find")
