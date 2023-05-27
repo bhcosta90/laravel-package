@@ -8,7 +8,7 @@ class CardHeaderComponent extends Component
 {
     public function __construct(
         public string $title,
-        public bool $modalClose = true,
+        public bool $keepOpen = false,
         public ?string $register = null,
         public ?string $textRegister = null,
         public ?string $typeRegister = 'link',

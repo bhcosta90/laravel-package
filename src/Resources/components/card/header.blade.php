@@ -4,10 +4,10 @@
         <div class='float-right'>
             @switch($typeRegister)
                 @case('submit')
-                    <button data-modal-close="{{$modalClose}}" class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
+                    <button data-keep-open="{{$keepOpen}}" class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
                     @break
                 @default
-                <a href='{{$register}}' data-modal-close={{$modalClose}} class='btn btn-light btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
+                <a href='{{$register}}' data-keep-open={{$keepOpen}} class='btn btn-light btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
             @endswitch
         </div>
     @endif
