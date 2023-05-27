@@ -7,7 +7,7 @@
                     <button class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
                     @break
                 @default
-                <a href='{{$register}}' class='btn btn-light'>{{ __($textRegister ?? "New register") }}</a>
+                <a href='{{$register}}' class='btn btn-light btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
             @endswitch
         </div>
     @endif
