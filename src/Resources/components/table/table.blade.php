@@ -31,10 +31,10 @@
                                     $id = $action['action']($rs);
                                     switch($k){
                                         case 'show':
-                                        echo "<a href='{$action['action']($rs)}' class='btn-secondary btn-sm btn-show' data-modal-close=1><i class=\"fas fa-search-plus\"></i></a>";
+                                        echo "<a href='{$action['action']($rs)}' class='btn-secondary btn-sm btn-show'><i class=\"fas fa-search-plus\"></i></a>";
                                         break;
                                         case 'edit':
-                                        echo "<a href='{$action['action']($rs)}' class='btn-primary btn-sm btn-edit-by-link' data-modal-close=1><i class='fa fa-edit'></i></a>";
+                                        echo "<a href='{$action['action']($rs)}' class='btn-primary btn-sm btn-edit-by-link'><i class='fa fa-edit'></i></a>";
                                         break;
                                         case 'delete':
                                         $form_id = uniqid();
