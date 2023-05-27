@@ -38,7 +38,7 @@ class PackageServiceProvider extends ServiceProvider
             if (empty($active)) {
                 $btn = "text-danger";
                 $icon = "far fa-square";
-                $title = __('Habilitar user');
+                $title = __('Habilitar' . $title);
             }
 
             return "<a href='" . $url . "'
