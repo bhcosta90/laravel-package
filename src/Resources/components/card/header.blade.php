@@ -1,18 +1,18 @@
 <div class='card-header'>
-    <div class='float-left'><h5 class="pt-1 pb-0 title">{{$title}}</h5></div>
+    <div class='float-left float-start'><h5 class="pt-1 pb-0 title">{{$title}}</h5></div>
     @empty(!$register)
-        <div class='float-right'>
+        <div class='float-right float-end'>
             @switch($typeRegister)
                 @case('submit')
                     <button data-keep-open="{{$keepOpen}}" class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
                     @break
                 @default
-                <a href='{{$register}}' data-keep-open="{{$keepOpen}}" class='btn btn-light btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
+                <a href='{{$register}}' data-keep-open="{{$keepOpen}}" class='btn btn-light btn-outline-secondary btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
             @endswitch
         </div>
     @endif
     @if($open)
-    <div class='float-right'>
+    <div class='float-right float-end'>
         <a href='javascript:void(1)'
             onclick='console.log($(this).parent().parent().parent().find("{{$open}}").slideToggle())'
             class='btn btn-secondary btn-sm'>

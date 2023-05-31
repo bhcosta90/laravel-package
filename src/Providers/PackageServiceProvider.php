@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder as BuilderEloquent;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Collective\Html\FormBuilder as Form;
 
 class PackageServiceProvider extends ServiceProvider
 {
@@ -52,6 +53,60 @@ class PackageServiceProvider extends ServiceProvider
                 class='action-enable-disabled {$btn}'>
                 <i class='{$icon}'></i>
             </a>";
+        });
+
+        Str::macro('numberFormat', function ($value, $decimal = 2) {
+            switch (config('app.locale')) {
+                case 'pt_BR':
+                case 'pt-BR':
+                case 'pt-br':
+                    return "R$&nbsp;".number_format($value, $decimal, ',', '.');
+                default:
+                    return "US$&nbsp;" . number_format($value, $decimal);
+            }
+        });
+
+        Str::macro('dayWeek', function ($value) {
+            switch (config('app.locale')) {
+                case 'pt_BR':
+                case 'pt-BR':
+                case 'pt-br':
+                    $dayWeek = [
+                        'Domingo',
+                        'Segunda feira',
+                        'Terça feira',
+                        'Quarta feira',
+                        'Quinta feira',
+                        'Sexta feira',
+                        'Sábado'
+                    ];
+                    break;
+                default:
+                    $dayWeek = [
+                        'Sunday',
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday'
+                    ];
+            }
+
+            return $dayWeek[$value];
+        });
+
+        Str::macro('formDelete', function($action, $id){
+            $html = app(Form::class)->open([
+                'url' => $action,
+                'id' => "frm-" . $id,
+                'method' => 'DELETE',
+                'style' => 'display:none;',
+                'class' => 'form-delete-confirmation'
+            ]);
+            $html .= "<button>{$action}</button>";
+            $html .=  app(Form::class)->close();
+            return $html;
         });
     }
 

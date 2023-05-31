@@ -14,7 +14,7 @@ trait IndexTrait
 {
     use Validation\ServiceTrait, ViewTrait;
 
-    protected abstract function table();
+    protected abstract function table(): array;
 
     private function executeTable(Request $request, string $action)
     {

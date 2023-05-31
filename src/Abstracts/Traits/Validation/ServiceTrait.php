@@ -6,7 +6,7 @@ use Exception;
 
 trait ServiceTrait
 {
-    public abstract function service();
+    protected abstract function service(): string;
 
     protected function validateService(array $methods)
     {

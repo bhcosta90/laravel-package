@@ -13,7 +13,8 @@ use Illuminate\Routing\Controller as BaseController;
 abstract class LaravelPackageController extends BaseController
 {
     use Traits\IndexTrait, Traits\FormTrait, Traits\ViewTrait;
-    use Traits\PostTrait, Traits\Validation\MethodTrait, Traits\Validation\ServiceTrait;
+    use Traits\PostTrait, Traits\DeleteTrait;
+    use Traits\Validation\MethodTrait, Traits\Validation\ServiceTrait;
     use AuthorizesRequests, ValidatesRequests;
 
     public function index(Request $request)
@@ -68,7 +69,6 @@ abstract class LaravelPackageController extends BaseController
     public function destroy(Request $request){
         $objService = $this->validateService(['destroy']);
 
-
         return DB::transaction(function () use($request, $objService){
             $obj = $this->getModel();
             $action = "destroy";
@@ -94,5 +94,19 @@ abstract class LaravelPackageController extends BaseController
                 'msg' => __($message),
             ], Response::HTTP_OK);
         });
+    }
+
+    protected function getFilter(): array{
+        return [];
+    }
+
+    protected function addDataInCreate(): array
+    {
+        return [];
+    }
+
+    protected function addDataInEdit(): array
+    {
+        return [];
     }
 }

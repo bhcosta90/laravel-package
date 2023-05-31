@@ -3,6 +3,7 @@
 namespace BRCas\Laravel\View\Components\Table;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
 class TableComponent extends Component
@@ -13,7 +14,7 @@ class TableComponent extends Component
      * @return void
      */
     public function __construct(
-        public array|LengthAwarePaginator $data,
+        public array|LengthAwarePaginator|Collection $data,
         public array $table,
         public array $actions = [],
     ) {

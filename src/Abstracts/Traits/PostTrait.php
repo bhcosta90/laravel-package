@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 trait PostTrait
 {
-    use Validation\ServiceTrait, Validation\MethodTrait;
+    use Validation\ServiceTrait, Validation\MethodTrait, FindTrait;
 
     protected function executePost($form, $action, $message, $model = null)
     {
@@ -27,6 +27,8 @@ trait PostTrait
                 $data += $this->$addArrayInData(request()->all());
             }
         }
+
+        $data += request()->route()->parameters();
 
         return DB::transaction(function () use ($objService, $action, $message, $data, $model) {
             if (empty($model)) {
@@ -48,7 +50,7 @@ trait PostTrait
         $redirect = redirect()->route(RouteSupport::getRouteActual() . ".index", request()->route()->parameters());
 
         if ($redirectAction = $this->getMethod(str()->camel("redirect " . $action))) {
-            $redirect = $this->$redirectAction($obj);
+            $redirect = redirect()->to($this->$redirectAction($obj));
         }
 
         if (!request()->isJson() && empty(request()->get('__ajax'))) {
@@ -60,19 +62,5 @@ trait PostTrait
             'data' => $obj,
             'msg' => __($message),
         ] + $attributes, $obj ? Response::HTTP_OK : Response::HTTP_CREATED);
-    }
-
-    protected function getModel($action = "find")
-    {
-        $objService = $this->validateService([$action]);
-        $allParameters = request()->route()->parameters();
-        $model = $objService->find(end($allParameters));
-
-        if (empty($model)) {
-            session()->flash('error', __('Register not found'));
-            return redirect()->back();
-        }
-
-        return $model;
     }
 }
