@@ -4,7 +4,7 @@ namespace BRCas\Laravel\Traits\Support;
 
 trait Permission
 {
-    public abstract function permissions();
+    protected abstract function permissions(): array;
 
     public function __construct()
     {

@@ -37,6 +37,11 @@ trait PostTrait
                 $obj = $objService->$action($model, $data);
             }
 
+            event(RouteSupport::getRouteActual() . '.' . $action, [
+                'model' => $obj,
+                'data' => $data,
+            ]);
+
             return $this->responsePost($action, $obj, $message);
         });
     }

@@ -25,6 +25,7 @@ class FormSupport
             'model' => $model,
             'attr' => [
                 'id' => 'form-builder-'.sha1(str()->uuid()),
+                'class' => 'laravel-form-builder'
             ]
         ], $attributes['data'] ?? []);
 

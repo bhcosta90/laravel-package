@@ -29,6 +29,10 @@ trait DeleteTrait
 
             $objService->$action($obj);
 
+            event(RouteSupport::getRouteActual() . '.' . $action, [
+                'model' => $obj,
+            ]);
+
             if (!$request->isJson() && empty($request->get('__ajax'))) {
                 session()->flash('success', __($message));
                 return $redirect;

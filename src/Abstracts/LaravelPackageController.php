@@ -66,34 +66,8 @@ abstract class LaravelPackageController extends BaseController
         return view($this->getView("show"), compact('obj'));
     }
 
-    public function destroy(Request $request){
-        $objService = $this->validateService(['destroy']);
-
-        return DB::transaction(function () use($request, $objService){
-            $obj = $this->getModel();
-            $action = "destroy";
-
-            $message = "Register deleted successfully";
-            if ($messageAction = $this->getMethod(str()->camel("message " . "destroy"))) {
-                $message = $this->$messageAction($obj);
-            }
-
-            $redirect = redirect()->route(RouteSupport::getRouteActual() . ".index", $request->route()->parameters());
-            if ($redirectAction = $this->getMethod(str()->camel("redirect " . $action))) {
-                $redirect = $this->$redirectAction($obj);
-            }
-
-            $objService->$action($obj);
-
-            if (!$request->isJson() && empty($request->get('__ajax'))) {
-                session()->flash('success', __($message));
-                return $redirect;
-            }
-
-            return response()->json([
-                'msg' => __($message),
-            ], Response::HTTP_OK);
-        });
+    public function destroy(){
+        return $this->executeDelete('destroy', 'find');
     }
 
     protected function getFilter(): array{

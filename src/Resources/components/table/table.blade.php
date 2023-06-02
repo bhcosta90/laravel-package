@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 @foreach ($table as $k => $rs)
-                    @php $class = !empty($rs['class']) ? $rs['class'] : ""; @endphp
+                    @php $class = !empty($rs['class']) ? (is_string($rs['class'] ? $rs['class'] : null)) : ""; @endphp
                     @if(substr($k, 0, 1) != "_")
                         <th class="{!! $class !!}">{!! __($k) !!}</th>
                     @endif
@@ -20,7 +20,7 @@
                 <tr class="{!! !empty($class_line) ? $class_line($rs) : "" !!}">
                     @foreach ($table as $j => $column)
                         @php $field = !empty($column['field']) ? $column['field'] : null; @endphp
-                        @php $class = !empty($column['class']) ? $column['class'] : ""; @endphp
+                        @php $class = !empty($column['class']) ? (is_string($column['class']) ? $column['class'] : $column['class']($rs)) : ""; @endphp
                         <td class="{!! $class !!}">{!! empty($column['action']) ? ($rs[$field] ?: $rs->$field) : $column['action']($rs) !!}</td>
                     @endforeach
 
