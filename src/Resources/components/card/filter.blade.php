@@ -17,7 +17,7 @@
                 @if(substr($key, 0, 7) == 'request')
                     {!! Form::hidden(substr($key, 8), request(substr($key, 8)), ['class' => 'form-control m-input']) !!}
                 @else
-                    <div class='form-group'>
+                    <div class='form-group mb-3'>
                         @if(!is_array($value))
                             {!! Form::label($key, __($value)) !!}
                             {!! Form::text($key, request($key), ['class' => 'form-control m-input']) !!}

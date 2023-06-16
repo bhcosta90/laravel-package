@@ -1,12 +1,12 @@
 <?php
 
-namespace BRCas\Laravel\Abstracts\Traits;
+namespace BRCas\Laravel\Traits\Controller\Support;
 
 use BRCas\Laravel\Support\RouteSupport;
 
 trait ViewTrait
 {
-    protected function getView($view)
+    protected function getNameView($view)
     {
         return $this->namespaceView() . '.' . $view;
     }

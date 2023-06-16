@@ -2,6 +2,7 @@
 
 namespace BRCas\Laravel\Providers;
 
+use BRCas\Laravel\Support\RouteSupport;
 use BRCas\Laravel\View\Components\Card\{CardBodyComponent, CardComponent, CardFilterComponent, CardHeaderComponent};
 use BRCas\Laravel\View\Components\Table\{TableComponent};
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,8 @@ class PackageServiceProvider extends ServiceProvider
         Str::macro('number', function ($str) {
             return preg_replace("/[^0-9]/", "", $str);
         });
+
+        $this->app->alias(RouteSupport::class, 'RouteSupport');
 
         Str::macro('is_active', function (string $title, string $url, null|bool $active) {
             $btn = "text-success";
@@ -67,33 +70,40 @@ class PackageServiceProvider extends ServiceProvider
         });
 
         Str::macro('dayWeek', function ($value) {
-            switch (config('app.locale')) {
-                case 'pt_BR':
-                case 'pt-BR':
-                case 'pt-br':
-                    $dayWeek = [
-                        'Domingo',
-                        'Segunda feira',
-                        'Terça feira',
-                        'Quarta feira',
-                        'Quinta feira',
-                        'Sexta feira',
-                        'Sábado'
-                    ];
-                    break;
-                default:
-                    $dayWeek = [
-                        'Sunday',
-                        'Monday',
-                        'Tuesday',
-                        'Wednesday',
-                        'Thursday',
-                        'Friday',
-                        'Saturday'
-                    ];
-            }
+            $dayWeek = [
+                'Sunday',
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ];
 
-            return $dayWeek[$value];
+            return __($dayWeek[$value]);
+        });
+
+        Str::macro('numberTruncate', function ($value, $decimal = 2) {
+            return intval($value * ($p = pow(10, $decimal))) / $p;
+        });
+
+        Str::macro('month', function ($value) {
+            $dayWeek = [
+                1 => 'January',
+                2 => 'February',
+                3 => 'March',
+                4 => 'April',
+                5 => 'May',
+                6 => 'June',
+                7 => 'July',
+                8 => 'August',
+                9 => 'September',
+                10 => 'October',
+                11 => 'November',
+                12 => 'December',
+            ];
+
+            return __($dayWeek[$value]);
         });
 
         Str::macro('formDelete', function($action, $id){

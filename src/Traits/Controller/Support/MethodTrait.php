@@ -1,6 +1,6 @@
 <?php
 
-namespace BRCas\Laravel\Abstracts\Traits\Validation;
+namespace BRCas\Laravel\Traits\Controller\Support;
 
 use Exception;
 

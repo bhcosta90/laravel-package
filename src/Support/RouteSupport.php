@@ -11,6 +11,11 @@ class RouteSupport
         return implode('.', $dataRoute);
     }
 
+    public function routeIsIndex() {
+        $arrayRoute = explode('.', $this->getRouteName());
+        return end($arrayRoute) === 'index';
+    }
+
     public static function getRouteName()
     {
         return request()->route()->getName();
