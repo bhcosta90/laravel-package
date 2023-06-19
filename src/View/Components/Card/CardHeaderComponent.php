@@ -9,9 +9,7 @@ class CardHeaderComponent extends Component
     public function __construct(
         public string $title,
         public bool $keepOpen = false,
-        public ?string $register = null,
-        public ?string $textRegister = null,
-        public ?string $typeRegister = 'link',
+        public $register = null,
         public ?string $open = null,
     ) {
         //

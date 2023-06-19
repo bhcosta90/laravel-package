@@ -21,13 +21,14 @@
                     @foreach ($table as $j => $column)
                         @php $field = !empty($column['field']) ? $column['field'] : null; @endphp
                         @php $class = !empty($column['class']) ? (is_string($column['class']) ? $column['class'] : $column['class']($rs)) : ""; @endphp
-                        <td class="{!! $class !!}">{!! empty($column['action']) ? ($rs[$field] ?: $rs->$field) : $column['action']($rs) !!}</td>
+                        <td class="{!! $class !!}">{!! empty($column['action']) ? ($rs->$field ?: $rs[$field]) : $column['action']($rs) !!}</td>
                     @endforeach
 
                     @if(!empty($actions))
-                        @foreach ($actions as $k => $action)
-                            <td class='action-{!! $k !!} {{ isset($action['class']) ? $action['class'] : "" }}'>
-                                @if (!empty($action['action']))
+                        @foreach ($actions as $action)
+                            <td class='action action-{{$action->getName()}}'>
+                                {!! $action->run((array) $rs) !!}
+                                {{-- @if (!empty($action['action']))
                                     @php
                                         $id = $action['action']($rs);
                                         switch($k){
@@ -55,7 +56,7 @@
                                                 echo $action['action']($rs);
                                         }
                                     @endphp
-                                @endif
+                                @endif --}}
                             </td>
                         @endforeach
                     @endif

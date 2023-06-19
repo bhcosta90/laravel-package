@@ -1,14 +1,8 @@
 <div class='card-header'>
     <div class='float-left float-start'><h5 class="pt-1 pb-0 title">{{$title}}</h5></div>
     @empty(!$register)
-        <div class='float-right float-end'>
-            @switch($typeRegister)
-                @case('submit')
-                    <button data-keep-open="{{$keepOpen}}" class='btn btn-light'>{{ __($textRegister ?? "New register") }}</button>
-                    @break
-                @default
-                <a href='{{$register}}' data-keep-open="{{$keepOpen}}" class='btn btn-light btn-outline-secondary btn-add-by-link'>{{ __($textRegister ?? "New register") }}</a>
-            @endswitch
+        <div class="float-right float-end">
+            {!! $register->run() !!}
         </div>
     @endif
     @if($open)
