@@ -82,6 +82,7 @@ class ActionSupport
     {
         $html = "";
         $url = $this->data['url'] ?? "javascript:void(-1)";
+        $routeName = "";
 
         if (!empty($url)) {
             $params = [];
@@ -92,6 +93,7 @@ class ActionSupport
                     $params[] = $data[$param];
                 }
             }
+            $routeName = $url['route'];
             $url = route($url['route'], $params);
         }
 
@@ -105,7 +107,7 @@ class ActionSupport
                     'id' => $id = "frm-" . base64_encode($url),
                     'method' => $methodForm,
                     'style' => 'display:none;',
-                    'class' => 'form-delete-confirmation'
+                    'class' => 'form-delete-confirmation',
                 ]);
                 $html .= "<button>{$id}</button>";
                 $html .= FormFacade::close();
@@ -123,7 +125,7 @@ class ActionSupport
 
             $btnClass = $this->data['btn']['class'] ?? "btn-outline-secondary";
             $ajax = empty($this->data['ajax']) ? "" : "btn-ajax";
-            $html .= "<a href='{$url}' class='btn btn-sm {$btnClass} {$ajax}'>";
+            $html .= "<a href='{$url}' data-url='{$routeName}' class='btn btn-sm {$btnClass} {$ajax}'>";
 
             switch ($this->data['name']['name'] ?? $this->data['text']['text']) {
                 case 'edit':

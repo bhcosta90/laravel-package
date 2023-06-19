@@ -44,7 +44,6 @@ class FormSupport
     public function data(string $form, array $attributes = [])
     {
         $formRun = $this->formBuilder->create($form, [], $attributes['data'] ?? []);
-
         if (!$formRun->isValid()) {
             throw ValidationException::withMessages($formRun->getErrors());
         }
