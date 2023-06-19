@@ -3,7 +3,10 @@
     "autoload": {
         "psr-4": {
             "BRCas\\Laravel\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "authors": [
         {
