@@ -19,7 +19,7 @@
         }
     },
     "require": {
-        "laravel/framework": ">=10.10",
+        "laravel/framework": ">=9.0",
         "kris/laravel-form-builder": ">=1.52"
     },
     "license": "MIT"
