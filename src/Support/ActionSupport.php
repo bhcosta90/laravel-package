@@ -105,7 +105,7 @@ class ActionSupport
 
                 $html .= FormFacade::open([
                     'url' => $url,
-                    'id' => $id = "frm-" . base64_encode($url . $methodForm),
+                    'id' => $id = "frm-" . sha1($url . $methodForm),
                     'method' => $methodForm,
                     'style' => 'display:none;',
                     'class' => 'form-delete-confirmation',
