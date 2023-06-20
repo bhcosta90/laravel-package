@@ -98,13 +98,14 @@ class ActionSupport
         }
 
         if ($url) {
+            $id = "";
 
             if (!empty($this->data['form'])) {
                 $methodForm = $this->data['form']['method'] ?? ($this->isDelete() ? "DELETE" : "POST");
 
                 $html .= FormFacade::open([
                     'url' => $url,
-                    'id' => $id = "frm-" . base64_encode($url),
+                    'id' => $id = "frm-" . base64_encode($url . $methodForm),
                     'method' => $methodForm,
                     'style' => 'display:none;',
                     'class' => 'form-delete-confirmation',
@@ -123,9 +124,7 @@ class ActionSupport
                 ] + $params);
             }
 
-            $btnClass = $this->data['btn']['class'] ?? "btn-outline-secondary";
-            $ajax = empty($this->data['ajax']) ? "" : "btn-ajax";
-            $html .= "<a href='{$url}' data-url='{$routeName}' class='btn btn-sm {$btnClass} {$ajax}'>";
+            $btnClass = $this->data['btn']['class'] ?? "btn-outline-secondary ";
 
             switch ($this->data['name']['name'] ?? $this->data['text']['text']) {
                 case 'edit':
@@ -140,8 +139,12 @@ class ActionSupport
                 case 'delete':
                     $this->data['text']['text'] = null;
                     $this->data['text']['icon'] = "fa-regular fa-trash-can";
+                    $btnClass .= " btn-frm-remove ";
                     break;
             }
+
+            $ajax = empty($this->data['ajax']) ? "" : "btn-ajax ";
+            $html .= "<a href='{$url}' data-id='{$id}' data-url='{$routeName}' class='btn btn-sm {$btnClass} {$ajax}'>";
 
             $html .= $this->data['text']['text'];
             if (!empty($icon = $this->data['text']['icon'] ?? null)) {
