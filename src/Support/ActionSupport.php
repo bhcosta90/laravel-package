@@ -44,6 +44,7 @@ class ActionSupport
         string $form,
         string $model = null,
         string $template = null,
+        string $key = null,
     ) {
         $this->data['generateForm'] = [
             'route' => $route,
@@ -51,6 +52,7 @@ class ActionSupport
             'title' => $this->data['text']['text'],
             'model' => $model,
             'template' => $template,
+            'key' => $key,
         ];
         return $this;
     }
@@ -121,6 +123,7 @@ class ActionSupport
                     'form' => base64_encode($this->data['generateForm']['form']),
                     'destination' => base64_encode($url),
                     'title' => base64_encode($this->data['generateForm']['title']),
+                    'key' => $this->data['generateForm']['key'],
                 ] + $params);
             }
 
