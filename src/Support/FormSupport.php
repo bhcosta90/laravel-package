@@ -24,18 +24,20 @@ class FormSupport
             'url' => $action,
             'model' => $model,
             'attr' => [
-                'id' => 'form-builder-'.sha1(str()->uuid()),
-                'class' => 'laravel-form-builder'
+                'id' => $attributes['key'] ?? 'form-builder-' . sha1(str()->uuid()),
+                'class' => $attributes['key'] ?? 'laravel-form-builder'
             ]
         ], $attributes['data'] ?? []);
+
+        $btnSubmit = __($attributes['submit'] ?? ($model ? "Update" : "Register"));
 
         $formRun->add('button_action', 'submit', [
             "attr" => [
                 'class' => 'btn btn-primary btn-action',
-                'data-label' => __($attributes['submit']),
+                'data-label' => $btnSubmit,
                 'value' => 'button_action'
             ],
-            'label' => __($attributes['submit'] ?? ($model ? "Update" : "Register")),
+            'label' => $btnSubmit,
         ]);
 
         return $formRun;

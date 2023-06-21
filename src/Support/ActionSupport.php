@@ -83,21 +83,12 @@ class ActionSupport
     public function run(array $data = [])
     {
         $html = "";
-        $url = $this->data['url'] ?? "javascript:void(-1)";
-        $routeName = "";
 
-        if (!empty($url)) {
-            $params = [];
-            foreach (($url['params'] ?? []) as $k => $param) {
-                if (is_string($k)) {
-                    $params[$k] = $param;
-                } else {
-                    $params[] = $data[$param];
-                }
-            }
-            $routeName = $url['route'];
-            $url = route($url['route'], $params);
-        }
+        $arrayUrl = $this->arrayUrl($data);
+
+        $url = $arrayUrl['url'] ?? null;
+        $params = $arrayUrl['params'] ?? [];
+        $routeName = $arrayUrl['route'] ?? null;
 
         if ($url) {
             $id = "";
@@ -144,6 +135,8 @@ class ActionSupport
                     $this->data['text']['icon'] = "fa-regular fa-trash-can";
                     $btnClass .= " btn-frm-remove ";
                     break;
+                default:
+                    break;
             }
 
             $ajax = empty($this->data['ajax']) ? "" : "btn-ajax ";
@@ -157,6 +150,27 @@ class ActionSupport
         }
 
         return $html;
+    }
+
+    protected function arrayUrl($data)
+    {
+        $url = $this->data['url'] ?? "javascript:void(-1)";
+        $routeName = null;
+        $params = [];
+
+        if (!empty($url)) {
+            foreach (($url['params'] ?? []) as $k => $param) {
+                if (is_string($k)) {
+                    $params[$k] = $param;
+                } else {
+                    $params[] = $data[$param];
+                }
+            }
+            $routeName = $url['route'];
+            $url = route($url['route'], $params);
+        }
+
+        return compact('url', 'routeName', 'params');
     }
 
     protected function isDelete()
