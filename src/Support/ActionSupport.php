@@ -45,6 +45,7 @@ class ActionSupport
         string $model = null,
         string $template = null,
         string $key = null,
+        string $submit = null,
     ) {
         $this->data['generateForm'] = [
             'route' => $route,
@@ -53,6 +54,7 @@ class ActionSupport
             'model' => $model,
             'template' => $template,
             'key' => $key,
+            'submit' => $submit,
         ];
         return $this;
     }
@@ -115,6 +117,7 @@ class ActionSupport
                     'destination' => base64_encode($url),
                     'title' => base64_encode($this->data['generateForm']['title']),
                     'key' => $this->data['generateForm']['key'],
+                    'submit' => base64_encode($this->data['generateForm']['submit']),
                 ] + $params);
             }
 
@@ -155,7 +158,7 @@ class ActionSupport
     protected function arrayUrl($data)
     {
         $url = $this->data['url'] ?? "javascript:void(-1)";
-        $routeName = null;
+        $route = null;
         $params = [];
 
         if (!empty($url)) {
@@ -166,11 +169,11 @@ class ActionSupport
                     $params[] = $data[$param];
                 }
             }
-            $routeName = $url['route'];
+            $route = $url['route'];
             $url = route($url['route'], $params);
         }
 
-        return compact('url', 'routeName', 'params');
+        return compact('url', 'route', 'params');
     }
 
     protected function isDelete()
