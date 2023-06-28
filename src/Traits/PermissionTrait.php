@@ -1,8 +1,10 @@
 <?php
 
-namespace BRCas\Laravel\Traits\Support;
+declare(strict_types=1);
 
-trait Permission
+namespace BRCas\LaravelPackage\Traits;
+
+trait PermissionTrait
 {
     protected abstract function permissions(): array;
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace BRCas\Laravel\Support;
+declare(strict_types=1);
+
+namespace BRCas\LaravelPackage\Support;
 
 use Illuminate\Validation\ValidationException;
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -29,7 +31,7 @@ class FormSupport
             ]
         ], $attributes['data'] ?? []);
 
-        $btnSubmit = __($attributes['submit'] ?? ($model ? "Update" : "Register"));
+        $btnSubmit = __($attributes['submit'] ?? ($model ? "Atualizar" : "Cadastrar"));
 
         $formRun->add('button_action', 'submit', [
             "attr" => [

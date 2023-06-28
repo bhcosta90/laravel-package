@@ -2,44 +2,58 @@
 
 declare(strict_types=1);
 
-namespace BRCas\Laravel\Tests;
+namespace BRCas\LaravelPackage\Tests;
 
+use App\Models\Traits\UploadFiles;
 use Illuminate\Http\UploadedFile;
 
 trait TestUpload
 {
-    public function assertInvalidateFiles($field, $extension, $maxSize, $rule, $ruleParams)
-    {
+    use TestValidation;
+
+    protected function assertInvalidationFile(
+        string $field,
+        string $extension,
+        ?int $maxSize,
+        string $rule,
+        array $ruleParams = []
+    ) {
         $routes = [
             [
-                'method' => "POST",
-                "route" => $this->routeStorage(),
+                'method' => 'POST',
+                'route' => $this->routeStore()
             ],
             [
-                'method' => "PUT",
-                "route" => $this->routeUpdate(),
-            ]
+                'method' => 'PUT',
+                'route' => $this->routeUpdate()
+            ],
         ];
 
+        $file = UploadedFile::fake()->create("$field.1$extension");
+
         foreach ($routes as $route) {
-            $file = UploadedFile::fake()->create("$field.1$extension");
-
             $response = $this->json($route['method'], $route['route'], [
-                $field => $file,
-            ]);
-            $this->assertInvationFields($response, [$field], $rule, $ruleParams);
-
-            $file = UploadedFile::fake()->create("$field.$extension")->size($maxSize + 1);
-
-            $response = $this->json($route['method'], $route['route'], [
-                $field => $file,
+                $field => $file
             ]);
 
-            $this->assertInvationFields($response, [$field], "max.file", ['max' => $maxSize]);
+            $this->assertInvalidationFields($response, [$field], $rule, $ruleParams);
+
+            if ($maxSize) {
+                $file = UploadedFile::fake()->create("$field.$extension")->size($maxSize + 1);
+                $response = $this->json($route['method'], $route['route'], [
+                    $field => $file
+                ]);
+
+                $this->assertInvalidationFields($response, [$field], 'max.file', ['max' => $maxSize]);
+            }
         }
     }
 
-    protected abstract function routeStorage();
-
-    protected abstract function routeUpdate();
+    protected function assertFilesExistsInStorage($model, array $files)
+    {
+        /** @var UploadFiles $model */
+        foreach ($files as $file) {
+            \Storage::assertExists($model->relativeFilePath($file->hashName()));
+        }
+    }
 }
