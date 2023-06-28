@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Tests;
+namespace BRCas\Laravel\Tests;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Testing\TestResponse;

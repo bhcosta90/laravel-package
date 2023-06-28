@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Resources;
+namespace BRCas\Laravel\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

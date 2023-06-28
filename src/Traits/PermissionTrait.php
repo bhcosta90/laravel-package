@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Traits;
+namespace BRCas\Laravel\Traits;
 
 trait PermissionTrait
 {

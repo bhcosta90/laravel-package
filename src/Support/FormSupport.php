@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Support;
+namespace BRCas\Laravel\Support;
 
 use Illuminate\Validation\ValidationException;
 use Kris\LaravelFormBuilder\FormBuilder;

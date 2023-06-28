@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Tests\Exception;
+namespace BRCas\Laravel\Tests\Exception;
 
 use Exception;
 

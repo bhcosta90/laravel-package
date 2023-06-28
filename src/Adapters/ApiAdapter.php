@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Adapters;
+namespace BRCas\Laravel\Adapters;
 
 use BRCas\CA\Contracts\Items\ItemInterface;
 use BRCas\CA\Contracts\Items\PaginationInterface;
-use BRCas\LaravelPackage\Resources\DefaultResource;
+use BRCas\Laravel\Resources\DefaultResource;
 
 class ApiAdapter
 {

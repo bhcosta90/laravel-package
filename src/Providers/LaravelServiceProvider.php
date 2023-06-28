@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BRCas\LaravelPackage\Providers;
+namespace BRCas\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
