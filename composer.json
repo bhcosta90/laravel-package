@@ -1,5 +1,7 @@
 {
     "name": "bhcosta90/laravel-package",
+    "type": "project",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "BRCas\\Laravel\\": "src/"
@@ -21,6 +23,5 @@
     "require": {
         "laravel/framework": ">=9.0",
         "kris/laravel-form-builder": ">=1.52"
-    },
-    "license": "MIT"
+    }
 }
