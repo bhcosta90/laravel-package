@@ -1,0 +1,68 @@
+name: Automatic Versioning (PR & Commits)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Obter última versão
+        id: get_version
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+
+      - name: Determinar tipo de versão
+        id: versioning
+        run: |
+          BUMP="patch"  # Padrão
+          LAST_VERSION="${{ env.LAST_TAG }}"
+          MAJOR=$(echo $LAST_VERSION | cut -d. -f1)
+
+          # Se for PR mergeada, verifica o título
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            PR_TITLE="${{ github.event.pull_request.title }}"
+
+            if [[ "$PR_TITLE" =~ "#major" ]]; then
+              BUMP="major"
+            elif [[ "$PR_TITLE" =~ "#minor" ]]; then
+              BUMP="minor"
+            fi
+          fi
+
+          # Se for push direto, verifica a mensagem do commit
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+
+            if [[ "$COMMIT_MSG" =~ "#major" ]]; then
+              BUMP="major"
+            elif [[ "$COMMIT_MSG" =~ "#minor" ]]; then
+              BUMP="minor"
+            fi
+          fi
+
+          # Se a última versão era major X, mantém nessa major, a menos que seja um novo #major
+          if [[ "$BUMP" != "major" ]]; then
+            echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+          fi
+
+          echo "BUMP=$BUMP" >> $GITHUB_ENV
+
+      - name: Criar e publicar nova tag
+        id: tag_version
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: ${{ env.BUMP }}
+          RELEASE_BRANCHES: main
+          WITH_V: false

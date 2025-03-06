@@ -1,0 +1,98 @@
+<?php
+
+namespace CodeFusion\Model;
+
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class HasManySynchronizable extends HasMany
+{
+    public function sync($data, $deleting = true): array
+    {
+        $changes = [
+            'created' => [],
+            'deleted' => [],
+            'updated' => [],
+        ];
+
+        $relatedKeyName = $this->related->getKeyName();
+        $current        = $this->newQuery()->pluck($relatedKeyName)->all();
+
+        // Separando as linhas para atualização e inserção
+        [$updateRows, $newRows] = $this->separateRowsForUpdateAndInsert($data, $current, $relatedKeyName);
+
+        // Identificando os ids para deleção
+        $deleteIds = $this->getDeleteIds($current, array_keys($updateRows));
+
+        // Deletando as linhas que não precisam ser atualizadas
+        if ($deleting && !empty($deleteIds)) {
+            $this->deleteRows($deleteIds);
+        }
+        $changes['deleted'] = $this->castKeys($deleteIds);
+
+        // Atualizando as linhas
+        $changes['updated'] = $this->updateRows($updateRows, $relatedKeyName);
+
+        // Inserindo as novas linhas
+        $changes['created'] = $this->insertNewRows($newRows, $relatedKeyName);
+
+        return $changes;
+    }
+
+    protected function separateRowsForUpdateAndInsert($data, $current, $relatedKeyName): array
+    {
+        $updateRows = [];
+        $newRows    = [];
+
+        foreach ($data as $row) {
+            if (isset($row[$relatedKeyName]) && !empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current)) {
+                $updateRows[$row[$relatedKeyName]] = $row;
+            } else {
+                $newRows[] = $row;
+            }
+        }
+
+        return [$updateRows, $newRows];
+    }
+
+    protected function getDeleteIds($current, $updateIds): array
+    {
+        return array_diff($current, $updateIds);
+    }
+
+    protected function deleteRows($deleteIds): void
+    {
+        $this->getRelated()->destroy($deleteIds);
+    }
+
+    protected function updateRows($updateRows, $relatedKeyName): array
+    {
+        foreach ($updateRows as $id => $row) {
+            $this->getRelated()->where($relatedKeyName, $id)
+                ->update($row);
+        }
+
+        return $this->castKeys(array_keys($updateRows));
+    }
+
+    protected function insertNewRows($newRows, $relatedKeyName): array
+    {
+        $newIds = [];
+
+        foreach ($newRows as $row) {
+            $newModel = $this->create($row);
+            $newIds[] = $newModel->$relatedKeyName;
+        }
+
+        return $this->castKeys($newIds);
+    }
+
+    protected function castKeys(array $keys): array
+    {
+        return array_map([$this, 'castKey'], $keys);
+    }
+
+    protected function castKey($key): int | string
+    {
+        return is_numeric($key) ? (int) $key : (string) $key;
+    }
+}

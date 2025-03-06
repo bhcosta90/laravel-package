@@ -1,0 +1,21 @@
+{
+    "name": "code-fusion/laravel-package",
+    "autoload": {
+        "psr-4": {
+            "CodeFusion\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bruno Henrique da Costa",
+            "email": "bruno.costa@mobiis.com.br"
+        }
+    ],
+    "require": {
+        "illuminate/database": "^11.0 | ^12.1",
+        "illuminate/http": "^11.0 | ^12.1"
+    },
+    "require-dev": {
+        "laravel/framework": "^11.0 | ^12.1"
+    }
+}
