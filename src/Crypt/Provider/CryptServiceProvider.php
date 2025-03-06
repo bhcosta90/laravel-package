@@ -13,10 +13,13 @@ class CryptServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(Hashids::class, function ($app) {
+
+            $connection = config('hashids.default', 'main');
+
             return new Hashids(
-                config('app.key'),
-                10,
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+                config("hashids.{$connection}.salt", config('app.key')),
+                config("hashids.{$connection}.length", 10),
+                config("hashids.{$connection}.alphabet", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
             );
         });
 
