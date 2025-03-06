@@ -1,14 +1,14 @@
-name: Automatic Versioning (Push & PRs to 1X)
+name: Automatic Versioning (Push & PRs to X Branches)
 
 on:
   pull_request:
     branches:
-      - "1X"  # Ajuste aqui conforme a versão (1X, 2X, etc.)
+      - "[0-9]+X"  # Padrão para qualquer branch tipo "1X", "2X", "10X", etc.
     types:
       - closed
   push:
     branches:
-      - "1X"  # Garante que pushs diretos também criem tags
+      - "[0-9]+X"  # Aceita pushes diretos para qualquer versão major
 
 jobs:
   tag:
@@ -32,8 +32,8 @@ jobs:
         run: |
           BUMP="minor"  # Padrão
           LAST_VERSION="${{ env.LAST_TAG }}"
-          TARGET_BRANCH="1X"
-          MAJOR_VERSION=$(echo "$TARGET_BRANCH" | grep -o '^[0-9]*')  # Extrai a major
+          TARGET_BRANCH="${{ github.ref_name }}"  # Pega a branch de destino
+          MAJOR_VERSION=$(echo "$TARGET_BRANCH" | grep -o '^[0-9]*')  # Extrai a major da branch
 
           # Se for push, pega a branch e commit
           if [[ "${{ github.event_name }}" == "push" ]]; then
