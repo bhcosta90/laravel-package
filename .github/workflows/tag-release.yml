@@ -1,15 +1,18 @@
-name: Automatic Versioning (PRs to Main)
+name: Automatic Versioning (Push & PRs to 1X)
 
 on:
   pull_request:
     branches:
-      - main
+      - "1X"  # Ajuste aqui conforme a versão (1X, 2X, etc.)
     types:
       - closed
+  push:
+    branches:
+      - "1X"  # Garante que pushs diretos também criem tags
 
 jobs:
   tag:
-    if: github.event.pull_request.merged == true  # Só executa se a PR foi mergeada
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Permite criar tags
@@ -21,32 +24,41 @@ jobs:
       - name: Obter última versão
         id: get_version
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "1.0.0")
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
 
       - name: Determinar tipo de versão
         id: versioning
         run: |
-          BUMP="patch"  # Padrão
+          BUMP="minor"  # Padrão
           LAST_VERSION="${{ env.LAST_TAG }}"
-          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # Branch de origem da PR
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          TARGET_BRANCH="1X"
+          MAJOR_VERSION=$(echo "$TARGET_BRANCH" | grep -o '^[0-9]*')  # Extrai a major
 
-          # Se o título da PR contém #major ou #minor, prioriza isso
-          if [[ "$PR_TITLE" =~ "#major" ]]; then
-            BUMP="major"
-          elif [[ "$PR_TITLE" =~ "#minor" ]]; then
-            BUMP="minor"
+          # Se for push, pega a branch e commit
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            SOURCE_BRANCH="${{ github.ref_name }}"
+            COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
           else
-            # Define o tipo de versão com base na branch de origem
-            if [[ "$SOURCE_BRANCH" =~ ^release/ ]]; then
-              BUMP="major"
-            elif [[ "$SOURCE_BRANCH" =~ ^feature/ ]]; then
-              BUMP="minor"
-            fi
+            # Se for PR, pega a branch de origem e título da PR
+            SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+            COMMIT_MSG="${{ github.event.pull_request.title }}"
+          fi
+
+          # Se a branch é hotfix ou bugfix, é patch
+          if [[ "$SOURCE_BRANCH" =~ ^(hotfix/|bugfix/) ]]; then
+            BUMP="patch"
+          fi
+
+          # Permitir #major ou #minor na mensagem da PR ou do commit
+          if [[ "$COMMIT_MSG" =~ "#major" ]]; then
+            BUMP="major"
+          elif [[ "$COMMIT_MSG" =~ "#minor" ]]; then
+            BUMP="minor"
           fi
 
           echo "BUMP=$BUMP" >> $GITHUB_ENV
+          echo "MAJOR_VERSION=$MAJOR_VERSION"
 
       - name: Criar e publicar nova tag
         id: tag_version
@@ -54,5 +66,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: ${{ env.BUMP }}
-          RELEASE_BRANCHES: main
+          RELEASE_BRANCHES: ${{ github.ref_name }}
           WITH_V: false
