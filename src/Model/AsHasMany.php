@@ -2,9 +2,11 @@
 
 namespace CodeFusion\src\Model;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 trait AsHasMany
 {
-    public function hasMany($related, $foreignKey = null, $localKey = null)
+    public function hasMany($related, $foreignKey = null, $localKey = null): HasMany
     {
         $instance   = $this->newRelatedInstance($related);
         $foreignKey = $foreignKey ?: $this->getForeignKey();
