@@ -3,12 +3,12 @@ name: Automatic Versioning (Push & PRs to X Branches)
 on:
   pull_request:
     branches:
-      - "[0-9]+X"  # Padrão para qualquer branch tipo "1X", "2X", "10X", etc.
+      - "[0-9]+x"  # Padrão para qualquer branch tipo "1X", "2X", "10X", etc.
     types:
       - closed
   push:
     branches:
-      - "[0-9]+X"  # Aceita pushes diretos para qualquer versão major
+      - "[0-9]+x"  # Aceita pushes diretos para qualquer versão major
 
 jobs:
   tag:
