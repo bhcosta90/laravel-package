@@ -1,16 +1,18 @@
-name: Automatic Versioning (PR & Commits)
+name: Automatic Versioning (PRs to Main)
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
     types:
       - closed
 
 jobs:
   tag:
+    if: github.event.pull_request.merged == true  # Só executa se a PR foi mergeada
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Permite criar tags
 
     steps:
       - name: Checkout do código
@@ -27,33 +29,21 @@ jobs:
         run: |
           BUMP="patch"  # Padrão
           LAST_VERSION="${{ env.LAST_TAG }}"
-          MAJOR=$(echo $LAST_VERSION | cut -d. -f1)
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # Branch de origem da PR
+          PR_TITLE="${{ github.event.pull_request.title }}"
 
-          # Se for PR mergeada, verifica o título
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
-            PR_TITLE="${{ github.event.pull_request.title }}"
-
-            if [[ "$PR_TITLE" =~ "#major" ]]; then
+          # Se o título da PR contém #major ou #minor, prioriza isso
+          if [[ "$PR_TITLE" =~ "#major" ]]; then
+            BUMP="major"
+          elif [[ "$PR_TITLE" =~ "#minor" ]]; then
+            BUMP="minor"
+          else
+            # Define o tipo de versão com base na branch de origem
+            if [[ "$SOURCE_BRANCH" =~ ^release/ ]]; then
               BUMP="major"
-            elif [[ "$PR_TITLE" =~ "#minor" ]]; then
+            elif [[ "$SOURCE_BRANCH" =~ ^feature/ ]]; then
               BUMP="minor"
             fi
-          fi
-
-          # Se for push direto, verifica a mensagem do commit
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
-
-            if [[ "$COMMIT_MSG" =~ "#major" ]]; then
-              BUMP="major"
-            elif [[ "$COMMIT_MSG" =~ "#minor" ]]; then
-              BUMP="minor"
-            fi
-          fi
-
-          # Se a última versão era major X, mantém nessa major, a menos que seja um novo #major
-          if [[ "$BUMP" != "major" ]]; then
-            echo "MAJOR=$MAJOR" >> $GITHUB_ENV
           fi
 
           echo "BUMP=$BUMP" >> $GITHUB_ENV
