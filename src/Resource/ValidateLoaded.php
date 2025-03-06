@@ -8,7 +8,7 @@ trait ValidateLoaded {
 
     use ConditionallyLoadsAttributes;
 
-    protected function validateLoaded($relationship, $value = null, $default = null): mixed
+    protected function verifyLoaded($relationship, $value = null, $default = null): mixed
     {
         $includedRelationships = explode(',', request()->input('include', ''));
 
