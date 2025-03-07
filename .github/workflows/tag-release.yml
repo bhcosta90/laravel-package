@@ -6,9 +6,6 @@ on:
       - "[0-9]+[Xx]"  # Aceita "1X", "2x", "10X", etc.
     types:
       - closed
-  push:
-    branches:
-      - "[0-9]+[Xx]"  # Aceita pushes diretos para qualquer versão major
 
 jobs:
   tag:
