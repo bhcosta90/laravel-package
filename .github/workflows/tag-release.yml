@@ -55,6 +55,11 @@ jobs:
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"  # Nome do branch do PR
           NEW_TAG=""
 
+          # Garantir que as variáveis MAJOR, MINOR e PATCH sejam inteiros
+          MAJOR=$((MAJOR))
+          MINOR=$((MINOR))
+          PATCH=$((PATCH))
+
           if [[ "$BRANCH_NAME" == release/* ]]; then
               ((MAJOR++))
               MINOR=0
