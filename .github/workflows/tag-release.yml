@@ -1,68 +1,87 @@
-name: Automatic Versioning (PRs to Main)
+name: Auto Tag on Merge
 
 on:
   pull_request:
-    branches:
-      - main
     types:
-      - closed
+      - closed  # Ação será executada quando o PR for mesclado
 
 jobs:
   tag:
-    if: github.event.pull_request.merged == true  # Só executa se a PR foi mergeada
+    if: github.event.pull_request.merged == true  # Garante que o PR foi realmente mesclado
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Permite criar tags
 
     steps:
       - name: Checkout do código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Obter última versão
-        id: get_version
+      - name: Configurar Git
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Obter a última tag limpa
+        id: last_tag
+        run: |
+          # Obtém a última tag, se não houver define como '0.0.0'
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo '0.0.0')
+
+          # Remove prefixos e sufixos (ex: 'dev-', 'release-', 'build-', '-1', '-alpha', etc.)
+          LAST_TAG=$(echo "$LAST_TAG" | sed -E 's/^(dev-|release-|build-)//' | sed -E 's/(-[0-9]+)$//')
+
+          # Garante que a tag tenha formato 'X.Y.Z'
+          LAST_TAG="${LAST_TAG//[^0-9.]/}"
+          LAST_TAG="${LAST_TAG:-0.0.0}"
+
+          # Extrai MAJOR, MINOR e PATCH
+          MAJOR=$(echo "$LAST_TAG" | cut -d. -f1)
+          MINOR=$(echo "$LAST_TAG" | cut -d. -f2)
+          PATCH=$(echo "$LAST_TAG" | cut -d. -f3)
+
+          # Se MINOR ou PATCH estiverem vazios, define como 0
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
+
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+          echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+          echo "MINOR=$MINOR" >> $GITHUB_ENV
+          echo "PATCH=$PATCH" >> $GITHUB_ENV
 
-      - name: Determinar tipo de versão
-        id: versioning
+          echo "Última tag limpa: $LAST_TAG"
+          echo "MAJOR=$MAJOR, MINOR=$MINOR, PATCH=$PATCH"
+
+      - name: Gerar nova versão com base no nome do branch
+        id: version
         run: |
-          BUMP="patch"  # Padrão
-          LAST_VERSION="${{ env.LAST_TAG }}"
-          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # Branch de origem da PR
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"  # Nome do branch do PR
+          NEW_TAG=""
 
-          # Se o título da PR contém #major ou #minor, prioriza isso
-          if [[ "$PR_TITLE" =~ "#major" ]]; then
-            BUMP="major"
-          elif [[ "$PR_TITLE" =~ "#minor" ]]; then
-            BUMP="minor"
-          elif [[ "$SOURCE_BRANCH" =~ ^(bugfix/|hotfix/) ]]; then
-            BUMP="patch"  # Se a branch de origem for bugfix ou hotfix, o incremento é PATCH
+          # Garantir que as variáveis MAJOR, MINOR e PATCH sejam inteiros
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
+
+          # Defina a nova versão com base no nome do branch
+          if [[ "$BRANCH_NAME" == release/* ]]; then
+              ((MAJOR++))
+              MINOR=0
+              PATCH=0
+              NEW_TAG="$MAJOR.$MINOR.$PATCH"
+          elif [[ "$BRANCH_NAME" == feature/* || "$BRANCH_NAME" == feat/* ]]; then
+              ((MINOR++))
+              PATCH=0
+              NEW_TAG="$MAJOR.$MINOR.$PATCH"
+          elif [[ "$BRANCH_NAME" == hotfix/* || "$BRANCH_NAME" == bugfix/* ]]; then
+              ((PATCH++))
+              NEW_TAG="$MAJOR.$MINOR.$PATCH"
           else
-            # Define o tipo de versão com base na branch de origem
-            if [[ "$SOURCE_BRANCH" =~ ^release/ ]]; then
-              BUMP="major"
-            elif [[ "$SOURCE_BRANCH" =~ ^feature/ ]]; then
-              BUMP="minor"
-            fi
-          fi
-
-          echo "BUMP=$BUMP" >> $GITHUB_ENV
-
-          if [[ ! "$SOURCE_BRANCH" =~ ^(release/|feature/|bugfix/|hotfix/) ]]; then
-            NEW_TAG="dev-${SOURCE_BRANCH//\//-}"
-          else
-            NEW_TAG="${LAST_VERSION%-*}-$BUMP"
+              BUILD_NUMBER=$(git tag --list "$MAJOR.$MINOR.$PATCH-build.*" | wc -l)
+              NEW_TAG="dev-$MAJOR.$MINOR.$PATCH-$((BUILD_NUMBER + 1))"
           fi
 
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "🔖 Nova tag gerada: $NEW_TAG"
 
-      - name: Criar e publicar nova tag
-        id: tag_version
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: ${{ env.BUMP }}
-          RELEASE_BRANCHES: main
-          WITH_V: false
+      - name: Criar e enviar a tag
+        run: |
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
