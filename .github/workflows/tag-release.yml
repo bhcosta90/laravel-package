@@ -36,7 +36,7 @@ jobs:
               NEW_TAG="$MAJOR.$MINOR.$PATCH"
           else
               BUILD_NUMBER=$(git tag --list "$MAJOR.$MINOR.$PATCH-build.*" | wc -l)
-              NEW_TAG="$MAJOR.$MINOR.$PATCH-build.$((BUILD_NUMBER + 1))"
+              NEW_TAG="dev-$MAJOR.$MINOR.$PATCH-build.$((BUILD_NUMBER + 1))"
           fi
 
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
