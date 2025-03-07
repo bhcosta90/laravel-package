@@ -56,10 +56,11 @@ jobs:
           NEW_TAG=""
 
           # Garantir que as variáveis MAJOR, MINOR e PATCH sejam inteiros
-          MAJOR=$((MAJOR))
-          MINOR=$((MINOR))
-          PATCH=$((PATCH))
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
 
+          # Defina a nova versão com base no nome do branch
           if [[ "$BRANCH_NAME" == release/* ]]; then
               ((MAJOR++))
               MINOR=0
