@@ -24,7 +24,7 @@ jobs:
       - name: Obter última versão
         id: get_version
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "1.0.0.0")
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
 
       - name: Determinar tipo de versão
