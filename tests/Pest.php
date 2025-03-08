@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -23,6 +25,8 @@
 | to assert different things. Of course, you may extend the Expectation API at any time.
 |
 */
+
+pest()->extend(CodeFusion\Tests\TestCase::class)->in('Feature');
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);

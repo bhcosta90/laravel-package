@@ -1,11 +1,24 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CodeFusion\Model;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\{Builder, Model};
 
 class HasManySynchronizable extends HasMany
 {
+    public function __construct(
+        Builder $query,
+        Model $parent,
+        $foreignKey,
+        $localKey,
+        readonly public bool $isDeleted = false
+    ) {
+        parent::__construct($query, $parent, $foreignKey, $localKey);
+    }
+
     public function sync($data, $deleting = true): array
     {
         $changes = [
@@ -20,14 +33,14 @@ class HasManySynchronizable extends HasMany
         // Separando as linhas para atualização e inserção
         [$updateRows, $newRows] = $this->separateRowsForUpdateAndInsert($data, $current, $relatedKeyName);
 
-        // Identificando os ids para deleção
-        $deleteIds = $this->getDeleteIds($current, array_keys($updateRows));
-
         // Deletando as linhas que não precisam ser atualizadas
-        if ($deleting && !empty($deleteIds)) {
+        if ($this->isDeleted
+            && $deleting
+            && !empty($deleteIds = $this->getDeleteIds($current, array_keys($updateRows)))
+        ) {
             $this->deleteRows($deleteIds);
+            $changes['deleted'] = $this->castKeys($deleteIds);
         }
-        $changes['deleted'] = $this->castKeys($deleteIds);
 
         // Atualizando as linhas
         $changes['updated'] = $this->updateRows($updateRows, $relatedKeyName);
