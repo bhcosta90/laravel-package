@@ -92,9 +92,21 @@ jobs:
 
       - name: Criar e enviar nova tag
         run: |
-          # Incrementa a última parte da tag de maneira adequada
           TAG_NAME="${{ env.new_tag }}"
           
-          # Verifica se a tag já existe, caso contrário, cria a nova tag
-          git tag "$TAG_NAME" || true
-          git push origin "$TAG_NAME"
+          # Verifica se a tag já existe e incrementa o número no final (caso seja necessário)
+          EXISTS=$(git tag --list "$TAG_NAME")
+          if [[ -n "$EXISTS" ]]; then
+            # Encontra o último número de incremento e cria a nova tag com o incremento correto
+            TAG_COUNT=$(git tag --list "${TAG_NAME}-*" | grep -oP '(?<=-)[0-9]+' | sort -n | tail -n 1)
+            if [[ -z "$TAG_COUNT" ]]; then
+              TAG_COUNT=1
+            else
+              TAG_COUNT=$((TAG_COUNT + 1))
+            fi
+            NEW_TAG="${TAG_NAME}-${TAG_COUNT}"
+          fi
+
+          # Cria e envia a nova tag
+          git tag "$NEW_TAG"
+          git push origin "$NEW_TAG"
