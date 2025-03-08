@@ -26,7 +26,7 @@ jobs:
         run: |
           if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
             echo "O PR não foi mesclado. Finalizando o fluxo."
-            exit 1
+            exit 0
           fi
 
       - name: Obter última tag válida
