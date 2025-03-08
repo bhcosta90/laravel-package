@@ -76,7 +76,7 @@ jobs:
               LAST_SUFFIX="-1"
             fi
             NEW_SUFFIX=$((LAST_SUFFIX + 1))
-          elif [[ "$BRANCH" =~ ^(release|perf)/.* ]]; then
+          elif [[ "$BRANCH" =~ ^(release|perf)/.* || "$BRANCH" == "release" ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
