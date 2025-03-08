@@ -4,16 +4,15 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
-use CodeFusion\Model\BaseModel;
-use CodeFusion\Model\{AsHasMany, Filterable};
+use CodeFusion\Model\Traits\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends BaseModel
+class Customer extends Model
 {
-    use AsHasMany;
+    use BaseModel;
     use HasFactory;
-    use Filterable;
 
     protected $fillable = [
         'name',

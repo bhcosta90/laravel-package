@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\Model;
+namespace CodeFusion\Model\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 

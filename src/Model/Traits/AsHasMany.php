@@ -2,8 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\Model;
+namespace CodeFusion\Model\Traits;
 
+use CodeFusion\Model\HasManySync;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait AsHasMany
