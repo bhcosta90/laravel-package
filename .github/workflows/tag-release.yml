@@ -23,7 +23,7 @@ jobs:
       - name: Obter última tag ou criar inicial
         id: last_tag
         run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$' | head -n 1)
+          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$' | sed 's/^dev-//' | head -n 1)
 
           if [[ -z "$TAG" ]]; then
             TAG="0.0.0-0"
@@ -48,10 +48,12 @@ jobs:
           fi
 
           BRANCH="${GITHUB_HEAD_REF}"
+          PREFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 (com "-")
+            # Feature -> Incrementa nível 4 (com "-") e adiciona prefixo "dev-"
             VERSION[3]=$((VERSION[3] + 1))
+            PREFIX="dev-"
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
             VERSION[1]=$((VERSION[1] + 1))
@@ -66,7 +68,7 @@ jobs:
             exit 1
           fi
 
-          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
