@@ -7,6 +7,7 @@ namespace App\Models;
 use CodeFusion\Model\Traits\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Contact extends Model
 {
@@ -16,4 +17,9 @@ class Contact extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
