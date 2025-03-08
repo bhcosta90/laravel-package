@@ -20,6 +20,12 @@ abstract class TestCase extends TestCaseAlias
     {
         $table = $app->get('db')->connection()->getSchemaBuilder();
 
+        $table->create('stores', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->timestamps();
+        });
+
         $table->create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');

@@ -59,10 +59,6 @@ trait AsControllerIndexTrait
 
     protected function parseSearch(?string $search): array
     {
-        if (blank($search)) {
-            return [];
-        }
-
         return collect(explode('|', $search))
             ->mapWithKeys(fn ($field) => [$field => $this->fieldSearchable])
             ->toArray();
