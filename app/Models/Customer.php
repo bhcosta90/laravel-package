@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use CodeFusion\Model\BaseModel;
 use CodeFusion\Model\{AsHasMany, Filterable};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends Model
+class Customer extends BaseModel
 {
     use AsHasMany;
     use HasFactory;
