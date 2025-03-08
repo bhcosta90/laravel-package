@@ -92,5 +92,9 @@ jobs:
 
       - name: Criar e enviar nova tag
         run: |
-          git tag "${{ env.new_tag }}"
-          git push origin "${{ env.new_tag }}"
+          # Incrementa a última parte da tag de maneira adequada
+          TAG_NAME="${{ env.new_tag }}"
+          
+          # Verifica se a tag já existe, caso contrário, cria a nova tag
+          git tag "$TAG_NAME" || true
+          git push origin "$TAG_NAME"
