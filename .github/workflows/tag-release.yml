@@ -65,9 +65,11 @@ jobs:
             # Verifica se a tag já existe e adiciona contador extra se necessário
             BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
             COUNT=1
-            while git tag --list "$BASE_TAG-$COUNT" > /dev/null 2>&1; do
+
+            while git tag --list | grep -q "^${BASE_TAG}-${COUNT}$"; do
               COUNT=$((COUNT + 1))
             done
+
             TAG_SUFFIX="-$COUNT"
 
           elif [[ "$BRANCH" == release/* ]]; then
