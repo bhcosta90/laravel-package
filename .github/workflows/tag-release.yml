@@ -87,7 +87,7 @@ jobs:
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
-#      - name: Criar e enviar nova tag
-#        run: |
-#          git tag "${{ env.new_tag }}"
-#          git push origin "${{ env.new_tag }}"
+      - name: Criar e enviar nova tag
+        run: |
+          git tag "${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}"
