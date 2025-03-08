@@ -23,7 +23,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Obter última tag ou criar inicial
+      - name: Obter última tag válida
         id: last_tag
         run: |
           TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | sed 's/^dev-//' | head -n 1)
@@ -43,7 +43,7 @@ jobs:
         run: |
           OLD_TAG="${{ env.tag }}"
           
-          # Extrai somente a parte principal (X.Y.Z) e o sufixo (-N)
+          # Extrai a parte principal (X.Y.Z) e o sufixo (-N)
           BASE_TAG=$(echo "$OLD_TAG" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
           SUFFIX=$(echo "$OLD_TAG" | grep -oE '[0-9]+$' || echo "")
 
@@ -52,12 +52,13 @@ jobs:
           NEW_SUFFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 e adiciona prefixo "dev-"
+            # Feature -> Adiciona prefixo "dev-" e gerencia o sufixo
             PREFIX="dev-"
-            if [[ -n "$SUFFIX" ]]; then
-              NEW_SUFFIX=$((SUFFIX + 1))  # Incrementa o número final corretamente
+
+            if [[ -z "$SUFFIX" ]]; then
+              NEW_SUFFIX="0"  # Se não houver sufixo, inicia com "-0"
             else
-              NEW_SUFFIX=1  # Começa em 1 se não existir
+              NEW_SUFFIX=$((SUFFIX + 1))  # Se já houver, incrementa corretamente
             fi
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
