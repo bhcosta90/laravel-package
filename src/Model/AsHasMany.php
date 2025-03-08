@@ -14,7 +14,7 @@ trait AsHasMany
         $foreignKey = $foreignKey ?: $this->getForeignKey();
         $localKey   = $localKey ?: $this->getKeyName();
 
-        return new HasManySynchronizable(
+        return new HasManySync(
             $instance->newQuery(),
             $this,
             $instance->getTable() . '.' . $foreignKey,
