@@ -108,16 +108,5 @@ jobs:
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
       - name: Create and push new tag
         run: |
-          # Check if the PR was merged or if it's a direct push to develop
-          if [[ "${{ github.event.pull_request.merged }}" != "true" && "${{ github.event_name }}" != "push" ]]; then
-            echo "The PR was not merged or the event is not a push. Ending the workflow."
-            exit 0
-          fi
-          
-          if [[ "${{ env.disabled }}" == "true" ]]; then
-            echo "Process is disabled. Skipping tag creation."
-            exit 0
-          fi
-          
           git tag "${{ env.new_tag }}"
           git push origin "${{ env.new_tag }}"
