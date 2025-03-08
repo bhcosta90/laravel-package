@@ -28,8 +28,8 @@ jobs:
           if [[ -z "$TAG" ]]; then
             TAG="0.0.0-0"
             echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
-            git tag $TAG
-            git push origin $TAG
+            git tag "$TAG"
+            git push origin "$TAG"
           fi
 
           echo "Última tag: $TAG"
@@ -38,8 +38,15 @@ jobs:
       - name: Determinar novo número de versão
         id: new_tag
         run: |
-          OLD_TAG="$TAG"
+          OLD_TAG="${{ env.tag }}"
           IFS='.-' read -r -a VERSION <<< "$OLD_TAG"
+
+          # Verifica se a TAG foi dividida corretamente
+          if [[ ${#VERSION[@]} -ne 4 ]]; then
+            echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
+            exit 1
+          fi
+
           BRANCH="${GITHUB_HEAD_REF}"
 
           if [[ "$BRANCH" == feature/* ]]; then
@@ -65,5 +72,5 @@ jobs:
 
       - name: Criar e enviar nova tag
         run: |
-          git tag ${{ env.new_tag }}
-          git push origin ${{ env.new_tag }}
+          git tag "${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}"
