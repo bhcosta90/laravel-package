@@ -17,6 +17,12 @@
         "hashids/hashids": "^5.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^10.1"
+        "orchestra/testbench": "^10.1",
+        "pestphp/pest": "^3.7"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
