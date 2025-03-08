@@ -56,15 +56,13 @@ jobs:
           if [[ "$BRANCH" == feature/* ]]; then
             # Feature -> Incrementa nível 4 e adiciona prefixo "dev-"
             if [[ ${#VERSION[@]} -eq 3 ]]; then
-              VERSION+=(1)  # Se não existir nível 4, cria
-            else
-              VERSION[3]=$((VERSION[3] + 1))
+              VERSION+=(0)  # Se não existir nível 4, inicia com 0
             fi
             PREFIX="dev-"
 
             # Verifica se a tag já existe e adiciona contador extra se necessário
-            BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
-            COUNT=1
+            BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
+            COUNT=$((VERSION[3] + 1))
 
             while git tag --list | grep -q "^${BASE_TAG}-${COUNT}$"; do
               COUNT=$((COUNT + 1))
@@ -77,31 +75,4 @@ jobs:
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
             VERSION[3]=0
-          elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
-            # Bugfix/Hotfix -> Incrementa nível 3, zera nível 4
-            VERSION[2]=$((VERSION[2] + 1))
-            VERSION[3]=0
-          else
-            echo "Branch não suportada para tagging automática."
-            exit 1
-          fi
-
-          # Se for uma feature, aplica a tag com contador extra
-          if [[ "$BRANCH" == feature/* ]]; then
-            NEW_TAG="${BASE_TAG}${TAG_SUFFIX}"
-          else
-            # Se o nível 4 existe, usa "-", caso contrário, não adiciona
-            if [[ ${#VERSION[@]} -eq 4 ]]; then
-              NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
-            else
-              NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
-            fi
-          fi
-
-          echo "Nova tag: $NEW_TAG"
-          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
-
-      - name: Criar e enviar nova tag
-        run: |
-          git tag "${{ env.new_tag }}"
-          git push origin "${{ env.new_tag }}"
+          elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; t
