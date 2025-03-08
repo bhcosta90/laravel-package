@@ -80,6 +80,7 @@ jobs:
           if [[ -n "$EXISTING_TAGS" ]]; then
             LAST_PART=$(echo "$EXISTING_TAGS" | grep -oE '[0-9]+$')
             LAST_PART=$((LAST_PART + 1))
+            BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${LAST_PART}"
           else
             LAST_PART=1
           fi
