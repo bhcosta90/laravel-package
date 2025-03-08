@@ -4,10 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - feature/**
       - release/**
-      - bugfix/**
-      - hotfix/**
 
 jobs:
   auto-tag:
@@ -26,10 +23,10 @@ jobs:
       - name: Obter última tag ou criar inicial
         id: last_tag
         run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | sed 's/^dev-//' | head -n 1)
+          TAG=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$' | head -n 1)
 
           if [[ -z "$TAG" ]]; then
-            TAG="0.0.0"
+            TAG="0.0.0-0"
             echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
             git tag "$TAG"
             git push origin "$TAG"
@@ -42,30 +39,19 @@ jobs:
         id: new_tag
         run: |
           OLD_TAG="${{ env.tag }}"
-          IFS='.' read -r -a VERSION <<< "$OLD_TAG"
-
-          # Se a tag inicial for 0.0.0, adicionamos o nível 4 ao primeiro incremento
-          if [[ "$OLD_TAG" == "0.0.0" ]]; then
-            VERSION+=(0)
-          fi
+          IFS='.-' read -r -a VERSION <<< "$OLD_TAG"
 
           # Verifica se a TAG foi dividida corretamente
-          if [[ ${#VERSION[@]} -lt 3 ]]; then
+          if [[ ${#VERSION[@]} -ne 4 ]]; then
             echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
             exit 1
           fi
 
           BRANCH="${GITHUB_HEAD_REF}"
-          PREFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 (com "-") e adiciona prefixo "dev-"
-            if [[ ${#VERSION[@]} -eq 3 ]]; then
-              VERSION+=(1)  # Se não existir nível 4, cria
-            else
-              VERSION[3]=$((VERSION[3] + 1))
-            fi
-            PREFIX="dev-"
+            # Feature -> Incrementa nível 4 (com "-")
+            VERSION[3]=$((VERSION[3] + 1))
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
             VERSION[1]=$((VERSION[1] + 1))
@@ -80,33 +66,11 @@ jobs:
             exit 1
           fi
 
-          # Se o nível 4 existe, usa "-", caso contrário, não adiciona
-          if [[ ${#VERSION[@]} -eq 4 ]]; then
-            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
-          else
-            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
-          fi
-
+          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Criar e enviar nova tag
         run: |
-          TAG_NAME="${{ env.new_tag }}"
-          
-          # Verifica se a tag já existe e incrementa o número no final (caso seja necessário)
-          EXISTS=$(git tag --list "$TAG_NAME")
-          if [[ -n "$EXISTS" ]]; then
-            # Encontra o último número de incremento e cria a nova tag com o incremento correto
-            TAG_COUNT=$(git tag --list "${TAG_NAME}-*" | grep -oP '(?<=-)[0-9]+' | sort -n | tail -n 1)
-            if [[ -z "$TAG_COUNT" ]]; then
-              TAG_COUNT=1
-            else
-              TAG_COUNT=$((TAG_COUNT + 1))
-            fi
-            NEW_TAG="${TAG_NAME}-${TAG_COUNT}"
-          fi
-
-          # Cria e envia a nova tag
-          git tag "$NEW_TAG"
-          git push origin "$NEW_TAG"
+          git tag "${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}"
