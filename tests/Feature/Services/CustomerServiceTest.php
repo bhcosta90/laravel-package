@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->service = app(CustomerService::class);
 });
 
-it('must create a new customer', function () {
+test('it must create a new customer', function () {
     $customer = $this->service->store([
         'name' => 'John Doe',
     ]);
@@ -23,7 +23,7 @@ it('must create a new customer', function () {
     ]);
 });
 
-it('must create a new customer with contacts', function () {
+test('it must create a new customer with contacts', function () {
     $customer = $this->service->store([
         'name'     => 'John Doe',
         'contacts' => [
@@ -58,7 +58,7 @@ it('must create a new customer with contacts', function () {
     ]);
 });
 
-it('must delete the customer', function () {
+test('it must delete the customer', function () {
     $customer = Customer::factory()->create();
 
     assertDatabaseCount('customers', 1);
@@ -68,7 +68,7 @@ it('must delete the customer', function () {
     assertDatabaseCount('customers', 0);
 });
 
-it('must update the customer', function () {
+test('it must update the customer', function () {
     $customer = Customer::factory()
         ->hasContacts(3)
         ->hasEmails(2)
@@ -137,4 +137,25 @@ test('it must update an existing contact', function () {
         'id'   => $contact->id,
         'name' => 'Contact name',
     ]);
+});
+
+test('it must search customers by name', function () {
+    Customer::factory(9)->create();
+    Customer::factory()->create(['name' => 'this customer will be search']);
+
+    $response = $this->service->getAll();
+
+    expect($response->count())->toBe(10);
+
+    $response = $this->service->getAll(
+        search: ['search customer' => ['name']],
+    );
+
+    expect($response->count())->toBe(0);
+
+    $response = $this->service->getAll(
+        search: ['this customer' => ['name']],
+    );
+
+    expect($response->count())->toBe(1);
 });

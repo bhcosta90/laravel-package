@@ -20,8 +20,6 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/database": "^11.0 | ^12.1",
-        "illuminate/http": "^11.0 | ^12.1",
         "hashids/hashids": "^5.0"
     },
     "require-dev": {
