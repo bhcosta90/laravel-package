@@ -4,16 +4,11 @@ on:
   pull_request:
     branches:
       - main
-      - hotfix/**
     types:
       - closed
   push:
     branches:
       - develop
-  workflow_run:
-    workflows: ["Run Tests - Current"]
-    types:
-      - completed
 
 jobs:
   auto-tag:
@@ -114,11 +109,6 @@ jobs:
           
           if [[ "${{ env.disabled }}" == "true" ]]; then
             echo "Process is disabled. Skipping tag creation."
-            exit 0
-          fi
-          
-          if [[ "${{ github.event.pull_request.base.ref }}" == "develop" && "${{ github.event.pull_request.head.ref }}" == "main" ]]; then
-            echo "PR is from main to develop. Skipping tag creation."
             exit 0
           fi
           
