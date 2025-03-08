@@ -62,7 +62,7 @@ jobs:
 
             # Verifica se a tag já existe e adiciona contador extra se necessário
             BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
-            COUNT=$((VERSION[3] + 1))
+            COUNT=${VERSION[3]}
 
             while git tag --list | grep -q "^${BASE_TAG}-${COUNT}$"; do
               COUNT=$((COUNT + 1))
@@ -99,7 +99,7 @@ jobs:
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
-      - name: Criar e enviar nova tag
-        run: |
-          git tag "${{ env.new_tag }}"
-          git push origin "${{ env.new_tag }}"
+#      - name: Criar e enviar nova tag
+#        run: |
+#          git tag "${{ env.new_tag }}"
+#          git push origin "${{ env.new_tag }}"
