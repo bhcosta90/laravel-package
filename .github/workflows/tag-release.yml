@@ -20,14 +20,18 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Obter última tag
+      - name: Obter última tag ou criar inicial
         id: last_tag
         run: |
-          TAG=$(git tag --sort=-v:refname | head -n 1)
+          TAG=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$' | sort -V | tail -n 1)
+
           if [[ -z "$TAG" ]]; then
-            echo "Nenhuma tag encontrada, crie uma manualmente (ex: 1.0.0.0)"
-            exit 1
+            TAG="0.0.0-0"
+            echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
+            git tag $TAG
+            git push origin $TAG
           fi
+
           echo "Última tag: $TAG"
           echo "tag=$TAG" >> $GITHUB_ENV
 
@@ -35,19 +39,19 @@ jobs:
         id: new_tag
         run: |
           OLD_TAG=${{ env.tag }}
-          IFS='.' read -r -a VERSION <<< "$OLD_TAG"
+          IFS='.-' read -r -a VERSION <<< "$OLD_TAG"
           BRANCH="${{ github.head_ref }}"
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4
+            # Feature -> Incrementa nível 4 (com "-")
             VERSION[3]=$((VERSION[3] + 1))
           elif [[ "$BRANCH" == release/* ]]; then
-            # Release -> Incrementa nível 2
+            # Release -> Incrementa nível 2, zera níveis 3 e 4
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
             VERSION[3]=0
           elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
-            # Bugfix/Hotfix -> Incrementa nível 3
+            # Bugfix/Hotfix -> Incrementa nível 3, zera nível 4
             VERSION[2]=$((VERSION[2] + 1))
             VERSION[3]=0
           else
@@ -55,11 +59,11 @@ jobs:
             exit 1
           fi
 
-          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}.${VERSION[3]}"
+          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Criar e enviar nova tag
         run: |
           git tag ${{ env.new_tag }}
-          git push origin ${{ env.new_tag }}
+          git push origin ${{ env.n
