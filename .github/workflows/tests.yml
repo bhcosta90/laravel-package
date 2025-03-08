@@ -44,3 +44,6 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest --parallel
+
+      - name: Execute php
+        run: vendor/bin/pint --test

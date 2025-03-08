@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CodeFusion\Service\Traits;
 
-use CodeFusion\Service\Traits\Helper\{SyncModelTrait};
 use CodeFusion\Service\Traits\Helper\BaseQueryTrait;
+use CodeFusion\Service\Traits\Helper\{SyncModelTrait};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
