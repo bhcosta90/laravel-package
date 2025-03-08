@@ -8,9 +8,6 @@ on:
       - hotfix/**
     types:
       - closed
-  push:
-    branches:
-      - develop
 
 jobs:
   auto-tag:
@@ -25,53 +22,32 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-
-      - name: Criar a tag inicial caso nenhuma tag exista
-        id: first_tag
-        run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^dev-//' | head -n 1)
-
-          if [[ -z "$TAG" ]]; then
-            TAG="0.0.0"
-            echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
-            git tag "$TAG"
-            git push origin "$TAG"
-            echo "Tag criada com sucesso: $TAG"
-          fi
-
       - name: Obter última tag válida
         id: last_tag
         run: |
           # Obtém a última versão estável (X.Y.Z), ignorando as dev-*
           LAST_STABLE_TAG=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
-
           # Obtém a última versão de feature (dev-X.Y.Z-N)
           LAST_FEATURE_TAG=$(git tag --list --sort=-v:refname "dev-*" | head -n 1 | sed 's/dev-//')
-
           # Define a base da nova versão
           if [[ -z "$LAST_STABLE_TAG" ]]; then
             LAST_STABLE_TAG="0.0.0"
           fi
-
           echo "Última versão estável: $LAST_STABLE_TAG"
           echo "Última versão de feature: $LAST_FEATURE_TAG"
           echo "tag=$LAST_STABLE_TAG" >> $GITHUB_ENV
           echo "feature_tag=$LAST_FEATURE_TAG" >> $GITHUB_ENV
-
       - name: Determinar novo número de versão
         id: new_tag
         run: |
           STABLE_TAG="${{ env.tag }}"
           FEATURE_TAG="${{ env.feature_tag }}"
-
           BASE_TAG="$STABLE_TAG"
           BRANCH="${GITHUB_HEAD_REF}"
           PREFIX=""
           NEW_SUFFIX=""
-
-          if [[ "$BRANCH" == feature/* || "$BRANCH" == "develop" ]]; then
+          if [[ "$BRANCH" == feature/* ]]; then
             PREFIX="dev-"
-
             # Se a última feature já estava baseada na última versão estável, continua o incremento
             if [[ "$FEATURE_TAG" == "$STABLE_TAG"-* ]]; then
               LAST_SUFFIX=$(echo "$FEATURE_TAG" | grep -oE '[0-9]+$' || echo "-1")
@@ -79,9 +55,7 @@ jobs:
               # Caso contrário, iniciamos a contagem a partir da nova versão estável
               LAST_SUFFIX="-1"
             fi
-
             NEW_SUFFIX=$((LAST_SUFFIX + 1))
-
           elif [[ "$BRANCH" == release/* ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
@@ -98,29 +72,19 @@ jobs:
             echo "Branch não suportada para tagging automática."
             exit 1
           fi
-
           if [[ -n "$NEW_SUFFIX" ]]; then
             NEW_TAG="${PREFIX}${BASE_TAG}-${NEW_SUFFIX}"
           else
             NEW_TAG="${PREFIX}${BASE_TAG}"
           fi
-
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
-
       - name: Criar e enviar nova tag
         run: |
-          # Verifica se o PR foi mesclado, ou se é um push direto na develop
-          if [[ "${{ github.event.pull_request.merged }}" != "true" && "${{ github.event_name }}" != "push" ]]; then
-            echo "O PR não foi mesclado ou o evento não é um push. Finalizando o fluxo."
+          if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
+            echo "O PR não foi mesclado. Finalizando o fluxo."
             exit 0
           fi
           
-          # Verifica se o push é na branch develop
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" != "refs/heads/develop" ]]; then
-            echo "Push não realizado na branch 'develop'. Finalizando o fluxo."
-            exit 0
-          fi
-
           git tag "${{ env.new_tag }}"
           git push origin "${{ env.new_tag }}"
