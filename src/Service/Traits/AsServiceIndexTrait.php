@@ -54,16 +54,11 @@ trait AsServiceIndexTrait
     {
         foreach ($filters as $key => $filter) {
             $nameFilter = str("by_{$key}")->camel()->toString();
-            $nameScoped = str("scope_by_{$key}")->camel()->toString();
             $dataFilter = collect(explode('|', $filter ?? ''))
                 ->filter(fn ($item) => filled($item))
                 ->toArray();
 
-            try {
-                $model->$nameFilter(array_values($dataFilter));
-            } catch (\BadMethodCallException) {
-                throw new \BadMethodCallException("Method {$nameScoped} does not exist in {$this->model()}");
-            }
+            $model->$nameFilter(array_values($dataFilter));
         }
     }
 
