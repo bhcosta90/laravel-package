@@ -22,13 +22,6 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Verificar se o PR foi mesclado
-        run: |
-          if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
-            echo "O PR não foi mesclado. Finalizando o fluxo."
-            exit 0
-          fi
-
       - name: Obter última tag válida
         id: last_tag
         run: |
