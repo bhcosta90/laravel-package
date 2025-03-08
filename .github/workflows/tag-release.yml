@@ -76,7 +76,7 @@ jobs:
           PREFIX=""
           NEW_SUFFIX=""
 
-          if [[ "$BRANCH" == feature/* || "$BRANCH" == develop ]]; then
+          if [[ "$BRANCH" =~ ^(feature|test|style)/.* || "$BRANCH" == develop ]]; then
             PREFIX="dev-"
 
             # If the last feature was based on the last stable version, continue the increment
@@ -89,14 +89,14 @@ jobs:
 
             NEW_SUFFIX=$((LAST_SUFFIX + 1))
 
-          elif [[ "$BRANCH" == release/* ]]; then
+          elif [[ "$BRANCH" =~ ^(release|perf|refactor)/ ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
             NEW_SUFFIX=""
             BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           
-          elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
+          elif [[ "$BRANCH" =~ ^(bugfix|hotfix)/ ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[2]=$((VERSION[2] + 1))
             NEW_SUFFIX=""
