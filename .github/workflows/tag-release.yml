@@ -46,7 +46,7 @@ jobs:
 
           # Se a tag inicial for 0.0.0, adicionamos o nível 4 ao primeiro incremento
           if [[ "$OLD_TAG" == "0.0.0" ]]; then
-            VERSION+=(0)
+            VERSION+=(1)  # Agora começa do 1, não do 0
           fi
 
           BRANCH="${GITHUB_HEAD_REF}"
@@ -56,7 +56,7 @@ jobs:
           if [[ "$BRANCH" == feature/* ]]; then
             # Feature -> Incrementa nível 4 e adiciona prefixo "dev-"
             if [[ ${#VERSION[@]} -eq 3 ]]; then
-              VERSION+=(0)  # Se não existir nível 4, inicia com 0
+              VERSION+=(1)  # Se não existir nível 4, inicia com 1
             fi
             PREFIX="dev-"
 
