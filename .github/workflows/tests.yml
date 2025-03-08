@@ -41,3 +41,10 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest --parallel
+report-status:
+  needs: test
+  runs-on: ubuntu-latest
+  if: success()
+  steps:
+    - name: Mark workflow as successful
+      run: echo "All matrix jobs passed successfully!"
