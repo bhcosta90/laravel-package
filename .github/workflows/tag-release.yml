@@ -22,8 +22,14 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
 
+      - name: Verificar se o PR foi mesclado
+        run: |
+          if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
+            echo "O PR não foi mesclado. Finalizando o fluxo."
+            exit 0
+          fi
+
       - name: Obter última tag válida
-        if: ${{ github.event.pull_request.merged == 'true' }}
         id: last_tag
         run: |
           # Obtém a última versão estável (X.Y.Z), ignorando as dev-*
@@ -43,7 +49,6 @@ jobs:
           echo "feature_tag=$LAST_FEATURE_TAG" >> $GITHUB_ENV
 
       - name: Determinar novo número de versão
-        if: ${{ github.event.pull_request.merged == 'true' }}
         id: new_tag
         run: |
           STABLE_TAG="${{ env.tag }}"
@@ -94,7 +99,11 @@ jobs:
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Criar e enviar nova tag
-        if: ${{ github.event.pull_request.merged == 'true' }}
         run: |
+          if [[ "${{ github.event.pull_request.merged }}" != "true" ]]; then
+            echo "O PR não foi mesclado. Finalizando o fluxo."
+            exit 0
+          fi
+          
           git tag "${{ env.new_tag }}"
           git push origin "${{ env.new_tag }}"
