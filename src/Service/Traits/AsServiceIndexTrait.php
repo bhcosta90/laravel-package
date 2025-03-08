@@ -22,6 +22,7 @@ trait AsServiceIndexTrait
         ?string $orderBy = null,
         ?string $orderDirection = null,
         ?string $paginate = null,
+        ?bool $debug = false,
     ): Paginator {
         $table = app($this->model())->getTable();
 
@@ -35,19 +36,18 @@ trait AsServiceIndexTrait
             $this->applySearch($query, $search);
         }
 
+        if ($debug) {
+            dd($query->toSql());
+        }
+
         $orderBy        = $orderBy ?? $table . '.id';
         $orderDirection = $orderDirection ?? 'asc';
 
         $paginate = $paginate ?: "paginate";
 
-        $response = $query
-            ->orderBy($orderBy, $orderDirection);
-
-        if (in_array($paginate, ['paginate', 'simplePaginate'])) {
-            return $response->$paginate(perPage: 15);
-        }
-
-        return $response->$paginate();
+        return $query
+            ->orderBy($orderBy, $orderDirection)
+            ->$paginate(perPage: 10);
     }
 
     protected function applyFilters(Builder $model, array $filters): void
