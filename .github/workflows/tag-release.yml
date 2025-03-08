@@ -67,7 +67,7 @@ jobs:
           
           PREFIX=""
           NEW_SUFFIX=""
-          if [[ "$BRANCH" == feature/* || "$BRANCH" == test/* || "$BRANCH" == style/* || "$BRANCH" == develop ]]; then
+          if [[ "$BRANCH" =~ ^(feature|test|style)/.* || "$BRANCH" == "develop" ]]; then
             PREFIX="dev-"
             # If the last feature was based on the last stable version, continue the increment
             if [[ "$FEATURE_TAG" == "$STABLE_TAG"-* ]]; then
