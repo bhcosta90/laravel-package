@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CodeFusion\Service\Traits\Helper;
 
 use Illuminate\Database\Eloquent\Model;

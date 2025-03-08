@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CodeFusion\Resource;
 
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 
-trait ValidateLoaded {
-
+trait ValidateLoaded
+{
     use ConditionallyLoadsAttributes;
 
     protected function verifyLoaded($relationship, $value = null, $default = null): mixed
@@ -14,7 +16,7 @@ trait ValidateLoaded {
 
         return $this->when(
             collect($includedRelationships)->contains(fn ($item) => str_contains($item, $relationship)),
-            fn() => $this->whenLoaded($relationship, $value, $default)
+            fn () => $this->whenLoaded($relationship, $value, $default)
         );
     }
 }
