@@ -4,7 +4,10 @@ on:
   pull_request:
     branches:
       - main
+      - feature/**
       - release/**
+      - bugfix/**
+      - hotfix/**
 
 jobs:
   auto-tag:
@@ -23,10 +26,10 @@ jobs:
       - name: Obter última tag ou criar inicial
         id: last_tag
         run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$' | head -n 1)
+          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | sed 's/^dev-//' | head -n 1)
 
           if [[ -z "$TAG" ]]; then
-            TAG="0.0.0-0"
+            TAG="0.0.0"
             echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
             git tag "$TAG"
             git push origin "$TAG"
@@ -39,34 +42,48 @@ jobs:
         id: new_tag
         run: |
           OLD_TAG="${{ env.tag }}"
-          IFS='.-' read -r -a VERSION <<< "$OLD_TAG"
-
-          # Verifica se a TAG foi dividida corretamente
-          if [[ ${#VERSION[@]} -ne 4 ]]; then
-            echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
-            exit 1
-          fi
+          
+          # Extrai somente a parte principal (X.Y.Z) e o sufixo (-N)
+          BASE_TAG=$(echo "$OLD_TAG" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+          SUFFIX=$(echo "$OLD_TAG" | grep -oE '[0-9]+$' || echo "")
 
           BRANCH="${GITHUB_HEAD_REF}"
+          PREFIX=""
+          NEW_SUFFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 (com "-")
-            VERSION[3]=$((VERSION[3] + 1))
+            # Feature -> Incrementa nível 4 e adiciona prefixo "dev-"
+            PREFIX="dev-"
+            if [[ -n "$SUFFIX" ]]; then
+              NEW_SUFFIX=$((SUFFIX + 1))  # Incrementa o número final corretamente
+            else
+              NEW_SUFFIX=1  # Começa em 1 se não existir
+            fi
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
+            IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
-            VERSION[3]=0
+            NEW_SUFFIX=""
+            BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
             # Bugfix/Hotfix -> Incrementa nível 3, zera nível 4
+            IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[2]=$((VERSION[2] + 1))
-            VERSION[3]=0
+            NEW_SUFFIX=""
+            BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           else
             echo "Branch não suportada para tagging automática."
             exit 1
           fi
 
-          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          # Monta a nova tag corretamente
+          if [[ -n "$NEW_SUFFIX" ]]; then
+            NEW_TAG="${PREFIX}${BASE_TAG}-${NEW_SUFFIX}"
+          else
+            NEW_TAG="${PREFIX}${BASE_TAG}"
+          fi
+
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
