@@ -125,23 +125,24 @@ test('store and update customer', function () {
 });
 
 test('show customer', function () {
-    get(route('customer.show', [
+    $response = get(route('customer.show', [
         'customer' => $this->customer01->id,
         'includes' => 'contacts',
-    ]))->assertOk()
-        ->assertJsonStructure([
-            'data' => [
-                'id',
-                'name',
-                'contacts' => [
-                    '*' => [
-                        'id',
-                        'customer_id',
-                        'name',
-                    ],
+    ]))->assertOk();
+
+    $response->assertJsonStructure([
+        'data' => [
+            'id',
+            'name',
+            'contacts' => [
+                '*' => [
+                    'id',
+                    'customer_id',
+                    'name',
                 ],
             ],
-        ]);
+        ],
+    ]);
 
     get(route('customer.show', [
         'customer' => 0,
