@@ -86,6 +86,17 @@ jobs:
             NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           fi
 
+          TAG_EXISTS=$(git tag --list "$NEW_TAG")
+
+          if [[ -n "$TAG_EXISTS" ]]; then
+            # Se a tag existe, incrementa o número no final
+            COUNT=1
+            while git tag --list "${NEW_TAG}-${COUNT}" > /dev/null 2>&1; do
+              COUNT=$((COUNT + 1))
+            done
+            NEW_TAG="${NEW_TAG}-${COUNT}"
+          fi
+
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
