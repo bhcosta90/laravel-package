@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - develop
+  workflow_run:
+    workflows: ["Run Tests - Current"]
+    types:
+      - completed
 
 jobs:
   auto-tag:
