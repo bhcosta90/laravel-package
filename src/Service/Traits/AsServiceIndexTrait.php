@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace CodeFusion\Service\Traits;
 
-use CodeFusion\Service\Traits\Helper\{BaseQueryTrait};
 use CodeFusion\Service\Traits\Helper\AddIncludesTrait;
+use CodeFusion\Service\Traits\Helper\{BaseQueryTrait};
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,6 +21,7 @@ trait AsServiceIndexTrait
         ?array $search = null,
         ?string $orderBy = null,
         ?string $orderDirection = null,
+        ?string $paginate = null,
     ): Paginator {
         $table = app($this->model())->getTable();
 
@@ -35,9 +38,16 @@ trait AsServiceIndexTrait
         $orderBy        = $orderBy ?? $table . '.id';
         $orderDirection = $orderDirection ?? 'asc';
 
-        return $query
-            ->orderBy($orderBy, $orderDirection)
-            ->paginate(perPage: 10);
+        $paginate = $paginate ?: "paginate";
+
+        $response = $query
+            ->orderBy($orderBy, $orderDirection);
+
+        if (in_array($paginate, ['paginate', 'simplePaginate'])) {
+            return $response->$paginate(perPage: 15);
+        }
+
+        return $response->$paginate();
     }
 
     protected function applyFilters(Builder $model, array $filters): void
