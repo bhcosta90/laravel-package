@@ -6,7 +6,7 @@ use App\Http\Controller\CustomerController;
 use App\Models\{Contact, Customer};
 use Illuminate\Support\Facades\{Route};
 
-use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, get, post, put};
+use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, delete, get, post, put};
 
 beforeEach(function () {
     Route::apiResource('customer', CustomerController::class);
@@ -55,6 +55,8 @@ test('include contacts in customer data', function () {
         ->assertJsonStructure([
             'data' => [
                 '*' => [
+                    'id',
+                    'name',
                     'contacts' => [
                         '*' => [
                             'id',
@@ -75,6 +77,8 @@ test('include contacts in customer data', function () {
         ->assertJsonStructure([
             'data' => [
                 '*' => [
+                    'id',
+                    'name',
                     'contacts' => [
                         '*' => [
                             'id',
@@ -118,4 +122,39 @@ test('store and update customer', function () {
     ]), [
         'name' => 'testing 3',
     ])->assertStatus(404);
+});
+
+test('show customer', function () {
+    get(route('customer.show', [
+        'customer' => $this->customer01->id,
+        'includes' => 'contacts',
+    ]))->assertOk()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'contacts' => [
+                    '*' => [
+                        'id',
+                        'customer_id',
+                        'name',
+                    ],
+                ],
+            ],
+        ]);
+
+    get(route('customer.show', [
+        'customer' => 0,
+        'includes' => 'contacts',
+    ]))->assertNotFound();
+});
+
+test('delete customer', function () {
+    delete(route('customer.destroy', [
+        'customer' => $this->customer01->id,
+    ]))->assertNoContent();
+
+    delete(route('customer.destroy', [
+        'customer' => 0,
+    ]))->assertNotFound();
 });
