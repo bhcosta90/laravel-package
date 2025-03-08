@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - master
       - hotfix/**
     types:
       - closed
@@ -114,11 +115,6 @@ jobs:
           
           if [[ "${{ env.disabled }}" == "true" ]]; then
             echo "Process is disabled. Skipping tag creation."
-            exit 0
-          fi
-          
-          if [[ "${{ github.event.pull_request.base.ref }}" == "develop" && "${{ github.event.pull_request.head.ref }}" == "main" ]]; then
-            echo "PR is from main to develop. Skipping tag creation."
             exit 0
           fi
           
