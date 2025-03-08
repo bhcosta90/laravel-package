@@ -66,8 +66,10 @@ jobs:
 
           BASE_TAG="$STABLE_TAG"
           
+          # Corrigir a atribuição de BRANCH no evento push
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            BRANCH="${{ github.ref#refs/heads/}}"
+            BRANCH="${{ github.ref }}"  # Ref completa: refs/heads/develop
+            BRANCH="${BRANCH/refs\/heads\//}"  # Remove o prefixo 'refs/heads/'
           else
             BRANCH="${GITHUB_HEAD_REF}"
           fi
