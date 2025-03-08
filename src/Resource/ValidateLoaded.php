@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeFusion\src\Resource;
+namespace CodeFusion\Resource;
 
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 

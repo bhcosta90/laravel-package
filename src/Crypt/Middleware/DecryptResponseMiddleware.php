@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\src\Crypt\Middleware;
+namespace CodeFusion\Crypt\Middleware;
 
 use Closure;
 use Hashids\Hashids;

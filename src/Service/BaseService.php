@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\src\Service;
+namespace CodeFusion\Service;
 
-use CodeFusion\src\Service\Traits\{AsServiceIndexTrait};
-use CodeFusion\src\Service\Traits\AsServiceDestroyTrait;
-use CodeFusion\src\Service\Traits\AsServiceShowTrait;
-use CodeFusion\src\Service\Traits\AsServiceStoreTrait;
-use CodeFusion\src\Service\Traits\AsServiceUpdateTrait;
+use CodeFusion\Service\Traits\{AsServiceIndexTrait};
+use CodeFusion\Service\Traits\AsServiceDestroyTrait;
+use CodeFusion\Service\Traits\AsServiceShowTrait;
+use CodeFusion\Service\Traits\AsServiceStoreTrait;
+use CodeFusion\Service\Traits\AsServiceUpdateTrait;
 
 abstract class BaseService
 {

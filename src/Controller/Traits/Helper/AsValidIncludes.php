@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeFusion\src\Controller\Traits\Helper;
+namespace CodeFusion\Controller\Traits\Helper;
 
 trait AsValidIncludes
 {

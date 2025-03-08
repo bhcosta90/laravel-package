@@ -1,9 +1,9 @@
 <?php
 
-namespace CodeFusion\src\Service\Traits;
+namespace CodeFusion\Service\Traits;
 
-use CodeFusion\src\Service\Traits\Helper\{BaseQueryTrait};
-use CodeFusion\src\Service\Traits\Helper\AddIncludesTrait;
+use CodeFusion\Service\Traits\Helper\{BaseQueryTrait};
+use CodeFusion\Service\Traits\Helper\AddIncludesTrait;
 use Illuminate\Database\Eloquent\{Model};
 
 trait AsServiceShowTrait

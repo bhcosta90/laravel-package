@@ -1,9 +1,9 @@
 <?php
 
-namespace CodeFusion\src\Crypt\Provider;
+namespace CodeFusion\Crypt\Provider;
 
-use CodeFusion\src\Crypt\Middleware\{EncryptResponseMiddleware};
-use CodeFusion\src\Crypt\Middleware\DecryptResponseMiddleware;
+use CodeFusion\Crypt\Middleware\{EncryptResponseMiddleware};
+use CodeFusion\Crypt\Middleware\DecryptResponseMiddleware;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;

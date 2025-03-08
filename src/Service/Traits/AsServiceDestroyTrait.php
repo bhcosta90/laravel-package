@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeFusion\src\Service\Traits;
+namespace CodeFusion\Service\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

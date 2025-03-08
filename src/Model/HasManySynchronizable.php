@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeFusion\src\Model;
+namespace CodeFusion\Model;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

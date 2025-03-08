@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeFusion\src\Service\Traits\Helper;
+namespace CodeFusion\Service\Traits\Helper;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\src\Controller\Traits;
+namespace CodeFusion\Controller\Traits;
 
 trait AsControllerStoreTrait
 {

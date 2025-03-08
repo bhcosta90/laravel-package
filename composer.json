@@ -17,6 +17,6 @@
         "hashids/hashids": "^5.0"
     },
     "require-dev": {
-        "laravel/framework": "^11.0 | ^12.1"
+        "orchestra/testbench": "^10.1"
     }
 }

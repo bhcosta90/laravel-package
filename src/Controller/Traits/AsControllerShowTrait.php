@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\src\Controller\Traits;
+namespace CodeFusion\Controller\Traits;
 
-use CodeFusion\src\Controller\Traits\Helper\AsValidIncludes;
+use CodeFusion\Controller\Traits\Helper\AsValidIncludes;
 use Illuminate\Http\{Request, Response};
 
 trait AsControllerShowTrait
