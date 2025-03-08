@@ -65,7 +65,13 @@ jobs:
           FEATURE_TAG="${{ env.feature_tag }}"
 
           BASE_TAG="$STABLE_TAG"
-          BRANCH="${GITHUB_HEAD_REF}"
+          
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            BRANCH="${{ github.ref#refs/heads/}}"
+          else
+            BRANCH="${GITHUB_HEAD_REF}"
+          fi
+          
           PREFIX=""
           NEW_SUFFIX=""
 
