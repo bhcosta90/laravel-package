@@ -77,14 +77,13 @@ jobs:
               LAST_SUFFIX="-1"
             fi
             NEW_SUFFIX=$((LAST_SUFFIX + 1))
-          elif [[ "$BRANCH" == release/* ]]; then
+          elif [[ "$BRANCH" =~ ^(release|perf)/.* ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
             NEW_SUFFIX=""
             BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
-          
-          elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
+          elif [[ "$BRANCH" =~ ^(bugfix|hotfix)/.* ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[2]=$((VERSION[2] + 1))
             NEW_SUFFIX=""
