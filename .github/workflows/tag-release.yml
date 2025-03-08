@@ -31,27 +31,40 @@ jobs:
             git tag "$TAG"
             git push origin "$TAG"
           fi
+          
+          CLEAN_TAG=$(echo "$TAG" | sed 's/^dev-//')
 
-          echo "Última tag: $TAG"
-          echo "tag=$TAG" >> $GITHUB_ENV
+          echo "Última tag (sem dev-): $CLEAN_TAG"
+          echo "tag=$CLEAN_TAG" >> $GITHUB_ENV
 
       - name: Determinar novo número de versão
         id: new_tag
         run: |
           OLD_TAG="${{ env.tag }}"
-          IFS='.-' read -r -a VERSION <<< "$OLD_TAG"
+          IFS='.' read -r -a VERSION <<< "$OLD_TAG"
+
+          # Se a tag inicial for 0.0.0, adicionamos o nível 4 ao primeiro incremento
+          if [[ "$OLD_TAG" == "0.0.0" ]]; then
+            VERSION+=(0)
+          fi
 
           # Verifica se a TAG foi dividida corretamente
-          if [[ ${#VERSION[@]} -ne 4 ]]; then
+          if [[ ${#VERSION[@]} -lt 3 ]]; then
             echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
             exit 1
           fi
 
           BRANCH="${GITHUB_HEAD_REF}"
+          PREFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 (com "-")
-            VERSION[3]=$((VERSION[3] + 1))
+            # Feature -> Incrementa nível 4 (com "-") e adiciona prefixo "dev-"
+            if [[ ${#VERSION[@]} -eq 3 ]]; then
+              VERSION+=(1)  # Se não existir nível 4, cria
+            else
+              VERSION[3]=$((VERSION[3] + 1))
+            fi
+            PREFIX="dev-"
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
             VERSION[1]=$((VERSION[1] + 1))
@@ -66,7 +79,13 @@ jobs:
             exit 1
           fi
 
-          NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          # Se o nível 4 existe, usa "-", caso contrário, não adiciona
+          if [[ ${#VERSION[@]} -eq 4 ]]; then
+            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          else
+            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
+          fi
+
           echo "Nova tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
 
