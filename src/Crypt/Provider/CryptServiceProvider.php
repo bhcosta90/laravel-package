@@ -4,8 +4,7 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Crypt\Provider;
 
-use CodeFusion\Crypt\Middleware\DecryptResponseMiddleware;
-use CodeFusion\Crypt\Middleware\{EncryptResponseMiddleware};
+use CodeFusion\Crypt\Middleware\{CryptMiddleware};
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +24,6 @@ class CryptServiceProvider extends ServiceProvider
             );
         });
 
-        Route::aliasMiddleware('code-fusion.encrypt.response', EncryptResponseMiddleware::class);
-        Route::aliasMiddleware('code-fusion.decrypt.response', DecryptResponseMiddleware::class);
+        Route::aliasMiddleware('code-fusion.crypt', CryptMiddleware::class);
     }
 }
