@@ -4,7 +4,10 @@ on:
   pull_request:
     branches:
       - main
+      - feature/**
       - release/**
+      - bugfix/**
+      - hotfix/**
 
 jobs:
   auto-tag:
@@ -23,7 +26,7 @@ jobs:
       - name: Obter última tag ou criar inicial
         id: last_tag
         run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^dev-//' | head -n 1)
+          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | sed 's/^dev-//' | head -n 1)
 
           if [[ -z "$TAG" ]]; then
             TAG="0.0.0"
@@ -31,11 +34,9 @@ jobs:
             git tag "$TAG"
             git push origin "$TAG"
           fi
-          
-          CLEAN_TAG=$(echo "$TAG" | sed 's/^dev-//')
 
-          echo "Última tag (sem dev-): $CLEAN_TAG"
-          echo "tag=$CLEAN_TAG" >> $GITHUB_ENV
+          echo "Última tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_ENV
 
       - name: Determinar novo número de versão
         id: new_tag
@@ -48,23 +49,27 @@ jobs:
             VERSION+=(0)
           fi
 
-          # Verifica se a TAG foi dividida corretamente
-          if [[ ${#VERSION[@]} -lt 3 ]]; then
-            echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
-            exit 1
-          fi
-
           BRANCH="${GITHUB_HEAD_REF}"
           PREFIX=""
+          TAG_SUFFIX=""
 
           if [[ "$BRANCH" == feature/* ]]; then
-            # Feature -> Incrementa nível 4 (com "-") e adiciona prefixo "dev-"
+            # Feature -> Incrementa nível 4 e adiciona prefixo "dev-"
             if [[ ${#VERSION[@]} -eq 3 ]]; then
               VERSION+=(1)  # Se não existir nível 4, cria
             else
               VERSION[3]=$((VERSION[3] + 1))
             fi
             PREFIX="dev-"
+
+            # Verifica se a tag já existe e adiciona contador extra se necessário
+            BASE_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+            COUNT=1
+            while git tag --list "$BASE_TAG-$COUNT" > /dev/null 2>&1; do
+              COUNT=$((COUNT + 1))
+            done
+            TAG_SUFFIX="-$COUNT"
+
           elif [[ "$BRANCH" == release/* ]]; then
             # Release -> Incrementa nível 2, zera níveis 3 e 4
             VERSION[1]=$((VERSION[1] + 1))
@@ -79,22 +84,16 @@ jobs:
             exit 1
           fi
 
-          # Se o nível 4 existe, usa "-", caso contrário, não adiciona
-          if [[ ${#VERSION[@]} -eq 4 ]]; then
-            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          # Se for uma feature, aplica a tag com contador extra
+          if [[ "$BRANCH" == feature/* ]]; then
+            NEW_TAG="${BASE_TAG}${TAG_SUFFIX}"
           else
-            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
-          fi
-
-          TAG_EXISTS=$(git tag --list "$NEW_TAG")
-
-          if [[ -n "$TAG_EXISTS" ]]; then
-            # Se a tag existe, incrementa o número no final
-            COUNT=1
-            while git tag --list "${NEW_TAG}-${COUNT}" > /dev/null 2>&1; do
-              COUNT=$((COUNT + 1))
-            done
-            NEW_TAG="${NEW_TAG}-${COUNT}"
+            # Se o nível 4 existe, usa "-", caso contrário, não adiciona
+            if [[ ${#VERSION[@]} -eq 4 ]]; then
+              NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+            else
+              NEW_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
+            fi
           fi
 
           echo "Nova tag: $NEW_TAG"
