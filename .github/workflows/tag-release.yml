@@ -1,58 +1,93 @@
-name: Automatic Versioning (PRs to Main)
+name: Auto Tagging
 
 on:
   pull_request:
     branches:
       - main
-    types:
-      - closed
+      - release/**
 
 jobs:
-  tag:
-    if: github.event.pull_request.merged == true  # Só executa se a PR foi mergeada
+  auto-tag:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Permite criar tags
-
     steps:
-      - name: Checkout do código
+      - name: Checkout código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Obter última versão
-        id: get_version
+      - name: Configurar Git
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
-          echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
 
-      - name: Determinar tipo de versão
-        id: versioning
+      - name: Obter última tag ou criar inicial
+        id: last_tag
         run: |
-          BUMP="patch"  # Padrão
-          LAST_VERSION="${{ env.LAST_TAG }}"
-          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"  # Branch de origem da PR
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^dev-//' | head -n 1)
 
-          # Se o título da PR contém #major ou #minor, prioriza isso
-          if [[ "$PR_TITLE" =~ "#major" ]]; then
-            BUMP="major"
-          elif [[ "$PR_TITLE" =~ "#minor" ]]; then
-            BUMP="minor"
-          else
-            # Define o tipo de versão com base na branch de origem
-            if [[ "$SOURCE_BRANCH" =~ ^release/ ]]; then
-              BUMP="major"
-            elif [[ "$SOURCE_BRANCH" =~ ^feature/ ]]; then
-              BUMP="minor"
-            fi
+          if [[ -z "$TAG" ]]; then
+            TAG="0.0.0"
+            echo "Nenhuma tag encontrada. Criando tag inicial: $TAG"
+            git tag "$TAG"
+            git push origin "$TAG"
           fi
 
-          echo "BUMP=$BUMP" >> $GITHUB_ENV
+          echo "Última tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_ENV
 
-      - name: Criar e publicar nova tag
-        id: tag_version
-        uses: anothrNick/github-tag-action@1.67.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: ${{ env.BUMP }}
-          RELEASE_BRANCHES: main
-          WITH_V: false
+      - name: Determinar novo número de versão
+        id: new_tag
+        run: |
+          OLD_TAG="${{ env.tag }}"
+          IFS='.' read -r -a VERSION <<< "$OLD_TAG"
+
+          # Se a tag inicial for 0.0.0, adicionamos o nível 4 ao primeiro incremento
+          if [[ "$OLD_TAG" == "0.0.0" ]]; then
+            VERSION+=(0)
+          fi
+
+          # Verifica se a TAG foi dividida corretamente
+          if [[ ${#VERSION[@]} -lt 3 ]]; then
+            echo "Erro: A tag antiga ($OLD_TAG) não foi interpretada corretamente."
+            exit 1
+          fi
+
+          BRANCH="${GITHUB_HEAD_REF}"
+          PREFIX=""
+
+          if [[ "$BRANCH" == feature/* ]]; then
+            # Feature -> Incrementa nível 4 (com "-") e adiciona prefixo "dev-"
+            if [[ ${#VERSION[@]} -eq 3 ]]; then
+              VERSION+=(1)  # Se não existir nível 4, cria
+            else
+              VERSION[3]=$((VERSION[3] + 1))
+            fi
+            PREFIX="dev-"
+          elif [[ "$BRANCH" == release/* ]]; then
+            # Release -> Incrementa nível 2, zera níveis 3 e 4
+            VERSION[1]=$((VERSION[1] + 1))
+            VERSION[2]=0
+            VERSION[3]=0
+          elif [[ "$BRANCH" == bugfix/* || "$BRANCH" == hotfix/* ]]; then
+            # Bugfix/Hotfix -> Incrementa nível 3, zera nível 4
+            VERSION[2]=$((VERSION[2] + 1))
+            VERSION[3]=0
+          else
+            echo "Branch não suportada para tagging automática."
+            exit 1
+          fi
+
+          # Se o nível 4 existe, usa "-", caso contrário, não adiciona
+          if [[ ${#VERSION[@]} -eq 4 ]]; then
+            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}-${VERSION[3]}"
+          else
+            NEW_TAG="${PREFIX}${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
+          fi
+
+          echo "Nova tag: $NEW_TAG"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_ENV
+
+      - name: Criar e enviar nova tag
+        run: |
+          git tag "${{ env.new_tag }}"
+          git push origin "${{ env.new_tag }}"
