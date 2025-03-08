@@ -103,7 +103,8 @@ jobs:
             BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           else
             echo "Unsupported branch for automatic tagging."
-            exit 1
+            echo "disabled=true" >> $GITHUB_ENV
+            exit 0
           fi
 
           if [[ -n "$NEW_SUFFIX" ]]; then
@@ -123,9 +124,8 @@ jobs:
             exit 0
           fi
           
-          # Check if the push is on the develop branch
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" != "refs/heads/develop" ]]; then
-            echo "Push not made on the 'develop' branch. Ending the workflow."
+          if [[ "${{ env.disabled }}" == "true" ]]; then
+            echo "Process is disabled. Skipping tag creation."
             exit 0
           fi
 
