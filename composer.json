@@ -1,5 +1,8 @@
 {
     "name": "code-fusion/laravel-package",
+    "license": "MIT",
+    "description": "A Laravel package",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "CodeFusion\\": "src/"
