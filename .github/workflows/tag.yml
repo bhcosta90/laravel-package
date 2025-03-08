@@ -66,17 +66,7 @@ jobs:
           
           PREFIX=""
           NEW_SUFFIX=""
-          if [[ "$BRANCH" =~ ^(feature|test|style)/.* || "$BRANCH" == "develop" ]]; then
-            PREFIX="dev-"
-            # If the last feature was based on the last stable version, continue the increment
-            if [[ "$FEATURE_TAG" == "$STABLE_TAG"-* ]]; then
-              LAST_SUFFIX=$(echo "$FEATURE_TAG" | grep -oE '[0-9]+$' || echo "-1")
-            else
-              # Otherwise, start counting from the new stable version
-              LAST_SUFFIX="-1"
-            fi
-            NEW_SUFFIX=$((LAST_SUFFIX + 1))
-          elif [[ "$BRANCH" =~ ^(release|perf)/.* || "$BRANCH" == "release" ]]; then
+          if [[ "$BRANCH" =~ ^(release|perf)/.* || "$BRANCH" == "release" ]]; then
             IFS='.' read -r -a VERSION <<< "$BASE_TAG"
             VERSION[1]=$((VERSION[1] + 1))
             VERSION[2]=0
@@ -88,9 +78,15 @@ jobs:
             NEW_SUFFIX=""
             BASE_TAG="${VERSION[0]}.${VERSION[1]}.${VERSION[2]}"
           else
-            echo "Unsupported branch for automatic tagging."
-            echo "disabled=true" >> $GITHUB_ENV
-            exit 0
+            PREFIX="dev-"
+            # If the last feature was based on the last stable version, continue the increment
+            if [[ "$FEATURE_TAG" == "$STABLE_TAG"-* ]]; then
+              LAST_SUFFIX=$(echo "$FEATURE_TAG" | grep -oE '[0-9]+$' || echo "-1")
+            else
+              # Otherwise, start counting from the new stable version
+              LAST_SUFFIX="-1"
+            fi
+            NEW_SUFFIX=$((LAST_SUFFIX + 1))
           fi
           if [[ -n "$NEW_SUFFIX" ]]; then
             NEW_TAG="${PREFIX}${BASE_TAG}-${NEW_SUFFIX}"
