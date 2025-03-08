@@ -17,6 +17,5 @@ it('registers the Hashids singleton', function () {
 });
 
 it('registers the middleware', function () {
-    expect(Route::getMiddleware())->toHaveKey('code-fusion.encrypt.response')
-        ->and(Route::getMiddleware())->toHaveKey('code-fusion.decrypt.response');
+    expect(Route::getMiddleware())->toHaveKey('code-fusion.crypt');
 });
