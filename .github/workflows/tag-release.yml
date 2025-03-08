@@ -4,10 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - feature/**
-      - release/**
-      - bugfix/**
-      - hotfix/**
+      - develop
 
 jobs:
   auto-tag:
