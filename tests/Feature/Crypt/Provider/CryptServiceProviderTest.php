@@ -7,6 +7,7 @@ use Hashids\Hashids;
 use Illuminate\Support\Facades\{Config, Route};
 
 beforeEach(function () {
+    putenv('APP_KEY=mocked-app-key');
     Config::set('app.key', 'mocked-app-key');
     $this->app->register(CryptServiceProvider::class);
 });
