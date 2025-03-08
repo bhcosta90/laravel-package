@@ -12,7 +12,7 @@ trait ValidateLoaded
 
     protected function verifyLoaded($relationship, $value = null, $default = null): mixed
     {
-        $includedRelationships = explode(',', request()->input('include', ''));
+        $includedRelationships = explode(',', request()->input('includes', ''));
 
         return $this->when(
             collect($includedRelationships)->contains(fn ($item) => str_contains($item, $relationship)),

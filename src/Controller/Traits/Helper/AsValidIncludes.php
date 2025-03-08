@@ -12,8 +12,20 @@ trait AsValidIncludes
             return [];
         }
 
-        $arrRequestIncludes = explode('|', $request->includes ?? '');
+        $arrRequestIncludes = explode('|', $requestIncludes);
 
-        return array_intersect_key($allowedIncludes, $arrRequestIncludes);
+        $data = array_intersect_key($allowedIncludes, $arrRequestIncludes);
+
+        $result = [];
+
+        foreach ($arrRequestIncludes as $include) {
+            foreach ($data as $item) {
+                if (str_contains($item, $include)) {
+                    $result[] = $include;
+                }
+            }
+        }
+
+        return $result;
     }
 }

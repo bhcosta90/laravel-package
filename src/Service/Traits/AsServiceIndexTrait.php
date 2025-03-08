@@ -36,9 +36,11 @@ trait AsServiceIndexTrait
             $this->applySearch($query, $search);
         }
 
+        // @codeCoverageIgnoreStart
         if ($debug) {
             dd($query->toSql());
         }
+        // @codeCoverageIgnoreEnd
 
         $orderBy        = $orderBy ?? $table . '.id';
         $orderDirection = $orderDirection ?? 'asc';
