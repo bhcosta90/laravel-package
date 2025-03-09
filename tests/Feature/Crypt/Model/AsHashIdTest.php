@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
 
 beforeEach(function () {
-    putenv('APP_KEY=mocked-app-key');
+    Config::set('app.key', 'testing');
     $this->app->register(CryptServiceProvider::class);
 
     $this->customer = Customer::factory()->create();
