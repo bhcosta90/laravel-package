@@ -99,7 +99,7 @@ test('store and update customer', function () {
 
     $response = post(route('customer.store', [
         'name' => 'testing 2',
-    ]))->assertStatus(201)->dump();
+    ]))->assertStatus(201);
 
     assertDatabaseCount('customers', 7);
     assertDatabaseHas('customers', [
