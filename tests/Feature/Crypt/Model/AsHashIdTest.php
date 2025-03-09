@@ -62,7 +62,7 @@ test('disable crypt: order creation with hashids', function () {
     expect($order)->toBeInstanceOf(Order::class);
 });
 
-test('xablau', function () {
+test('enable crypt: create order with encoded customer id', function () {
     Config::set('hashids.enable', true);
 
     $idCustomer = $this->hash::encode($this->customer->id);
