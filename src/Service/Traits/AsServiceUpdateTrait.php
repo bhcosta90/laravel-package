@@ -32,12 +32,12 @@ trait AsServiceUpdateTrait
         return DB::transaction(function () use ($model, $attributes) {
             $model->save();
 
-            if (method_exists($this, 'afterUpdate')) {
-                $this->afterUpdate($attributes);
-            }
-
             if (method_exists($this, 'afterSave')) {
                 $this->afterSave($attributes);
+            }
+
+            if (method_exists($this, 'afterUpdate')) {
+                $this->afterUpdate($attributes);
             }
 
             $this->syncModel($model, $attributes);
