@@ -4,19 +4,22 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Crypt\Model;
 
-use Hashids\Hashids;
+use CodeFusion\Crypt\Contracts\HashInterface;
+use CodeFusion\Crypt\Factory\HashFactory;
 
 trait AsHashId
 {
-    protected static ?Hashids $hashids = null;
+    protected static ?HashInterface $hashids = null;
 
     protected static function bootAsHashId(): void
     {
         static::saving(function ($model) {
             if (config('hashids.enable')) {
+                $crypt = self::getHashId();
+
                 foreach ($model->getAttributes() as $key => $value) {
-                    if (preg_match('/^.*_id$|^id$/', (string) $key)) {
-                        $model->setAttribute($key, self::getHashId()->decode($value)[0]);
+                    if ($crypt->verify($key)) {
+                        $model->setAttribute($key, self::getHashId()->decode($value));
                     }
                 }
             }
@@ -29,7 +32,7 @@ trait AsHashId
             return parent::getAttribute($key);
         }
 
-        if (preg_match('/^.*_id$|^id$/', (string) $key)) {
+        if (self::getHashId()->verify($key)) {
             return self::getHashId()->encode(parent::getAttribute($key));
         }
 
@@ -58,10 +61,10 @@ trait AsHashId
             ?->firstOrFail();
     }
 
-    protected static function getHashId(): Hashids
+    protected static function getHashId(): HashInterface
     {
-        if (!self::$hashids instanceof Hashids) {
-            self::$hashids = app(Hashids::class);
+        if (!self::$hashids instanceof HashInterface) {
+            self::$hashids = HashFactory::create();
         }
 
         return self::$hashids;

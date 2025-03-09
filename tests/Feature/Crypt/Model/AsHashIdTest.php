@@ -3,8 +3,8 @@
 declare(strict_types = 1);
 
 use App\Models\{Customer, Order};
+use CodeFusion\Crypt\Factory\HashFactory;
 use CodeFusion\Crypt\Provider\CryptServiceProvider;
-use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
@@ -18,7 +18,7 @@ beforeEach(function () {
         'customer_id' => $this->customer->id,
         'type'        => 'default',
     ]);
-    $this->hash = app(Hashids::class);
+    $this->hash = HashFactory::create();
 });
 
 test('enable crypt: order creation with hashids', function () {
