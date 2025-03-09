@@ -29,6 +29,7 @@ abstract class TestCase extends TestCaseAlias
         $table->create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
 
