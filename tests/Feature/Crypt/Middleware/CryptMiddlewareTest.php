@@ -22,8 +22,6 @@ beforeEach(function () {
     $this->customerId = $crypt->encode($this->customer->id);
     $this->contactId  = $crypt->encode($this->contact->id);
 
-    Config::set('hashids.enable', true);
-
     Route::middleware(CryptMiddleware::class)
         ->apiResource('customer', CustomerController::class);
 
@@ -64,6 +62,8 @@ it('bypasses encryption and decryption when disabled', function () {
 });
 
 it('updates customer and contact names', function () {
+    Config::set('hashids.enable', true);
+
     putJson(route('customer.update', [
         'customer' => $this->customerId,
     ]), [
