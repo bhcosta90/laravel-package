@@ -37,6 +37,7 @@ abstract class TestCase extends TestCaseAlias
             $table->increments('id');
             $table->foreignId('customer_id')->constrained();
             $table->string('name');
+            $table->boolean('is_principal')->nullable();
             $table->timestamps();
         });
 

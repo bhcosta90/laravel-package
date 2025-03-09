@@ -17,4 +17,13 @@ class ContactFactory extends Factory
             'name' => fake()->name,
         ];
     }
+
+    public function principal(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_principal' => true,
+            ];
+        });
+    }
 }
