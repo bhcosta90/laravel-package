@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace CodeFusion\Model\Traits;
+namespace CodeFusion\Crypt\Model;
 
 use Hashids\Hashids;
 
