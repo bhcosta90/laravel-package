@@ -4,14 +4,14 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Service\Traits;
 
-use CodeFusion\Service\Traits\Helper\AddIncludesTrait;
+use CodeFusion\Service\Traits\Helper\WithIncludesTrait;
 use CodeFusion\Service\Traits\Helper\{BaseQueryTrait};
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 
 trait AsServiceIndexTrait
 {
-    use AddIncludesTrait;
+    use WithIncludesTrait;
     use BaseQueryTrait;
 
     public function getAll(
@@ -28,7 +28,7 @@ trait AsServiceIndexTrait
 
         $query = $this->baseQuery($data);
 
-        $this->addIncludes($query, $includes);
+        $this->withIncludes($query, $includes);
 
         $this->applyFilters($query, $filters);
 
