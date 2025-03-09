@@ -9,7 +9,9 @@ beforeEach(function () {
     $this->customer = Customer::factory()
         ->hasContacts(3)
         ->hasContacts(2, ['is_principal' => true])
-        ->create();
+        ->create([
+            'type' => "principal",
+        ]);
     $this->service = app(CustomerContactPrincipalService::class);
 });
 
@@ -20,17 +22,11 @@ test('get list only principal', function () {
         includes: ['contacts.customer']
     );
 
-    expect($response->contacts->count())->toBe(2);
-});
+    $contact = $response->contacts->get(0);
 
-test('get list with specific fields', function () {
-    /** @var Customer $response */
-    $response = $this->service->getById(
-        id: $this->customer->id,
-        includes: ['contacts.customer:id,name']
-    );
-
-    expect($response->contacts->count())->toBe(2);
+    expect($response->contacts->count())->toBe(2)
+        ->and($contact)->is_principal->toBeTrue()
+        ->customer->type->toBe('principal');
 });
 
 test('get list with specific fields and customer id', function () {
@@ -41,5 +37,10 @@ test('get list with specific fields and customer id', function () {
         includes: ['contacts:customer_id,name.customer']
     );
 
-    expect($response->contacts->count())->toBe(2);
+    $contact = $response->contacts->get(0);
+
+    expect($response->contacts->count())->toBe(2)
+        ->and($contact)
+        ->is_principal->toBeNull()
+        ->customer->id->toBe($this->customer->id);
 });
