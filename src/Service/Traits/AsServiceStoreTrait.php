@@ -30,12 +30,12 @@ trait AsServiceStoreTrait
 
             $this->setModel($callback);
 
-            if (method_exists($this, 'afterStore')) {
-                $this->afterStore($attributes);
-            }
-
             if (method_exists($this, 'afterSave')) {
                 $this->afterSave($attributes);
+            }
+
+            if (method_exists($this, 'afterStore')) {
+                $this->afterStore($attributes);
             }
 
             $this->syncModel($callback, $attributes);
