@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace CodeFusion\Controller\Traits;
 
 use CodeFusion\Controller\Traits\Helper\AsValidIncludes;
-use Illuminate\Http\{Request, Response};
+use Illuminate\Http\{Request};
 
 trait AsControllerShowTrait
 {
@@ -32,10 +32,6 @@ trait AsControllerShowTrait
             includes: $validIncludes,
             data: request()->route()?->parameters()
         );
-
-        if (blank($model)) {
-            abort(Response::HTTP_NOT_FOUND, 'Resource not found.');
-        }
 
         return new $resource($model);
     }
