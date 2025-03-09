@@ -74,14 +74,11 @@ trait WithIncludesTrait
         }
 
         foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
-            foreach ($output as $keyOutput => $valueOutput) {
+            $output = array_filter($output, function ($valueOutput) use ($keyInclude, $valueInclude) {
                 [$tableValueOutput] = explode(':', $valueOutput);
 
-                if ($tableValueOutput === $keyInclude) {
-                    unset($output[$keyOutput]);
-                    $output[$keyInclude] = $valueInclude;
-                }
-            }
+                return $tableValueOutput === $keyInclude;
+            });
 
             if (!isset($output[$keyInclude])) {
                 $output[$keyInclude] = $valueInclude;
