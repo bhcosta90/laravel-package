@@ -10,6 +10,19 @@ trait AsHashId
 {
     protected static ?Hashids $hashids = null;
 
+    protected static function bootAsHashId(): void
+    {
+        static::saving(function ($model) {
+            if (config('hashids.enable')) {
+                foreach ($model->getAttributes() as $key => $value) {
+                    if (preg_match('/^.*_id$|^id$/', (string) $key)) {
+                        $model->setAttribute($key, self::getHashId()->decode($value)[0]);
+                    }
+                }
+            }
+        });
+    }
+
     public function getAttribute($key)
     {
         if (!config('hashids.enable')) {
