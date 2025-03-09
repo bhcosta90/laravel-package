@@ -4,20 +4,24 @@ declare(strict_types = 1);
 
 use App\Http\Controller\CustomerController;
 use App\Models\{Customer};
+use CodeFusion\Crypt\Factory\HashFactory;
 use CodeFusion\Crypt\Middleware\CryptMiddleware;
-use Hashids\Hashids;
+use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Illuminate\Support\Facades\{Config, Route};
 
 use function Pest\Laravel\{assertDatabaseHas, get, getJson, putJson};
 
 beforeEach(function () {
+    putenv('APP_KEY=mocked-app-key');
+    $this->app->register(CryptServiceProvider::class);
+
     $this->customer = Customer::factory()
         ->hasContacts()
         ->create(['name' => 'John Doe']);
 
     $this->contact = $this->customer->contacts->first();
 
-    $crypt = app(Hashids::class);
+    $crypt = HashFactory::create();
 
     $this->customerId = $crypt->encode($this->customer->id);
     $this->contactId  = $crypt->encode($this->contact->id);
