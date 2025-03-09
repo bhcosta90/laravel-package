@@ -5,8 +5,6 @@ declare(strict_types = 1);
 use App\Models\{Contact, Customer};
 use App\Services\CustomerService;
 
-use Illuminate\Http\UploadedFile;
-
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
 
 beforeEach(function () {
@@ -160,23 +158,4 @@ test('it must search customers by name', function () {
     );
 
     expect($response->count())->toBe(1);
-});
-
-test('xablau', function () {
-    Illuminate\Support\Facades\Storage::fake();
-    $file = UploadedFile::fake()->create('test.jpg', 100, 'image/jpeg');
-
-    $customer = $this->service->store([
-        'name'  => 'John Doe',
-        'photo' => $file,
-    ]);
-
-    expect(str_contains($customer->photo, 'customers'))->toBeTrue();
-
-    $customer = $this->service->store([
-        'name'  => 'John Doe',
-        'photo' => file_get_contents(base_path('../../../../tests/Fixture/image.txt')),
-    ]);
-
-    expect(str_contains($customer->photo, 'customers'))->toBeTrue();
 });
