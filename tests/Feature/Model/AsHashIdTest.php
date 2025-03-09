@@ -3,7 +3,10 @@
 declare(strict_types = 1);
 
 use App\Models\{Customer, Order};
+use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
+
+use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
 
 beforeEach(function () {
     $this->customer = Customer::factory()->create();
@@ -11,6 +14,7 @@ beforeEach(function () {
         'customer_id' => $this->customer->id,
         'type'        => 'default',
     ]);
+    $this->hash = app(Hashids::class);
 });
 
 test('enable crypt: order creation with hashids', function () {
@@ -52,6 +56,22 @@ test('disable crypt: order creation with hashids', function () {
 
     $order = Order::find($this->order->id);
     expect($order)->toBeInstanceOf(Order::class);
+});
+
+test('xablau', function () {
+    Config::set('hashids.enable', true);
+
+    $idCustomer = $this->hash->encode($this->customer->id);
+
+    $order = Order::create([
+        'customer_id' => $idCustomer,
+    ]);
+
+    assertDatabaseCount('orders', 2);
+    assertDatabaseHas('orders', [
+        'id'          => $this->hash->decode($order->id)[0],
+        'customer_id' => $this->customer->id,
+    ]);
 });
 
 test('disable crypt: get order by hash id', function () {
