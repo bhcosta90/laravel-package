@@ -14,10 +14,10 @@ class CustomerContactPrincipalService extends BaseService
         return Customer::class;
     }
 
-    protected function filterInclude(): array
+    protected function filterInclude(array $table): array
     {
         return [
-            'contacts' => fn ($query) => $query->principal(),
+            'contacts' => fn ($query) => $query->select($table['contacts'])->principal(),
         ];
     }
 }
