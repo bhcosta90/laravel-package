@@ -4,5 +4,5 @@ This package provides a set of tools and utilities to enhance the development ex
 
 ## Requirements
 
-- PHP 8.3 or higher
+- PHP 8.2 or higher
 - Composer

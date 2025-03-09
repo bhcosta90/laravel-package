@@ -13,19 +13,20 @@ trait AsValidIncludes
         }
 
         $arrRequestIncludes = explode('|', $requestIncludes);
-
-        $data = array_intersect_key($allowedIncludes, $arrRequestIncludes);
-
-        $result = [];
+        $onlyIncludes       = [];
 
         foreach ($arrRequestIncludes as $include) {
-            foreach ($data as $item) {
-                if (str_contains($item, $include)) {
-                    $result[] = $include;
-                }
+            $arrDot    = explode('.', $include);
+            $resultDot = [];
+
+            foreach ($arrDot as $dot) {
+                [$table]     = explode(':', $dot);
+                $resultDot[] = $table;
             }
+
+            $onlyIncludes[] = implode('.', $resultDot);
         }
 
-        return $result;
+        return array_intersect_key($allowedIncludes, $onlyIncludes);
     }
 }

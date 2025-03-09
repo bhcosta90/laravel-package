@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\{Config, Route};
 use function Pest\Laravel\{assertDatabaseHas, get, getJson, putJson};
 
 beforeEach(function () {
-    putenv('APP_KEY=mocked-app-key');
+    Config::set('app.key', 'testing');
     $this->app->register(CryptServiceProvider::class);
 
     $this->customer = Customer::factory()

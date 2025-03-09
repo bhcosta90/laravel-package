@@ -30,8 +30,17 @@ class Customer extends Model
 
     public function scopeByName(Builder $builder, array $name): void
     {
-        $builder->when($name, function (Builder $builder) use ($name) {
-            $builder->where('name', $name);
-        });
+        $builder->when(
+            $name,
+            fn (Builder $builder) => $builder->where('name', $name)
+        );
+    }
+
+    public function scopeByType(Builder $builder, string | array $type = []): void
+    {
+        $builder->when(
+            $type,
+            fn (Builder $builder) => $builder->whereIn('type', (array) $type)
+        );
     }
 }

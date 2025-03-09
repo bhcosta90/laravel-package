@@ -17,7 +17,6 @@ class CustomerPrincipalService extends BaseService
 
     protected function baseQuery(array $data = []): Builder
     {
-        return parent::baseQuery($data)
-            ->where('type', 'principal');
+        return parent::baseQuery($data)->byType('principal');
     }
 }
