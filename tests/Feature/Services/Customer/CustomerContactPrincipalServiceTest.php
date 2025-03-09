@@ -22,3 +22,24 @@ test('get list only principal', function () {
 
     expect($response->contacts->count())->toBe(2);
 });
+
+test('get list with specific fields', function () {
+    /** @var Customer $response */
+    $response = $this->service->getById(
+        id: $this->customer->id,
+        includes: ['contacts.customer:id,name']
+    );
+
+    expect($response->contacts->count())->toBe(2);
+});
+
+test('get list with specific fields and customer id', function () {
+
+    /** @var Customer $response */
+    $response = $this->service->getById(
+        id: $this->customer->id,
+        includes: ['contacts:customer_id,name.customer']
+    );
+
+    expect($response->contacts->count())->toBe(2);
+});

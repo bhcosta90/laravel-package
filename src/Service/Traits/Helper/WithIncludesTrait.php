@@ -19,8 +19,9 @@ trait WithIncludesTrait
     {
         $output = [];
 
+        $tableFields = [];
+
         foreach ($input as $string) {
-            $arrOnlyTable = "";
 
             $existDot = explode(':', $string);
 
@@ -29,7 +30,9 @@ trait WithIncludesTrait
             $temp = [];
 
             foreach ($parts as $part) {
-                $temp[] = empty($temp) ? $part : end($temp) . '.' . $part;
+                $temp[] = $table = empty($temp) ? $part : end($temp) . '.' . $part;
+
+                $tableFields[$table] = ["*"];
             }
 
             if (count($existDot) === 1) {
@@ -57,23 +60,36 @@ trait WithIncludesTrait
         }
 
         if (method_exists($this, 'filterInclude')) {
-            foreach ($this->filterInclude() as $keyInclude => $valueInclude) {
+
+            foreach ($output as $valueOutput) {
+                $arrValueOutput = explode(':', $valueOutput);
+
+                if (empty($arrValueOutput[1])) {
+                    $arrValueOutput[1] = "*";
+                }
+
+                $tableFields[$arrValueOutput[0]] = explode(',', $arrValueOutput[1]);
+            }
+
+            foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
 
                 foreach ($output as $keyOutput => $valueOutput) {
-                    if (str_contains($valueOutput, $keyInclude)) {
+                    [$tableValueOutput] = explode(':', $valueOutput);
+
+                    if ($tableValueOutput === $keyInclude) {
                         unset($output[$keyOutput]);
-                        $arrValueOutput   = explode(':', $valueOutput);
                         $stringKeyInclude = $keyInclude;
 
-                        if (isset($arrValueOutput[1])) {
-                            $stringKeyInclude .= ':' . $arrValueOutput[1];
-                        }
                         $output[$stringKeyInclude] = $valueInclude;
                     }
+                }
+
+                if (!isset($output[$keyInclude])) {
+                    $output[$keyInclude] = $valueInclude;
                 }
             }
         }
 
-        return array_unique($output);
+        return $output;
     }
 }
