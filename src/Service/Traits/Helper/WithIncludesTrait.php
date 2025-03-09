@@ -10,16 +10,52 @@ trait WithIncludesTrait
 {
     protected function withIncludes(Builder $model, array $includes = []): void
     {
-        if (method_exists($this, 'filterInclude')) {
-            foreach ($this->filterInclude() as $key => $include) {
-                foreach ($includes as $includeValue) {
-                    if (str_contains($includeValue, $key)) {
-                        $includes[$key] = $include;
-                    }
+        $includes = $this->transformWithIncludes($includes);
+
+        $model->with($includes);
+    }
+
+    protected function transformWithIncludes(array $input = []): array
+    {
+        $output = [];
+
+        foreach ($input as $string) {
+            $arrOnlyTable = "";
+
+            $existDot = explode(':', $string);
+
+            $parts = explode('.', $string);
+
+            $temp = [];
+
+            foreach ($parts as $part) {
+                $temp[] = empty($temp) ? $part : end($temp) . '.' . $part;
+            }
+
+            if (count($existDot) === 1) {
+                $output[] = $string;
+
+                continue;
+            }
+
+            foreach ($temp as $value) {
+                $datDot = explode('.', $value);
+
+                if (count($datDot) === 1) {
+                    $output[] = $datDot[0];
+
+                    continue;
                 }
+
+                $lastTable = array_pop($datDot);
+
+                $prefix = array_map(fn ($valueDot) => explode(':', $valueDot)[0], $datDot);
+
+                $output[] = implode('.', $prefix) . "." . $lastTable;
+
             }
         }
 
-        $model->with($includes);
+        return array_unique($output);
     }
 }
