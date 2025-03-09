@@ -5,21 +5,24 @@ declare(strict_types = 1);
 namespace CodeFusion\Crypt\Middleware;
 
 use Closure;
-use Hashids\Hashids;
+use CodeFusion\Crypt\Contracts\HashInterface;
+use CodeFusion\Crypt\Factory\HashFactory;
 use Illuminate\Http\Request;
 
 class CryptMiddleware
 {
-    public function __construct(protected Hashids $crypt)
+    protected HashInterface $crypt;
+
+    public function __construct()
     {
-        //
+        $this->crypt = HashFactory::create();
     }
 
     public function handle(Request $request, Closure $next)
     {
         if (config('hashids.enable') === true) {
             foreach ($request->route()?->parameters() as $key => $route) {
-                $decoded = $this->decodeValue($request->route($key));
+                $decoded = $this->crypt->decode($request->route($key));
 
                 if ($decoded !== null) {
                     $request->route()?->setParameter($key, $decoded);
@@ -40,11 +43,10 @@ class CryptMiddleware
         $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         if (is_array($data)) {
-            $crypt = $this->crypt;
 
-            array_walk_recursive($data, function (&$value, $key) use ($crypt) {
-                if (preg_match('/^.*_id$|^id$/', (string) $key)) {
-                    $value = $crypt->encode((string) $value);
+            array_walk_recursive($data, function (&$value, $key) {
+                if ($this->crypt->verify((string) $key)) {
+                    $value = $this->crypt->encode((string) $value);
                 }
             });
 
@@ -60,8 +62,8 @@ class CryptMiddleware
             foreach ($data as $key => &$value) {
                 if (is_array($value)) {
                     $this->recursiveDecrypt($value); // Chamada recursiva
-                } elseif (preg_match('/^.*_id$|^id$/', (string) $key)) {
-                    $decoded = $this->decodeValue($value);
+                } elseif ($this->crypt->verify((string) $key)) {
+                    $decoded = $this->crypt->decode($value);
 
                     if ($decoded !== null) {
                         $value = $decoded;
@@ -69,12 +71,5 @@ class CryptMiddleware
                 }
             }
         }
-    }
-
-    private function decodeValue($value): int | null
-    {
-        $decoded = $this->crypt->decode($value);
-
-        return !empty($decoded) ? $decoded[0] : null;
     }
 }
