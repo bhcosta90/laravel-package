@@ -13,12 +13,12 @@ trait AsServiceShowTrait
     use AddIncludesTrait;
     use BaseQueryTrait;
 
-    public function getById(string | int $id, array $includes = [], array $data = []): ?Model
+    public function getById(string | int $id, array $includes = [], array $data = []): Model
     {
         $query = $this->baseQuery($data);
 
         $this->addIncludes($query, $includes);
 
-        return $query->find($id);
+        return $query->findOrFail($id);
     }
 }
