@@ -3,12 +3,16 @@
 declare(strict_types = 1);
 
 use App\Models\{Customer, Order};
+use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
 
 beforeEach(function () {
+    putenv('APP_KEY=mocked-app-key');
+    $this->app->register(CryptServiceProvider::class);
+
     $this->customer = Customer::factory()->create();
     $this->order    = Order::query()->create([
         'customer_id' => $this->customer->id,
@@ -62,14 +66,13 @@ test('xablau', function () {
     Config::set('hashids.enable', true);
 
     $idCustomer = $this->hash->encode($this->customer->id);
-
-    $order = Order::create([
+    $order      = Order::create([
         'customer_id' => $idCustomer,
     ]);
 
     assertDatabaseCount('orders', 2);
     assertDatabaseHas('orders', [
-        'id'          => $this->hash->decode($order->id)[0],
+        'id'          => $this->hash->decode($order->id),
         'customer_id' => $this->customer->id,
     ]);
 });
