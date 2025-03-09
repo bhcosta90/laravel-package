@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 use App\Http\Controller\CustomerController;
 use App\Models\{Customer};
-use CodeFusion\Crypt\Factory\HashFactory;
+use CodeFusion\Crypt\Facade\HashId;
 use CodeFusion\Crypt\Middleware\CryptMiddleware;
 use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Illuminate\Support\Facades\{Config, Route};
@@ -21,10 +21,8 @@ beforeEach(function () {
 
     $this->contact = $this->customer->contacts->first();
 
-    $crypt = HashFactory::create();
-
-    $this->customerId = $crypt->encode($this->customer->id);
-    $this->contactId  = $crypt->encode($this->contact->id);
+    $this->customerId = HashId::encode($this->customer->id);
+    $this->contactId  = HashId::encode($this->contact->id);
 
     Route::middleware(CryptMiddleware::class)
         ->apiResource('customer', CustomerController::class);

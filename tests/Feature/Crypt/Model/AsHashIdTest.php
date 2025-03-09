@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 
 use App\Models\{Customer, Order};
-use CodeFusion\Crypt\Factory\HashFactory;
+use CodeFusion\Crypt\Facade\HashId;
 use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Illuminate\Support\Facades\Config;
 
@@ -18,7 +18,7 @@ beforeEach(function () {
         'customer_id' => $this->customer->id,
         'type'        => 'default',
     ]);
-    $this->hash = HashFactory::create();
+    $this->hash = app(HashId::class);
 });
 
 test('enable crypt: order creation with hashids', function () {
@@ -65,14 +65,14 @@ test('disable crypt: order creation with hashids', function () {
 test('xablau', function () {
     Config::set('hashids.enable', true);
 
-    $idCustomer = $this->hash->encode($this->customer->id);
+    $idCustomer = $this->hash::encode($this->customer->id);
     $order      = Order::create([
         'customer_id' => $idCustomer,
     ]);
 
     assertDatabaseCount('orders', 2);
     assertDatabaseHas('orders', [
-        'id'          => $this->hash->decode($order->id),
+        'id'          => $this->hash::decode($order->id),
         'customer_id' => $this->customer->id,
     ]);
 });
