@@ -4,22 +4,19 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Crypt\Model;
 
-use CodeFusion\Crypt\Contracts\HashInterface;
-use CodeFusion\Crypt\Factory\HashFactory;
+use CodeFusion\Crypt\Facade\HashId;
 
 trait AsHashId
 {
-    protected static ?HashInterface $hashids = null;
+    protected static ?HashId $hashids = null;
 
     protected static function bootAsHashId(): void
     {
         static::saving(function ($model) {
             if (config('hashids.enable')) {
-                $crypt = self::getHashId();
-
                 foreach ($model->getAttributes() as $key => $value) {
-                    if ($crypt->verify($key)) {
-                        $model->setAttribute($key, self::getHashId()->decode($value));
+                    if (self::hash()::verify($key)) {
+                        $model->setAttribute($key, self::hash()::decode($value));
                     }
                 }
             }
@@ -32,8 +29,8 @@ trait AsHashId
             return parent::getAttribute($key);
         }
 
-        if (self::getHashId()->verify($key)) {
-            return self::getHashId()->encode(parent::getAttribute($key));
+        if (self::hash()::verify($key)) {
+            return self::hash()::encode(parent::getAttribute($key));
         }
 
         return parent::getAttribute($key);
@@ -42,7 +39,7 @@ trait AsHashId
     public static function find(mixed $id): ?self
     {
         if (config('hashids.enable')) {
-            $id = self::getHashId()->decode($id);
+            $id = self::hash()::decode($id);
         }
 
         return self::query()
@@ -53,7 +50,7 @@ trait AsHashId
     public static function findOrFail(mixed $id): self
     {
         if (config('hashids.enable')) {
-            $id = self::getHashId()->decode($id);
+            $id = self::hash()::decode($id);
         }
 
         return self::query()
@@ -61,12 +58,12 @@ trait AsHashId
             ?->firstOrFail();
     }
 
-    protected static function getHashId(): HashInterface
+    protected static function hash(): HashId
     {
-        if (!self::$hashids instanceof HashInterface) {
-            self::$hashids = HashFactory::create();
+        if (static::$hashids === null) {
+            static::$hashids = app(HashId::class);
         }
 
-        return self::$hashids;
+        return static::$hashids;
     }
 }
