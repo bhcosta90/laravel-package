@@ -31,7 +31,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies (remove passport)
         run: composer remove --dev laravel/passport --no-interaction --no-update
@@ -43,7 +43,7 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest --parallel
+        run: vendor/bin/pest --parallel --coverage --min=100 --compact
 
       - name: Execute php
         run: vendor/bin/pint --test

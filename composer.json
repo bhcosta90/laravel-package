@@ -23,6 +23,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "ext-bcmath": "*",
         "hashids/hashids": "^5.0"
     },
     "require-dev": {
@@ -34,6 +35,13 @@
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodeFusion\\Crypt\\Provider\\CryptServiceProvider"
+            ]
         }
     }
 }
