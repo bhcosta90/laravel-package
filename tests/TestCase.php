@@ -29,6 +29,7 @@ abstract class TestCase extends TestCaseAlias
         $table->create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
 
@@ -42,7 +43,7 @@ abstract class TestCase extends TestCaseAlias
         $table->create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->foreignId('customer_id')->constrained();
-            $table->string('type')->default('default');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
 

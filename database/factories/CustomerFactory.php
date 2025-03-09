@@ -17,4 +17,13 @@ class CustomerFactory extends Factory
             'name' => $this->faker->name(),
         ];
     }
+
+    public function principal(): self
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'type' => 'principal',
+            ];
+        });
+    }
 }

@@ -18,9 +18,10 @@ trait AsControllerStoreTrait
         $resource = $this->resource();
         $request  = app($this->requestStore());
 
-        $data = $request->validated();
+        $data   = $request->validated();
+        $params = $request->route()?->parameters() ?: [];
 
-        $response = $service->store($data + request()->route()?->parameters());
+        $response = $service->store($data + $params);
 
         return new $resource($response);
     }
