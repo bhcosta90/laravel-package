@@ -55,7 +55,7 @@ class HasManySync extends HasMany
         $newRows    = [];
 
         foreach ($data as $row) {
-            if (isset($row[$relatedKeyName]) && !empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current)) {
+            if (!empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current, true)) {
                 $updateRows[$row[$relatedKeyName]] = $row;
             } else {
                 $newRows[] = $row;
