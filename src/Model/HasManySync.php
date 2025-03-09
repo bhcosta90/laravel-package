@@ -22,18 +22,16 @@ class HasManySync extends HasMany
     public function sync($data, $deleting = true): array
     {
         $changes = [
-            'created' => [],
             'deleted' => [],
-            'updated' => [],
         ];
 
         $relatedKeyName = $this->related->getKeyName();
         $current        = $this->newQuery()->pluck($relatedKeyName)->all();
 
-        // Separando as linhas para atualização e inserção
+        // Separating rows for update and insert
         [$updateRows, $newRows] = $this->separateRowsForUpdateAndInsert($data, $current, $relatedKeyName);
 
-        // Deletando as linhas que não precisam ser atualizadas
+        // Deleting rows that do not need to be updated
         if ($this->isDeleted
             && $deleting
             && !empty($deleteIds = $this->getDeleteIds($current, array_keys($updateRows)))
@@ -42,10 +40,10 @@ class HasManySync extends HasMany
             $changes['deleted'] = $this->castKeys($deleteIds);
         }
 
-        // Atualizando as linhas
+        // Updating rows
         $changes['updated'] = $this->updateRows($updateRows, $relatedKeyName);
 
-        // Inserindo as novas linhas
+        // Inserting new rows
         $changes['created'] = $this->insertNewRows($newRows, $relatedKeyName);
 
         return $changes;
@@ -57,7 +55,7 @@ class HasManySync extends HasMany
         $newRows    = [];
 
         foreach ($data as $row) {
-            if (isset($row[$relatedKeyName]) && !empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current)) {
+            if (!empty($row[$relatedKeyName]) && in_array($row[$relatedKeyName], $current, true)) {
                 $updateRows[$row[$relatedKeyName]] = $row;
             } else {
                 $newRows[] = $row;
