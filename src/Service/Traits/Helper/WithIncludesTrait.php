@@ -10,7 +10,9 @@ trait WithIncludesTrait
 {
     protected function withIncludes(Builder $model, array $includes = []): void
     {
-        $model->with($this->transformWithIncludes($includes));
+        $includesTransform = $this->transformWithIncludes($includes);
+
+        $model->with($includesTransform);
     }
 
     protected function transformWithIncludes(array $input = []): array

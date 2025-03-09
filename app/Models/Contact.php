@@ -19,6 +19,10 @@ class Contact extends Model
         'is_principal',
     ];
 
+    protected $casts = [
+        'is_principal' => 'bool',
+    ];
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

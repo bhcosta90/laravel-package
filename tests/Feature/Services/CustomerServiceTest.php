@@ -58,6 +58,26 @@ test('it must create a new customer with contacts', function () {
     ]);
 });
 
+test('get list with specific fields', function () {
+    $customer = Customer::factory()
+        ->hasContacts(2)
+        ->create([
+            'type' => 'principal',
+        ]);
+
+    /** @var Customer $response */
+    $response = $this->service->getById(
+        id: $customer->id,
+        includes: ['contacts.customer:id,name']
+    );
+
+    $contact = $response->contacts->get(0);
+
+    expect($response->contacts->count())->toBe(2)
+        ->and($contact)
+        ->customer->type->toBeNull();
+});
+
 test('it must delete the customer', function () {
     $customer = Customer::factory()->create();
 
