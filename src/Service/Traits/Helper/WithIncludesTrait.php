@@ -11,85 +11,82 @@ trait WithIncludesTrait
     protected function withIncludes(Builder $model, array $includes = []): void
     {
         $includes = $this->transformWithIncludes($includes);
-
         $model->with($includes);
     }
 
     protected function transformWithIncludes(array $input = []): array
     {
-        $output = [];
-
+        $output      = [];
         $tableFields = [];
 
         foreach ($input as $string) {
+            $this->processIncludeString($string, $output, $tableFields);
+        }
 
-            $existDot = explode(':', $string);
+        if (method_exists($this, 'filterInclude')) {
+            $this->applyFilterInclude($output, $tableFields);
+        }
 
-            $parts = explode('.', $string);
+        return $output;
+    }
 
-            $temp = [];
+    private function processIncludeString(string $string, array &$output, array &$tableFields): void
+    {
+        $existDot = explode(':', $string);
+        $parts    = explode('.', $string);
+        $temp     = [];
 
-            foreach ($parts as $part) {
-                $temp[] = $table = empty($temp) ? $part : end($temp) . '.' . $part;
+        foreach ($parts as $part) {
+            $temp[]              = $table = empty($temp) ? $part : end($temp) . '.' . $part;
+            $tableFields[$table] = ["*"];
+        }
 
-                $tableFields[$table] = ["*"];
-            }
+        if (count($existDot) === 1) {
+            $output[] = $string;
 
-            if (count($existDot) === 1) {
-                $output[] = $string;
+            return;
+        }
+
+        foreach ($temp as $value) {
+            $datDot = explode('.', $value);
+
+            if (count($datDot) === 1) {
+                $output[] = $datDot[0];
 
                 continue;
             }
 
-            foreach ($temp as $value) {
-                $datDot = explode('.', $value);
+            $lastTable = array_pop($datDot);
+            $prefix    = array_map(fn ($valueDot) => explode(':', $valueDot)[0], $datDot);
+            $output[]  = implode('.', $prefix) . "." . $lastTable;
+        }
+    }
 
-                if (count($datDot) === 1) {
-                    $output[] = $datDot[0];
+    private function applyFilterInclude(array &$output, array $tableFields): void
+    {
+        foreach ($output as $valueOutput) {
+            $arrValueOutput = explode(':', $valueOutput);
 
-                    continue;
-                }
-
-                $lastTable = array_pop($datDot);
-
-                $prefix = array_map(fn ($valueDot) => explode(':', $valueDot)[0], $datDot);
-
-                $output[] = implode('.', $prefix) . "." . $lastTable;
-
+            if (empty($arrValueOutput[1])) {
+                $arrValueOutput[1] = "*";
             }
+
+            $tableFields[$arrValueOutput[0]] = explode(',', $arrValueOutput[1]);
         }
 
-        if (method_exists($this, 'filterInclude')) {
+        foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
+            foreach ($output as $keyOutput => $valueOutput) {
+                [$tableValueOutput] = explode(':', $valueOutput);
 
-            foreach ($output as $valueOutput) {
-                $arrValueOutput = explode(':', $valueOutput);
-
-                if (empty($arrValueOutput[1])) {
-                    $arrValueOutput[1] = "*";
-                }
-
-                $tableFields[$arrValueOutput[0]] = explode(',', $arrValueOutput[1]);
-            }
-
-            foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
-
-                foreach ($output as $keyOutput => $valueOutput) {
-                    [$tableValueOutput] = explode(':', $valueOutput);
-
-                    if ($tableValueOutput === $keyInclude) {
-                        unset($output[$keyOutput]);
-                        $stringKeyInclude = $keyInclude;
-
-                        $output[$stringKeyInclude] = $valueInclude;
-                    }
-                }
-
-                if (!isset($output[$keyInclude])) {
+                if ($tableValueOutput === $keyInclude) {
+                    unset($output[$keyOutput]);
                     $output[$keyInclude] = $valueInclude;
                 }
             }
-        }
 
-        return $output;
+            if (!isset($output[$keyInclude])) {
+                $output[$keyInclude] = $valueInclude;
+            }
+        }
     }
 }
