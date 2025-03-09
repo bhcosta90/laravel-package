@@ -4,17 +4,17 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Service\Traits;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 trait AsServiceDestroyTrait
 {
-    public function destroy(Model $model): true
+    public function destroy(string | int $id): true
     {
+        $model = $this->baseQuery()->findOrFail($id);
+
         return DB::transaction(function () use ($model) {
             $fieldId = $model->getKeyName();
-
-            $id = $model->{$fieldId};
+            $id      = $model->{$fieldId};
 
             if (method_exists($this, 'beforeDelete')) {
                 $this->beforeDelete($model);
