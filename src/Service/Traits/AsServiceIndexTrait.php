@@ -38,7 +38,7 @@ trait AsServiceIndexTrait
 
         // @codeCoverageIgnoreStart
         if ($debug) {
-            dd($query->toSql());
+            $query->dumpRawSql();
         }
         // @codeCoverageIgnoreEnd
 
