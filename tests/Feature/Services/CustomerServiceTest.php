@@ -63,7 +63,7 @@ test('it must delete the customer', function () {
 
     assertDatabaseCount('customers', 1);
 
-    $this->service->destroy($customer);
+    $this->service->destroy($customer->id);
 
     assertDatabaseCount('customers', 0);
 });
@@ -77,7 +77,7 @@ test('it must update the customer', function () {
     assertDatabaseCount('customers', 1);
     assertDatabaseCount('contacts', 3);
 
-    $this->service->update($customer, [
+    $this->service->update($customer->id, [
         'name'     => 'John Doe',
         'contacts' => [
             [
@@ -120,7 +120,7 @@ test('it must update an existing contact', function () {
             'customer_id' => $customer->id,
         ]);
 
-    $this->service->update($customer, [
+    $this->service->update($customer->id, [
         'name'     => 'John Doe',
         'contacts' => [
             [

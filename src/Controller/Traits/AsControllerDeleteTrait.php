@@ -15,16 +15,8 @@ trait AsControllerDeleteTrait
         $service = app($this->service());
 
         $params = $request->route()?->parameters() ?: [];
-        $model  = $service->getById(
-            id: end($params),
-            data: request()->route()?->parameters()
-        );
 
-        if (blank($model)) {
-            abort(Response::HTTP_NOT_FOUND, 'Resource not found.');
-        }
-
-        $service->destroy($model);
+        $service->destroy(end($params), $params);
 
         return response()->noContent();
     }

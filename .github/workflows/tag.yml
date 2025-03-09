@@ -23,16 +23,20 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-      - name: Create initial tag if no tag exists
-        id: first_tag
+      - name: Create 0.0.0 tag if no tag exists
+        id: initial_tag
         run: |
-          TAG=$(git tag --list --sort=-v:refname | grep -E '^(dev-)?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^dev-//' | head -n 1)
+          # Check if there is any tags in the repository
+          TAG=$(git tag --list)
           if [[ -z "$TAG" ]]; then
+            # Se não houver nenhuma tag, cria a tag '0.0.0'
             TAG="0.0.0"
-            echo "No tag found. Creating initial tag: $TAG"
+            echo "No tags found. Creating initial '0.0.0' tag."
             git tag "$TAG"
             git push origin "$TAG"
-            echo "Tag created successfully: $TAG"
+            echo "'0.0.0' tag created successfully: $TAG"
+          else
+            echo "Tags already exist in the repository."
           fi
       - name: Get the last valid tag
         id: last_tag

@@ -15,8 +15,10 @@ trait AsServiceUpdateTrait
     use SyncModelTrait;
     use AsModel;
 
-    public function update(Model $model, array $attributes = []): Model
+    public function update(string | int $id, array $attributes = []): Model
     {
+        $model = $this->baseQuery()->findOrFail($id);
+
         $this->setModel($model);
 
         if (method_exists($this, 'beforeUpdate')) {
