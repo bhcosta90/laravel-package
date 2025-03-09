@@ -56,6 +56,24 @@ trait WithIncludesTrait
             }
         }
 
+        if (method_exists($this, 'filterInclude')) {
+            foreach ($this->filterInclude() as $keyInclude => $valueInclude) {
+
+                foreach ($output as $keyOutput => $valueOutput) {
+                    if (str_contains($valueOutput, $keyInclude)) {
+                        unset($output[$keyOutput]);
+                        $arrValueOutput   = explode(':', $valueOutput);
+                        $stringKeyInclude = $keyInclude;
+
+                        if (isset($arrValueOutput[1])) {
+                            $stringKeyInclude .= ':' . $arrValueOutput[1];
+                        }
+                        $output[$stringKeyInclude] = $valueInclude;
+                    }
+                }
+            }
+        }
+
         return array_unique($output);
     }
 }
