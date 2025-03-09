@@ -17,7 +17,7 @@ class CustomerContactPrincipalService extends BaseService
     protected function filterInclude(): array
     {
         return [
-            'contacts' => fn ($query) => $query->where('is_principal', true),
+            'contacts' => fn ($query) => $query->principal(),
         ];
     }
 }
