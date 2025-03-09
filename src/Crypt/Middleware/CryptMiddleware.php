@@ -17,7 +17,7 @@ class CryptMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (config('crypt.enable') === true) {
+        if (config('hashids.enable') === true) {
             foreach ($request->route()?->parameters() as $key => $route) {
                 $decoded = $this->decodeValue($request->route($key));
 
@@ -33,7 +33,7 @@ class CryptMiddleware
 
         $response = $next($request);
 
-        if (config('crypt.enable') === false) {
+        if (config('hashids.enable') === false) {
             return $response;
         }
 
