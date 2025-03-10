@@ -17,7 +17,7 @@ class CustomerResource extends JsonResource
         return [
             'id'       => $this->id,
             'name'     => $this->name,
-            'contacts' => $this->verifyLoaded('contacts', fn () => ContactResource::collection($this->contacts)),
+            'contacts' => $this->whenLoaded('contacts', fn () => ContactResource::collection($this->contacts)),
         ];
     }
 }

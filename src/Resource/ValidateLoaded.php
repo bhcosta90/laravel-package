@@ -10,13 +10,13 @@ trait ValidateLoaded
 {
     use ConditionallyLoadsAttributes;
 
-    protected function verifyLoaded($relationship, $value = null, $default = null): mixed
+    protected function whenLoaded($relationship, $value = null, $default = null): mixed
     {
         $includedRelationships = explode(',', request()->input('includes', ''));
 
         return $this->when(
             collect($includedRelationships)->contains(fn ($item) => str_contains($item, $relationship)),
-            fn () => $this->whenLoaded($relationship, $value, $default)
+            fn () => parent::whenLoaded($relationship, $value, $default)
         );
     }
 }
