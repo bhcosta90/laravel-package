@@ -10,13 +10,11 @@ trait AsControllerUpdateTrait
 
     abstract protected function resource(): string;
 
-    abstract protected function requestUpdate(): string;
-
     public function update()
     {
         $service  = app($this->service());
         $resource = $this->resource();
-        $request  = app($this->requestUpdate());
+        $request  = app($this->request()[__FUNCTION__]);
 
         $params = $request->route()?->parameters() ?: [];
         $data   = $request->validated();
