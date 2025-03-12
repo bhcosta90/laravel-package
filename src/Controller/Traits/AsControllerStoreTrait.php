@@ -39,7 +39,7 @@ trait AsControllerStoreTrait
                 'status'    => false,
                 'message'   => $exception->getMessage(),
                 'errors'    => $exception->errors(),
-                'validated' => $this->getRulesByRequest((new $request())->rules()),
+                'rules' => $this->getRulesByRequest((new $request())->rules()),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $e) {
             DB::rollBack();
