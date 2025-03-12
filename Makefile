@@ -3,6 +3,7 @@ date:
 
 dev-delete-tag:
 	git fetch
+
 	@if [ -z "$(version)" ]; then \
 		echo "Error: You must specify the version as MAJOR.MINOR."; \
 		exit 1; \
