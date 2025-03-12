@@ -4,12 +4,15 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Controller\Traits;
 
+use CodeFusion\Controller\Traits\Helper\AsAddRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 trait AsControllerUpdateTrait
 {
+    use AsAddRequest;
+    
     abstract protected function service(): string;
 
     abstract protected function resource(): string;
@@ -36,7 +39,7 @@ trait AsControllerUpdateTrait
                 'status'    => false,
                 'message'   => $exception->getMessage(),
                 'errors'    => $exception->errors(),
-                'validated' => $this->getRulesByRequest((new $request())->rules()),
+                'rules' => $this->getRulesByRequest((new $request())->rules()),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $e) {
             DB::rollBack();
