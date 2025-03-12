@@ -29,17 +29,18 @@ trait AsControllerStoreTrait
             $data    = $request->validated();
             $params  = $request->route()?->parameters() ?: [];
 
-            DB::beginTransaction();
-            $response = $service->store($data + $params);
-            DB::commit();
+            return DB::transaction(function () use ($service, $params, $data, $resource) {
+                $response = $service->store($data + $params);
 
-            return new $resource($response);
+                return new $resource($response);
+            });
+
         } catch (ValidationException $exception) {
             return response()->json([
-                'status'    => false,
-                'message'   => $exception->getMessage(),
-                'errors'    => $exception->errors(),
-                'rules' => $this->getRulesByRequest((new $request())->rules()),
+                'status'  => false,
+                'message' => $exception->getMessage(),
+                'errors'  => $exception->errors(),
+                'rules'   => $this->getRulesByRequest((new $request())->rules()),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Throwable $e) {
             DB::rollBack();
