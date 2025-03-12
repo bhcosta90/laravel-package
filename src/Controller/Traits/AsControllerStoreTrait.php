@@ -5,6 +5,9 @@ declare(strict_types = 1);
 namespace CodeFusion\Controller\Traits;
 
 use CodeFusion\Controller\Traits\Helper\AsAddRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 trait AsControllerStoreTrait
 {
@@ -18,13 +21,30 @@ trait AsControllerStoreTrait
     {
         $service  = app($this->service());
         $resource = $this->resource();
-        $request  = app($this->request()[__FUNCTION__]);
 
-        $data   = $request->validated();
-        $params = $request->route()?->parameters() ?: [];
+        $request = $this->request()[__FUNCTION__];
 
-        $response = $service->store($data + $params);
+        try {
+            $request = app($request);
+            $data    = $request->validated();
+            $params  = $request->route()?->parameters() ?: [];
 
-        return new $resource($response);
+            DB::beginTransaction();
+            $response = $service->store($data + $params);
+            DB::commit();
+
+            return new $resource($response);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'status'    => false,
+                'message'   => $exception->getMessage(),
+                'errors'    => $exception->errors(),
+                'validated' => $this->getRulesByRequest((new $request())->rules()),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
     }
 }
