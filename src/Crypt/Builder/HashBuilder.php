@@ -14,7 +14,6 @@ class HashBuilder implements HashInterface
     public function __construct()
     {
         $connection = config('hashids.default', 'main');
-        ;
         $this->hashId = new Hashids(
             config("hashids.{$connection}.salt"),
             config("hashids.{$connection}.length"),
