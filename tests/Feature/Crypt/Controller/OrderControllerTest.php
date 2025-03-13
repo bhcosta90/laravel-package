@@ -5,7 +5,6 @@ declare(strict_types = 1);
 use App\Http\Controller\{OrderController};
 use App\Models\{Order};
 use CodeFusion\Crypt\Facade\HashId;
-use CodeFusion\Crypt\Middleware\CryptMiddleware;
 use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Illuminate\Support\Facades\{Config, Route};
 
@@ -16,7 +15,7 @@ beforeEach(function () {
     Config::set('app.key', 'mocked-app-key');
     $this->app->register(CryptServiceProvider::class);
 
-    Route::middleware([CryptMiddleware::class])->apiResource('order', OrderController::class);
+    Route::apiResource('order', OrderController::class);
 
     $this->order = Order::factory()->create();
 });
