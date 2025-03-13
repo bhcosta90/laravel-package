@@ -26,13 +26,14 @@ class HashBuilder implements HashInterface
         return $this->hashId->encode($value);
     }
 
-    public function verify(string $key): bool
-    {
-        return (bool) preg_match('/^.*_id$|^id$/', $key);
-    }
 
     public function decode(string $hashedValue): int | string
     {
         return $this->hashId->decode($hashedValue)[0];
     }
+    
+    public function verify(string $key): bool
+    {
+        return (bool) preg_match('/^.*_id$|^id$/', $key);
+    }    
 }
