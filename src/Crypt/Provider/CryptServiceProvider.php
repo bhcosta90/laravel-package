@@ -13,6 +13,5 @@ class CryptServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../Config/hashids.php', 'hashids');
-        Route::aliasMiddleware('code-fusion.crypt', CryptMiddleware::class);
     }
 }
