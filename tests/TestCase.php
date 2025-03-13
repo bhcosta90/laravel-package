@@ -13,6 +13,9 @@ abstract class TestCase extends TestCaseAlias
     {
         parent::setUp();
 
+        $appMock = \Mockery::mock('alias:Illuminate\Support\Facades\App');
+        $appMock->shouldReceive('runningInConsole')->andReturn(false);
+
         $this->setUpDatabase($this->app);
     }
 

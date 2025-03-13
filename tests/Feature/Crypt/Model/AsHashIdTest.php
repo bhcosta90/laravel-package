@@ -41,6 +41,9 @@ test('enable crypt: get order by hash id', function () {
 
     $order = Order::findOrFail($this->order->id);
 
+    $appMock = Mockery::mock('alias:Illuminate\Support\Facades\App');
+    $appMock->shouldReceive('runningInConsole')->andReturn(false);
+
     expect($order)
         ->id->not->toBe(1)
         ->customer_id->not->toBe(1)
