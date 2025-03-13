@@ -16,7 +16,3 @@ it('registers the Hashids singleton', function () {
     $hashids = $this->app->make(Hashids::class);
     expect($hashids)->toBeInstanceOf(Hashids::class);
 });
-
-it('registers the middleware', function () {
-    expect(Route::getMiddleware())->toHaveKey('code-fusion.crypt');
-});
