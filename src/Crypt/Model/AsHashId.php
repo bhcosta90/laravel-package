@@ -4,61 +4,27 @@ declare(strict_types = 1);
 
 namespace CodeFusion\Crypt\Model;
 
+use CodeFusion\Crypt\Casts\HashIdCast;
 use CodeFusion\Crypt\Facade\HashId;
 
 trait AsHashId
 {
-    protected static ?HashId $hashids = null;
+    private static ?HashId $hashids = null;
 
-    protected static function bootAsHashId(): void
+    public function getCasts(): array
     {
-        static::saving(function ($model) {
-            if (config('hashids.enable')) {
-                foreach ($model->getAttributes() as $key => $value) {
-                    if (self::hash()::verify($key)) {
-                        $model->setAttribute($key, self::hash()::decode($value));
-                    }
-                }
+        $cast = [];
+
+        foreach ($this->getAttributes() as $attribute => $value) {
+            if (self::hash()::verify($attribute)) {
+                $cast[$attribute] = HashIdCast::class;
             }
-        });
-    }
-
-    public function getAttribute($key)
-    {
-        if (!config('hashids.enable')) {
-            return parent::getAttribute($key);
         }
 
-        if (self::hash()::verify($key)) {
-            return self::hash()::encode(parent::getAttribute($key));
-        }
-
-        return parent::getAttribute($key);
+        return array_merge(parent::getCasts(), $cast);
     }
 
-    public static function find(mixed $id): ?self
-    {
-        if (config('hashids.enable')) {
-            $id = self::hash()::decode($id);
-        }
-
-        return self::query()
-            ->find($id)
-            ?->first();
-    }
-
-    public static function findOrFail(mixed $id): self
-    {
-        if (config('hashids.enable')) {
-            $id = self::hash()::decode($id);
-        }
-
-        return self::query()
-            ->findOrFail($id)
-            ?->firstOrFail();
-    }
-
-    protected static function hash(): HashId
+    private function hash(): HashId
     {
         if (static::$hashids === null) {
             static::$hashids = app(HashId::class);
