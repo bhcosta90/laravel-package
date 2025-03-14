@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Hashids\Hashids;
-use Illuminate\Support\Facades\{Config, Route};
+use Illuminate\Support\Facades\{Config};
 
 beforeEach(function () {
     putenv('APP_KEY=mocked-app-key');
