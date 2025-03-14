@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 use App\Http\Controller\CustomerController;
 use App\Models\{Contact, Customer};
+use Illuminate\Database\Events\{TransactionBeginning};
 use Illuminate\Support\Facades\{Route};
 
-use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, delete, get, post, put};
+use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, delete, get, post, postJson, put};
 
 beforeEach(function () {
     Route::apiResource('customer', CustomerController::class);
@@ -97,6 +98,14 @@ test('include contacts in customer data', function () {
 
 test('store and update customer', function () {
 
+    postJson(route('customer.store'))
+        ->assertJsonStructure([
+            'rules' => [
+                'name' => [],
+            ],
+        ])
+        ->assertStatus(422);
+
     $response = post(route('customer.store', [
         'name' => 'testing 2',
     ]))->assertStatus(201);
@@ -105,6 +114,14 @@ test('store and update customer', function () {
     assertDatabaseHas('customers', [
         'name' => 'testing 2',
     ]);
+
+    put(route('customer.update', [
+        'customer' => $response->json('data.id'),
+    ]))->assertJsonStructure([
+        'rules' => [
+            'name' => [],
+        ],
+    ])->assertStatus(422);
 
     put(route('customer.update', [
         'customer' => $response->json('data.id'),
@@ -122,6 +139,26 @@ test('store and update customer', function () {
     ]), [
         'name' => 'testing 3',
     ])->assertStatus(404);
+});
+
+test('transaction beginning event with store', function () {
+    Event::listen(TransactionBeginning::class, function () {
+        throw new Exception('begin transaction');
+    });
+
+    expect(fn () => post(route('customer.store', [
+        'name' => 'testing 2',
+    ]))->assertOk())->toThrow(Exception::class);
+});
+
+test('transaction beginning event with update', function () {
+    Event::listen(TransactionBeginning::class, function () {
+        throw new Exception('begin transaction');
+    });
+
+    expect(fn () => post(route('customer.store', [
+        'name' => 'testing 2',
+    ]))->assertStatus(201))->toThrow(Exception::class);
 });
 
 test('show customer', function () {

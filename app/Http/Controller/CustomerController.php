@@ -35,13 +35,11 @@ class CustomerController
         return CustomerResource::class;
     }
 
-    protected function requestUpdate(): string
+    protected function request(): array
     {
-        return $this->requestStore();
-    }
-
-    protected function requestStore(): string
-    {
-        return CustomerRequest::class;
+        return [
+            'store'  => CustomerRequest::class,
+            'update' => CustomerRequest::class,
+        ];
     }
 }
