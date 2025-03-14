@@ -100,7 +100,7 @@ test('store and update customer', function () {
 
     postJson(route('customer.store'))
         ->assertJsonStructure([
-            'validated' => [
+            'rules' => [
                 'name' => [],
             ],
         ])
@@ -118,7 +118,7 @@ test('store and update customer', function () {
     put(route('customer.update', [
         'customer' => $response->json('data.id'),
     ]))->assertJsonStructure([
-        'validated' => [
+        'rules' => [
             'name' => [],
         ],
     ])->assertStatus(422);
