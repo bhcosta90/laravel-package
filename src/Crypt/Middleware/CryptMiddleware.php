@@ -21,10 +21,12 @@ class CryptMiddleware
     {
         if (config('hashids.enable') === true) {
             foreach ($request->route()?->parameters() as $key => $route) {
-                $decoded = $this->crypt::decode($request->route($key));
+                if (is_string($key)) {
+                    $decoded = $this->crypt::decode($request->route($key));
 
-                if ($decoded !== null) {
-                    $request->route()?->setParameter($key, $decoded);
+                    if ($decoded !== null) {
+                        $request->route()?->setParameter($key, $decoded);
+                    }
                 }
             }
 
@@ -44,7 +46,7 @@ class CryptMiddleware
         if (is_array($data)) {
 
             array_walk_recursive($data, function (&$value, $key) {
-                if ($this->crypt::verify((string) $key)) {
+                if (is_numeric($value) && $this->crypt::verify((string) $key)) {
                     $value = $this->crypt::encode((string) $value);
                 }
             });
