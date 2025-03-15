@@ -6,6 +6,9 @@ on:
       - '[0-9]+x'
     types:
       - closed
+  push:
+    branches:
+      - develop
 
 jobs:
   auto-tag:
