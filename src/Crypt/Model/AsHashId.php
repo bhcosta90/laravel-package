@@ -43,9 +43,10 @@ trait AsHashId
         return $this->find(self::hash()::decode($value));
     }
 
-    public function resolveRouteBindingQuery($query, $value, $field = null): Builder|Relation
+    public function resolveRouteBindingQuery($query, $value, $field = null): Builder | Relation
     {
         $id = $this->getModel()->keyFromHashId($value);
+
         return $query->where($field ?? $this->getRouteKeyName(), $id);
     }
 
