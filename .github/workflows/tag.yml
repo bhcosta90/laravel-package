@@ -3,12 +3,9 @@ name: Auto Tagging
 on:
   pull_request:
     branches:
-      - main
+      - '[0-9]+x'
     types:
       - closed
-  push:
-    branches:
-      - develop
 
 jobs:
   auto-tag:
@@ -59,6 +56,14 @@ jobs:
           STABLE_TAG="${{ env.tag }}"
           FEATURE_TAG="${{ env.feature_tag }}"
           BASE_TAG="$STABLE_TAG"
+          
+          if [[ "$BRANCH" =~ ^([0-9]+)x$ ]]; then
+            MAJOR="${BASH_REMATCH[1]}"
+          else
+            MAJOR="0"
+          fi
+          
+          VERSION[0]=$MAJOR
           
           # Fix the assignment of BRANCH for the push event
           if [[ "${{ github.event_name }}" == "push" ]]; then
