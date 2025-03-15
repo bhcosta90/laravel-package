@@ -6,7 +6,9 @@ namespace CodeFusion\Crypt\Model;
 
 use CodeFusion\Crypt\Casts\HashIdCast;
 use CodeFusion\Crypt\Facade\HashId;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait AsHashId
 {
@@ -43,9 +45,10 @@ trait AsHashId
         return $this->find(self::hash()::decode($value));
     }
 
-    public function resolveRouteBindingQuery($query, $value, $field = null): Builder|Relation
+    public function resolveRouteBindingQuery($query, $value, $field = null): Builder | Relation
     {
         $id = $this->getModel()->keyFromHashId($value);
+
         return $query->where($field ?? $this->getRouteKeyName(), $id);
     }
 
