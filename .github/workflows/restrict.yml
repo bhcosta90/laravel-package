@@ -12,7 +12,7 @@ jobs:
       - name: Validate source branch
         run: |
           SOURCE_BRANCH="${{ github.head_ref }}"
-          if [[ ! "$SOURCE_BRANCH" =~ ^(feature|hotfix|bugfix)/.* ]]; then
-            echo "❌ ERRO: PRs para 'main' só podem vir de 'feature/*' ou 'hotfix/*' ou 'bugfix/*'."
+          if [[ ! "$SOURCE_BRANCH" =~ ^(feature|hotfix|bugfix|release)/.* && "$SOURCE_BRANCH" != "release" ]]; then
+            echo "❌ ERRO: PRs para 'main' só podem vir de 'feature/*' ou 'hotfix/*' ou 'bugfix/*'. ou 'release/* ou 'bugfix/*'. ou 'release'."
             exit 1
           fi
