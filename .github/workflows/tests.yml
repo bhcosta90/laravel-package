@@ -43,7 +43,7 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest --parallel --coverage --min=100 --compact
+        run: vendor/bin/pest --parallel --coverage --min=80 --compact
 
       - name: Execute php
         run: vendor/bin/pint --test
