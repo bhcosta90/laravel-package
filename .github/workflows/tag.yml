@@ -3,7 +3,7 @@ name: Auto Tagging
 on:
   pull_request:
     branches:
-      - 'refs/heads/[0-9]+x'  # Aceita PRs para branches com qualquer número seguido de 'x'
+      - '[0-9]+x'
     types:
       - closed
 
