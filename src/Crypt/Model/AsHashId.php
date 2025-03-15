@@ -6,7 +6,9 @@ namespace CodeFusion\Crypt\Model;
 
 use CodeFusion\Crypt\Casts\HashIdCast;
 use CodeFusion\Crypt\Facade\HashId;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait AsHashId
 {
