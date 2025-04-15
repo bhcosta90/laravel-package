@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 use CodeFusion\Tests\Fixture\Service\Traits\Helper\WithIncludes;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->class = new WithIncludes();
 });
 
-test('transform with contact customer', function () {
+test('transform with contact customer', function (): void {
     $response = $this->class->transform([
         "contact.customer",
     ]);
@@ -18,7 +18,7 @@ test('transform with contact customer', function () {
     ]);
 });
 
-test('transform with contact customer id and name', function () {
+test('transform with contact customer id and name', function (): void {
     $response = $this->class->transform([
         "contact.customer:id,name",
     ]);
@@ -29,7 +29,7 @@ test('transform with contact customer id and name', function () {
     ]);
 });
 
-test('transform with complex nested structure', function () {
+test('transform with complex nested structure', function (): void {
     $response = $this->class->transform([
         "contact:id,name.customer:id,name.email:value.xablau:id,name",
     ]);

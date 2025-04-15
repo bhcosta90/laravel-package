@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\{Route};
 
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas, delete, get, post, postJson, put};
 
-beforeEach(function () {
+beforeEach(function (): void {
     Route::apiResource('customer', CustomerController::class);
 
     $this->customer01 = Customer::factory()->create(['name' => 'John Doe']);
@@ -21,7 +21,7 @@ beforeEach(function () {
     Customer::factory(4)->create();
 });
 
-test('search for customer by name', function () {
+test('search for customer by name', function (): void {
     $response = get(route('customer.index', [
         'search' => '',
     ]));
@@ -46,7 +46,7 @@ test('search for customer by name', function () {
         ->assertJsonCount(1, 'data');
 });
 
-test('include contacts in customer data', function () {
+test('include contacts in customer data', function (): void {
     $response = get(route('customer.index', [
         'includes' => 'contacts',
     ]));
@@ -96,7 +96,7 @@ test('include contacts in customer data', function () {
         ]);
 });
 
-test('store and update customer', function () {
+test('store and update customer', function (): void {
 
     postJson(route('customer.store'))
         ->assertJsonStructure([
@@ -141,8 +141,8 @@ test('store and update customer', function () {
     ])->assertStatus(404);
 });
 
-test('transaction beginning event with store', function () {
-    Event::listen(TransactionBeginning::class, function () {
+test('transaction beginning event with store', function (): void {
+    Event::listen(TransactionBeginning::class, function (): void {
         throw new Exception('begin transaction');
     });
 
@@ -151,8 +151,8 @@ test('transaction beginning event with store', function () {
     ]))->assertOk())->toThrow(Exception::class);
 });
 
-test('transaction beginning event with update', function () {
-    Event::listen(TransactionBeginning::class, function () {
+test('transaction beginning event with update', function (): void {
+    Event::listen(TransactionBeginning::class, function (): void {
         throw new Exception('begin transaction');
     });
 
@@ -161,7 +161,7 @@ test('transaction beginning event with update', function () {
     ]))->assertStatus(201))->toThrow(Exception::class);
 });
 
-test('show customer', function () {
+test('show customer', function (): void {
     $response = get(route('customer.show', [
         'customer' => $this->customer01->id,
         'includes' => 'contacts',
@@ -187,7 +187,7 @@ test('show customer', function () {
     ]))->assertNotFound();
 });
 
-test('delete customer', function () {
+test('delete customer', function (): void {
     delete(route('customer.destroy', [
         'customer' => $this->customer01->id,
     ]))->assertNoContent();

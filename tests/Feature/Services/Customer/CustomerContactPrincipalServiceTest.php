@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Models\Customer;
 use App\Services\Customer\{CustomerContactPrincipalService};
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->customer = Customer::factory()
         ->hasContacts(3)
         ->hasContacts(2, ['is_principal' => true])
@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->service = app(CustomerContactPrincipalService::class);
 });
 
-test('get list only principal', function () {
+test('get list only principal', function (): void {
     /** @var Customer $response */
     $response = $this->service->getById(
         id: $this->customer->id,
@@ -29,7 +29,7 @@ test('get list only principal', function () {
         ->customer->type->toBe('principal');
 });
 
-test('get list with specific fields and customer id', function () {
+test('get list with specific fields and customer id', function (): void {
 
     /** @var Customer $response */
     $response = $this->service->getById(

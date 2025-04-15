@@ -38,7 +38,7 @@ trait WithIncludesTrait
         $temp     = [];
 
         foreach ($parts as $part) {
-            $temp[]              = $table = empty($temp) ? $part : end($temp) . '.' . $part;
+            $temp[]              = $table = $temp === [] ? $part : end($temp) . '.' . $part;
             $tableFields[$table] = ["*"];
         }
 
@@ -58,7 +58,7 @@ trait WithIncludesTrait
             }
 
             $lastTable = array_pop($datDot);
-            $prefix    = array_map(fn ($valueDot) => explode(':', $valueDot)[0], $datDot);
+            $prefix    = array_map(fn ($valueDot): string => explode(':', (string) $valueDot)[0], $datDot);
             $output[]  = implode('.', $prefix) . "." . $lastTable;
         }
     }
@@ -66,7 +66,7 @@ trait WithIncludesTrait
     private function applyFilterInclude(array &$output, array $tableFields): void
     {
         foreach ($output as $valueOutput) {
-            $arrValueOutput = explode(':', $valueOutput);
+            $arrValueOutput = explode(':', (string) $valueOutput);
 
             if (empty($arrValueOutput[1])) {
                 $arrValueOutput[1] = "*";
@@ -76,8 +76,8 @@ trait WithIncludesTrait
         }
 
         foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
-            $output = array_filter($output, function ($valueOutput) use ($keyInclude, $valueInclude) {
-                [$tableValueOutput] = explode(':', $valueOutput);
+            $output = array_filter($output, function ($valueOutput) use ($keyInclude, $valueInclude): bool {
+                [$tableValueOutput] = explode(':', (string) $valueOutput);
 
                 return $tableValueOutput === $keyInclude;
             });

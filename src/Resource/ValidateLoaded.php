@@ -15,7 +15,7 @@ trait ValidateLoaded
         $includedRelationships = explode(',', request()->input('includes', ''));
 
         return $this->when(
-            collect($includedRelationships)->contains(fn ($item) => str_contains($item, $relationship)),
+            collect($includedRelationships)->contains(fn ($item): bool => str_contains((string) $item, (string) $relationship)),
             fn () => parent::whenLoaded($relationship, $value, $default)
         );
     }

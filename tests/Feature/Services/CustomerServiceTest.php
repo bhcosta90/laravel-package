@@ -7,11 +7,11 @@ use App\Services\CustomerService;
 
 use function Pest\Laravel\{assertDatabaseCount, assertDatabaseHas};
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->service = app(CustomerService::class);
 });
 
-test('it must create a new customer', function () {
+test('it must create a new customer', function (): void {
     $customer = $this->service->store([
         'name' => 'John Doe',
     ]);
@@ -23,7 +23,7 @@ test('it must create a new customer', function () {
     ]);
 });
 
-test('it must create a new customer with contacts', function () {
+test('it must create a new customer with contacts', function (): void {
     $customer = $this->service->store([
         'name'     => 'John Doe',
         'contacts' => [
@@ -58,7 +58,7 @@ test('it must create a new customer with contacts', function () {
     ]);
 });
 
-test('get list with specific fields', function () {
+test('get list with specific fields', function (): void {
     $customer = Customer::factory()
         ->hasContacts(2)
         ->create([
@@ -78,7 +78,7 @@ test('get list with specific fields', function () {
         ->customer->type->toBeNull();
 });
 
-test('it must delete the customer', function () {
+test('it must delete the customer', function (): void {
     $customer = Customer::factory()->create();
 
     assertDatabaseCount('customers', 1);
@@ -88,7 +88,7 @@ test('it must delete the customer', function () {
     assertDatabaseCount('customers', 0);
 });
 
-test('it must update the customer', function () {
+test('it must update the customer', function (): void {
     $customer = Customer::factory()
         ->hasContacts(3)
         ->hasEmails(2)
@@ -131,7 +131,7 @@ test('it must update the customer', function () {
     ]);
 });
 
-test('it must update an existing contact', function () {
+test('it must update an existing contact', function (): void {
     $customer = Customer::factory()
         ->create();
 
@@ -159,7 +159,7 @@ test('it must update an existing contact', function () {
     ]);
 });
 
-test('it must search customers by name', function () {
+test('it must search customers by name', function (): void {
     Customer::factory(9)->create();
     Customer::factory()->create(['name' => 'this customer will be search']);
 

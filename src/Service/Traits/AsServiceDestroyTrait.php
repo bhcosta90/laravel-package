@@ -12,7 +12,7 @@ trait AsServiceDestroyTrait
     {
         $model = $this->baseQuery()->findOrFail($id);
 
-        return DB::transaction(function () use ($model) {
+        return DB::transaction(function () use ($model): true {
             $fieldId = $model->getKeyName();
             $id      = $model->{$fieldId};
 

@@ -5,11 +5,11 @@ declare(strict_types = 1);
 use App\Models\{Store};
 use App\Services\{StoreService};
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->service = app(StoreService::class);
 });
 
-test('it must search stores by name', function () {
+test('it must search stores by name', function (): void {
     Store::factory(9)->create();
     Store::factory()->create(['name' => 'this customer will be search']);
 

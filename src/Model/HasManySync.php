@@ -34,7 +34,7 @@ class HasManySync extends HasMany
         // Deleting rows that do not need to be updated
         if ($this->isDeleted
             && $deleting
-            && !empty($deleteIds = $this->getDeleteIds($current, array_keys($updateRows)))
+            && ($deleteIds = $this->getDeleteIds($current, array_keys($updateRows))) !== []
         ) {
             $this->deleteRows($deleteIds);
             $changes['deleted'] = $this->castKeys($deleteIds);

@@ -6,13 +6,13 @@ use CodeFusion\Crypt\Provider\CryptServiceProvider;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\{Config};
 
-beforeEach(function () {
+beforeEach(function (): void {
     putenv('APP_KEY=mocked-app-key');
     Config::set('app.key', 'mocked-app-key');
     $this->app->register(CryptServiceProvider::class);
 });
 
-it('registers the Hashids singleton', function () {
+it('registers the Hashids singleton', function (): void {
     $hashids = $this->app->make(Hashids::class);
     expect($hashids)->toBeInstanceOf(Hashids::class);
 });

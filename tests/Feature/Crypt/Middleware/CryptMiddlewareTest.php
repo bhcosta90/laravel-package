@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\{Config, Route};
 
 use function Pest\Laravel\{assertDatabaseHas, get, getJson, putJson};
 
-beforeEach(function () {
+beforeEach(function (): void {
     Config::set('app.key', 'testing');
     $this->app->register(CryptServiceProvider::class);
 
@@ -29,7 +29,7 @@ beforeEach(function () {
 
 });
 
-it('decodes route parameters', function () {
+it('decodes route parameters', function (): void {
     Config::set('hashids.enable', true);
 
     $data = get(route('customer.index', [
@@ -46,7 +46,7 @@ it('decodes route parameters', function () {
     expect($data['data']['id'])->toBe($this->customerId);
 });
 
-it('bypasses encryption and decryption when disabled', function () {
+it('bypasses encryption and decryption when disabled', function (): void {
     Config::set('hashids.enable', false);
 
     $data = get(route('customer.index', [
@@ -63,7 +63,7 @@ it('bypasses encryption and decryption when disabled', function () {
     expect($data['data']['id'])->toBe($this->customer->id);
 });
 
-it('updates customer and contact names', function () {
+it('updates customer and contact names', function (): void {
     Config::set('hashids.enable', true);
 
     putJson(route('customer.update', [

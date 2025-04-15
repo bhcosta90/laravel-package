@@ -41,11 +41,11 @@ class CryptMiddleware
             return $response;
         }
 
-        $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         if (is_array($data)) {
 
-            array_walk_recursive($data, function (&$value, $key) {
+            array_walk_recursive($data, function (&$value, $key): void {
                 if (is_numeric($value) && $this->crypt::verify((string) $key)) {
                     $value = $this->crypt::encode((string) $value);
                 }

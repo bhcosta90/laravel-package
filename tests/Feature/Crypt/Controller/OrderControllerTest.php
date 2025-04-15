@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\{Config, Route};
 
 use function Pest\Laravel\get;
 
-beforeEach(function () {
+beforeEach(function (): void {
     putenv('APP_KEY=mocked-app-key');
     Config::set('app.key', 'mocked-app-key');
     $this->app->register(CryptServiceProvider::class);
@@ -20,7 +20,7 @@ beforeEach(function () {
     $this->order = Order::factory()->create();
 });
 
-test('order index returns correct data', function () {
+test('order index returns correct data', function (): void {
     $id = HashId::encode($this->order->id);
 
     Config::set('hashids.enable', true);

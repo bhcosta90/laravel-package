@@ -32,7 +32,7 @@ class HashIdCast implements CastsAttributes
 
     protected function hash(): HashId
     {
-        if (static::$hashids === null) {
+        if (!static::$hashids instanceof \CodeFusion\Crypt\Facade\HashId) {
             static::$hashids = app(HashId::class);
         }
 

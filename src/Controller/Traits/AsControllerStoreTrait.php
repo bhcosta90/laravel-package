@@ -29,7 +29,7 @@ trait AsControllerStoreTrait
             $data    = $request->validated();
             $params  = $request->route()?->parameters() ?: [];
 
-            return DB::transaction(function () use ($service, $params, $data, $resource) {
+            return DB::transaction(function () use ($service, $params, $data, $resource): object {
                 $response = $service->store($data + $params);
 
                 return new $resource($response);

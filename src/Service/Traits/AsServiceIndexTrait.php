@@ -32,20 +32,20 @@ trait AsServiceIndexTrait
 
         $this->applyFilters($query, $filters);
 
-        if ($search) {
+        if ($search !== null && $search !== []) {
             $this->applySearch($query, $search);
         }
 
         // @codeCoverageIgnoreStart
-        if ($debug) {
+        if ($debug === true) {
             $query->dumpRawSql();
         }
         // @codeCoverageIgnoreEnd
 
-        $orderBy        = $orderBy ?? $table . '.id';
-        $orderDirection = $orderDirection ?? 'asc';
+        $orderBy ??= $table . '.id';
+        $orderDirection ??= 'asc';
 
-        $paginate = $paginate ?: "paginate";
+        $paginate = $paginate !== null && $paginate !== '' && $paginate !== '0' ? $paginate : "paginate";
 
         return $query
             ->orderBy($orderBy, $orderDirection)

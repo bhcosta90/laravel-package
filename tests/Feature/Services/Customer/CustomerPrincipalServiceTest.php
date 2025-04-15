@@ -6,19 +6,19 @@ use App\Models\Customer;
 use App\Services\Customer\CustomerPrincipalService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->customerPrincipal = Customer::factory()->principal()->create();
     $this->customerDefault   = Customer::factory()->create();
     $this->service           = app(CustomerPrincipalService::class);
 });
 
-test('get list only principal', function () {
+test('get list only principal', function (): void {
     $response = $this->service->getAll();
 
     expect($response->count())->toBe(1);
 });
 
-test('get customer principal by id', function () {
+test('get customer principal by id', function (): void {
     $response = $this->service->getById($this->customerPrincipal->id);
 
     expect($response)
@@ -27,7 +27,7 @@ test('get customer principal by id', function () {
         ->toThrow(ModelNotFoundException::class);
 });
 
-test('update customer principal', function () {
+test('update customer principal', function (): void {
     $response = $this->service->update($this->customerPrincipal->id, [
         'name' => 'Customer Principal Updated',
     ]);
@@ -39,7 +39,7 @@ test('update customer principal', function () {
         ]))->toThrow(ModelNotFoundException::class);
 });
 
-test('delete customer principal', function () {
+test('delete customer principal', function (): void {
     $response = $this->service->destroy($this->customerPrincipal->id);
 
     expect($response)

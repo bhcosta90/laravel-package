@@ -23,20 +23,20 @@ abstract class TestCase extends TestCaseAlias
     {
         $table = $app->get('db')->connection()->getSchemaBuilder();
 
-        $table->create('stores', function (Blueprint $table) {
+        $table->create('stores', function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name');
             $table->timestamps();
         });
 
-        $table->create('customers', function (Blueprint $table) {
+        $table->create('customers', function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name');
             $table->string('type')->nullable();
             $table->timestamps();
         });
 
-        $table->create('contacts', function (Blueprint $table) {
+        $table->create('contacts', function (Blueprint $table): void {
             $table->increments('id');
             $table->foreignId('customer_id')->constrained();
             $table->string('name');
@@ -44,14 +44,14 @@ abstract class TestCase extends TestCaseAlias
             $table->timestamps();
         });
 
-        $table->create('orders', function (Blueprint $table) {
+        $table->create('orders', function (Blueprint $table): void {
             $table->increments('id');
             $table->foreignId('customer_id')->constrained();
             $table->string('type')->nullable();
             $table->timestamps();
         });
 
-        $table->create('emails', function (Blueprint $table) {
+        $table->create('emails', function (Blueprint $table): void {
             $table->increments('id');
             $table->foreignId('customer_id')->constrained();
             $table->string('value');

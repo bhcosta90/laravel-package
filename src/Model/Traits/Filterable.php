@@ -10,7 +10,7 @@ trait Filterable
 {
     public function scopeFilters(Builder $query, array $fields, array $filters): void
     {
-        $query->where(function ($query) use ($fields, $filters) {
+        $query->where(function ($query) use ($fields, $filters): void {
             foreach ($filters as $value) {
                 $query->when(
                     filled($value),
