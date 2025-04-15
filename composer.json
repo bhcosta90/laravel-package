@@ -5,7 +5,7 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "CodeFusion\\": "src/"
+            "CodeFusion\\": "_bkp_src/"
         }
     },
     "autoload-dev": {
@@ -44,7 +44,7 @@
         "lint": "pint",
         "test:refactor": "rector --dry-run",
         "test:lint": "pint --test",
-        "test:types": "phpstan analyse --ansi src/",
+        "test:types": "phpstan analyse --ansi _bkp_src/",
         "test:unit": "pest --colors=always --coverage --min=100 --compact",
         "test:debug": "laradumps check --dir=src,tests --text=dump,dd",
         "test": [
