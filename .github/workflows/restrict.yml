@@ -3,7 +3,7 @@ name: Restrict PRs to Main
 on:
   pull_request:
     branches:
-      - main
+      - '[0-9]+x'
 
 jobs:
   check-source-branch:
@@ -12,7 +12,7 @@ jobs:
       - name: Validate source branch
         run: |
           SOURCE_BRANCH="${{ github.head_ref }}"
-          if [[ ! "$SOURCE_BRANCH" =~ ^(release|hotfix)/.* && "$SOURCE_BRANCH" != "release" ]]; then
-            echo "❌ ERRO: PRs para 'main' só podem vir de 'release/*' ou 'hotfix/*'."
+          if [[ ! "$SOURCE_BRANCH" =~ ^(feature|hotfix|bugfix|release)/.* && "$SOURCE_BRANCH" != "release" ]]; then
+            echo "❌ ERRO: PRs para 'main' só podem vir de 'feature/*' ou 'hotfix/*' ou 'bugfix/*'. ou 'release/* ou 'bugfix/*'. ou 'release'."
             exit 1
           fi
