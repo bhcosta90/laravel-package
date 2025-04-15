@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 use CodeFusion\Tests\Fixture\Controller\Traits\Helper\AsValidIncludes;
 
-beforeEach(fn (): \CodeFusion\Tests\Fixture\Controller\Traits\Helper\AsValidIncludes => $this->class = new AsValidIncludes());
+beforeEach(fn (): AsValidIncludes => $this->class = new AsValidIncludes());
 
 test('it returns an empty array for empty input', function (): void {
     $response = $this->class->getValidIncludes([], "");

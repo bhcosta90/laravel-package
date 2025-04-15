@@ -65,6 +65,10 @@ trait WithIncludesTrait
 
     private function applyFilterInclude(array &$output, array $tableFields): void
     {
+        if (!method_exists($this, 'filterInclude')) {
+            return;
+        }
+
         foreach ($output as $valueOutput) {
             $arrValueOutput = explode(':', (string) $valueOutput);
 
@@ -76,7 +80,7 @@ trait WithIncludesTrait
         }
 
         foreach ($this->filterInclude($tableFields) as $keyInclude => $valueInclude) {
-            $output = array_filter($output, function ($valueOutput) use ($keyInclude, $valueInclude): bool {
+            $output = array_filter($output, function ($valueOutput) use ($keyInclude): bool {
                 [$tableValueOutput] = explode(':', (string) $valueOutput);
 
                 return $tableValueOutput === $keyInclude;

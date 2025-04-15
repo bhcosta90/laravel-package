@@ -69,10 +69,10 @@ trait AsServiceIndexTrait
         $fieldsSearch = array_keys($search);
         $valuesSearch = array_values($search)[0];
 
-        try {
-            $model->filters($valuesSearch, $fieldsSearch);
-        } catch (\BadMethodCallException) {
+        if (!method_exists($model, 'filters')) {
             throw new \BadMethodCallException("Method scopeFilters does not exist in {$this->model()}");
         }
+
+        $model->filters($valuesSearch, $fieldsSearch);
     }
 }
