@@ -11,7 +11,7 @@
     "autoload-dev": {
         "psr-4": {
             "CodeFusion\\Tests\\": "tests/",
-            "Database\\Factories\\": "database/factories",
+            "Database\\Factories\\": "_bkp_database/factories",
             "App\\": "app"
         }
     },
