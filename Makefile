@@ -25,6 +25,10 @@ all-delete-tag:
 	done
 	@echo "All '$(version).*' tags have been removed."
 
+update-date:
+	@date '+%Y-%m-%d %H:%M:%S' > date.txt
+
 help:
 	@echo "  make date                   - Creates a version file with the current date and time"
 	@echo "  make delete-tag version=0.0 - Removes tags matching 'dev-version.*' (e.g., 'dev-0.0.*')"
+	@echo "  update-date 				 - Updates the date.txt file with the current date and time"
