@@ -78,5 +78,9 @@
       ]
     },
     "single_space_around_construct": true
-  }
+  },
+  "exclude": [
+    "vendor",
+    "_bkp"
+  ]
 }
