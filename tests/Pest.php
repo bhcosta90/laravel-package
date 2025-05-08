@@ -13,9 +13,9 @@ declare(strict_types = 1);
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+//pest()->extend(Tests\TestCase::class)
+//    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+//    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ pest()->extend(Tests\TestCase::class)
 |
 */
 
-expect()->extend('toBeOne', fn () => $this->toBe(1));
+//expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------
@@ -40,8 +40,3 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
-function something(): void
-{
-    // ..
-}
