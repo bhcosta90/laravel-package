@@ -13,9 +13,9 @@ declare(strict_types = 1);
 |
 */
 
-//pest()->extend(Tests\TestCase::class)
-//    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-//    ->in('Feature');
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ declare(strict_types = 1);
 |
 */
 
-//expect()->extend('toBeOne', fn () => $this->toBe(1));
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------
