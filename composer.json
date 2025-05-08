@@ -30,11 +30,13 @@
         "laradumps/laradumps": "^4.0",
         "pestphp/pest-plugin-laravel": "^3.1",
         "larastan/larastan": "^3.0",
-        "rector/rector": "^2.0"
+        "rector/rector": "^2.0",
+        "captainhook/captainhook-phar": "^5.25"
     },
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "captainhook/captainhook-phar": true
         }
     },
     "scripts": {
