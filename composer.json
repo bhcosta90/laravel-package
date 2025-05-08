@@ -38,7 +38,7 @@
         }
     },
     "scripts": {
-        "refactor": "rector",
+        "rector": "rector",
         "lint": "pint",
         "test:refactor": "rector --dry-run",
         "test:lint": "pint --test",
