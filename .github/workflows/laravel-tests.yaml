@@ -1,0 +1,49 @@
+name: "Run Tests - Current"
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.4, 8.3, 8.2]
+        laravel: ["^12.0", "^11.0"]
+        dependency-version: [prefer-lowest, prefer-stable]
+        include:
+          - laravel: "^12.0"
+            testbench: 10.*
+          - laravel: "^11.0"
+            testbench: 9.*
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
+          coverage: pcov
+
+      - name: Install dependencies (remove passport)
+        run: composer remove --dev laravel/passport --no-interaction --no-update
+        if: matrix.laravel == '^8.12'
+
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "symfony/console:>=4.3.4" "mockery/mockery:^1.3.2" "nesbot/carbon:>=2.72.6" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
+      #      - name: Execute tests
+      #        run: vendor/bin/pest --parallel --coverage --min=80 --compact
+
+      - name: Execute tests
+        run: composer run tests
