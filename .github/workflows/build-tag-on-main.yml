@@ -1,11 +1,9 @@
 name: Create Build Tag on Merge to Main
 
 on:
-  workflow_run:
-    workflows:
-      - Run Tests - Current
-    types:
-      - completed
+  push:
+    branches:
+      - 'main'
 
 jobs:
   create_build_tag:
